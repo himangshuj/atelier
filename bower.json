@@ -1,13 +1,14 @@
 {
-  "name": "ng-boilerplate",
+  "name": "teacher-dashboard",
   "version": "0.3.0",
   "devDependencies": {
-    "angular": "~1.0.7",
-    "angular-mocks": "~1.0.7",
-    "bootstrap": "~2.3.2",
-    "angular-bootstrap": "~0.3.0",
-    "angular-ui-router": "~0.0.1",
-    "angular-ui-utils": "~0.0.3"
+    "angular": "~1.0.8",
+    "angular-mocks": "~1.0.8",
+    "bootstrap": "~3.0.0",
+    "font-awesome": "~3.2.1",
+    "angular-bootstrap": "~0.6.0",
+    "angular-ui-router": "~0.2.0",
+    "angular-ui-utils": "~0.0.4"
   },
   "dependencies": {}
 }
