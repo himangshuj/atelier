@@ -1,8 +1,10 @@
 angular.module( 'sokratik', [
   'templates-app',
   'templates-common',
-  'ngBoilerplate.home',
-  'ngBoilerplate.about',
+  'sokratik.home',
+  'sokratik.login',
+  'sokratik.forgot-password',
+  'sokratik.register',
   'ui.router',
   'ui.route'
 ])
@@ -12,7 +14,7 @@ angular.module( 'sokratik', [
 })
 
 .run( function run ( titleService ) {
-  titleService.setSuffix( ' | ngBoilerplate' );
+  titleService.setSuffix( ' | Sokratik' );
 })
 
 .controller( 'AppCtrl', function AppCtrl ( $scope, $location ) {
