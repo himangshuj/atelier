@@ -1,24 +1,26 @@
-angular.module( 'sokratik', [
-  'templates-app',
-  'templates-common',
-  'sokratik.home',
-  'sokratik.login',
-  'sokratik.forgot-password',
-  'sokratik.register',
-  'ui.router',
-  'ui.route'
-])
+angular.module('sokratik', [
+        'templates-app',
+        'templates-common',
+        'sokratik.home',
+        'sokratik.login',
+        'sokratik.forgot-password',
+        'sokratik.register',
+        'ui.router',
+        'ui.route',
+        'ui.validate',
+        'ngCookies'
+    ])
 
-.config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {
-  $urlRouterProvider.otherwise( '/home' );
-})
+    .config(function myAppConfig($stateProvider, $urlRouterProvider) {
+        $urlRouterProvider.otherwise('/home');
+    })
 
-.run( function run ( titleService ) {
-  titleService.setSuffix( ' | Sokratik' );
-})
+    .run(function run(titleService) {
+        titleService.setSuffix(' | Sokratik');
+    })
 
-.controller( 'AppCtrl', function AppCtrl ( $scope, $location ) {
-})
+    .controller('AppCtrl', function AppCtrl($scope, $location) {
+    })
 
 ;
 

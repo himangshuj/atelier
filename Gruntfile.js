@@ -24,7 +24,6 @@ module.exports = function (grunt) {
      */
 
     var appConfig = grunt.file.readJSON(grunt.option('appConfigLocation'));
-    console.log(appConfig);
 
     /**
      * This is the configuration object Grunt uses to give each plugin its
@@ -102,8 +101,8 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: [ '**' ],
-                        dest: '<%= build_dir %>/assets/',
-                        cwd: 'src/assets',
+                        dest: '<%= build_dir %>/static/',
+                        cwd: 'src/<%= app_name %>/assets',
                         expand: true
                     }
                 ]
@@ -132,8 +131,8 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: [ '**' ],
-                        dest: '<%= compile_dir %>/assets',
-                        cwd: '<%= build_dir %>/assets',
+                        dest: '<%= compile_dir %>/static',
+                        cwd: '<%= build_dir %>/static',
                         expand: true
                     }
                 ]
@@ -161,7 +160,7 @@ module.exports = function (grunt) {
                     '<%= vendor_files.js %>',
                     'module.suffix'
                 ],
-                dest: '<%= compile_dir %>/assets/<%= pkg.name %>.js'
+                dest: '<%= compile_dir %>/static/<%= pkg.name %>.js'
             }
         },
 
@@ -224,7 +223,7 @@ module.exports = function (grunt) {
         recess: {
             build: {
                 src: [ '<%= app_files.less %>' ],
-                dest: '<%= build_dir %>/assets/<%= pkg.name %>.css',
+                dest: '<%= build_dir %>/static/<%= pkg.name %>.css',
                 options: {
                     compile: true,
                     compress: false,
@@ -456,7 +455,7 @@ module.exports = function (grunt) {
              */
             assets: {
                 files: [
-                    'src/assets/**/*'
+                    'src/**/assets/**/*'
                 ],
                 tasks: [ 'copy:build_assets' ]
             },
@@ -584,7 +583,7 @@ module.exports = function (grunt) {
         var cssFiles = filterForCSS(this.filesSrc).map(function (file) {
             return file.replace(dirRE, '');
         });
-        grunt.file.copy(grunt.config("app_files.html"), this.data.dir + '/index.html', {
+        grunt.file.copy(grunt.config("app_files.html"), this.data.dir + "/" + grunt.config("app_files.destination"), {
             process: function (contents, path) {
                 return grunt.template.process(contents, {
                     data: {

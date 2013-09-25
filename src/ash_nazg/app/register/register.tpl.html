@@ -1,76 +1,61 @@
 <div class="widget-body">
-    <div class="widget-main">
-        <h4 class="header green lighter bigger">
-            <i class="icon-group blue"></i>
-            New User Registration
-        </h4>
+    <div class="widget-main"><h4 class="header green lighter bigger"><i class="icon-group blue"></i>New User
+        Registration</h4>
 
         <div class="space-6"></div>
         <p> Enter your details to begin: </p>
 
-        <form>
+        <form name="registrationForm">
             <fieldset>
                 <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control"
-                                                                   placeholder="Email"/>
-															<i class="icon-envelope"></i>
-														</span>
+                    <span class="block input-icon input-icon-right">
+                        <input type="email" class="form-control" name="email" placeholder="Email"
+                               ng-model="user.email"/>
+                <i class="icon-envelope"></i>
+                        <span class="error" ng-show="registrationForm.email.$error.email"> Invalid email</span>
+                    </span>
                 </label>
-
                 <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="text" class="form-control"
-                                                                   placeholder="Username"/>
-															<i class="icon-user"></i>
-														</span>
+                    <span class="block input-icon input-icon-right">
+                    <input type="text" class="form-control" placeholder="Username" ng-model="user.name"
+                           name="userName"/>
+                    <i class="icon-user"></i>
+                    <span class="error" ng-show="registrationForm.userName.$error.required"> Required</span>
+                    </span>
                 </label>
-
+                <label class="block clearfix"><span class="block input-icon input-icon-right">
+                    <input type="password" class="form-control" name="password" placeholder="Password" ng-model="user.password" required=/>
+                    <i class="icon-lock"></i></span></label>
                 <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control"
-                                                                   placeholder="Password"/>
-															<i class="icon-lock"></i>
-														</span>
+                    <span class="block input-icon input-icon-right">
+                        <input type="password" class="form-control"
+                               placeholder="confirm password"
+                               required
+                               ng-model="user.confirm_password"
+                               ui-validate="'$value==user.password' "
+                               ui-validate-watch=" 'user.password' "
+                               placeholder="confirm password"
+                               name="confirmPassword"/><i
+                            class="icon-retweet"></i>
+                        <span class="error" ng-show="registrationForm.confirmPassword.$error.validator"> Password do not match</span>
+                        <span class="error"
+                              ng-show="registrationForm.confirmPassword.$error.require"> Required</span></span>
+                    </span>
                 </label>
-
-                <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="password" class="form-control"
-                                                                   placeholder="Repeat password"/>
-															<i class="icon-retweet"></i>
-														</span>
-                </label>
-
-                <label class="block">
-                    <input type="checkbox" class="ace"/>
-														<span class="lbl">
-															I accept the
-															<a href="#">User Agreement</a>
-														</span>
-                </label>
+                <label class="block"><input type="checkbox" class="ace" ng-model="user.tnc" required/><span
+                        class="lbl">I accept the<a href="#">User Agreement</a></span></label>
 
                 <div class="space-24"></div>
-
                 <div class="clearfix">
-                    <button type="reset" class="width-30 pull-left btn btn-sm">
-                        <i class="icon-refresh"></i>
-                        Reset
+                    <button type="reset" class="width-30 pull-left btn btn-sm"><i class="icon-refresh"></i>Reset
                     </button>
-
-                    <button type="button" class="width-65 pull-right btn btn-sm btn-success" ng-click="registerUser()">
-                        Register
-                        <i class="icon-arrow-right icon-on-right"></i>
-                    </button>
+                    <button type="button" class="width-65 pull-right btn btn-sm btn-success"
+                            ng-disabled="!registrationForm.$valid" ng-click="registerUser()">Register<i
+                            class="icon-arrow-right icon-on-right"></i></button>
                 </div>
             </fieldset>
         </form>
     </div>
-
-    <div class="toolbar center">
-        <a ui-sref="login" class="back-to-login-link">
-            <i class="icon-arrow-left"></i>
-            Back to login
-        </a>
-    </div>
+    <div class="toolbar center"><a ui-sref="login" class="back-to-login-link"><i class="icon-arrow-left"></i>Back to
+        login</a></div>
 </div><!-- /widget-body -->

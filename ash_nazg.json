@@ -1,6 +1,7 @@
 {
     "build_dir": "build/ash_nazg",
     "compile_dir": "bin/ash_nazg",
+    "app_name": "ash_nazg",
     "app_files": {
         "js": [ "src/common/**/*.js", "src/ash_nazg/app/**/**/*.js",
             "!src/**/**/*.spec.js" ,"!src/ash_nazg/app/**/*.spec.js"],
@@ -15,16 +16,20 @@
         "ctpl": [ "src/common/**/*.tpl.html" ],
 
         "html": "src/ash_nazg/index.html" ,
-        "less": "src/ash_nazg/less/main.less"
+        "less": "src/ash_nazg/less/main.less",
+        "destination":"sokratik-howitworks.html"
     },
 
     "vendor_files": {
         "js": [
-            "vendor/angular/angular.js",
-            "vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
+            "vendor/angular/angular.min.js",
+            "vendor/angular-cookies/angular-cookies.min.js",
+            "vendor/angular-bootstrap/ui-bootstrap.min.js",
             "vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js",
             "vendor/angular-ui-router/release/angular-ui-router.js",
-            "vendor/angular-ui-utils/modules/route/route.js"
+            "vendor/angular-ui-utils/modules/route/route.js",
+            "vendor/angular-ui-utils/modules/validate/validate.js"
+
         ],
         "css": [
         ]

@@ -1,4 +1,4 @@
-angular.module( 'sokratik.register', [
+angular.module('sokratik.register', [
         'ui.router',
         'titleService',
         'plusOne'
@@ -9,8 +9,8 @@ angular.module( 'sokratik.register', [
  * will handle ensuring they are all available at run-time, but splitting it
  * this way makes each module more "self-contained".
  */
-    .config(function config( $stateProvider ) {
-        $stateProvider.state( 'register', {
+    .config(function config($stateProvider) {
+        $stateProvider.state('register', {
             url: '/register',
             views: {
                 "main": {
@@ -24,10 +24,12 @@ angular.module( 'sokratik.register', [
 /**
  * And of course we define a controller for our route.
  */
-    .controller( 'RegistrationCtrl', function RegistrationController( $scope, titleService,$state,$http ) {
-        titleService.setTitle( 'Register' );
-        $scope.registerUser = function(){
-           $state.go("login");
+    .controller('RegistrationCtrl', function RegistrationController($scope, titleService, $state, $http,$cookies) {
+        titleService.setTitle('Register');
+        $scope.registerUser = function () {
+            $cookies.user = {};
+            $cookies.user.name = $scope.user.name;
+            $state.go("login");
         };
     })
 
