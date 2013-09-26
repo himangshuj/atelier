@@ -1,21 +1,16 @@
 {
-  "author": "Josh David Miller",
-  "name": "teacher-dashboard",
-  "version": "0.1.0" ,
-  "homepage": "http://bit.ly/ng-boilerplate",
-  "licenses": {
-    "type": "MIT",
-    "url": "https://raw.github.com/joshdmiller/ng-boilerplate/master/LICENSE"
-  },
-  "bugs": "https://github.com/joshdmiller/ng-boilerplate/issues",
+  "author": "Himangshu",
+  "name": "sokratik",
+  "version": "0.1.0",
+  "homepage": "https://bitbucket.org/sokratik/sokratik-frontend/wiki/Home",
+  "bugs": "https://bitbucket.org/sokratik/sokratik-frontend/issues",
   "repository": {
     "type": "git",
-    "url": "git@github.com:joshdmiller/ng-boilerplate.git"
+    "url": "git@bitbucket.org:sokratik/sokratik-frontend.git"
   },
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-recess": "~0.4.0",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.4",
@@ -28,6 +23,12 @@
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-coffeelint": "0.0.7",
     "grunt-conventional-changelog": "~1.0.0",
-    "grunt-bump": "0.0.11"
+    "grunt-bump": "0.0.11",
+    "grunt-env": "~0.4.0",
+    "grunt-recess": "~0.4.0",
+    "karma-jasmine": "~0.1.3",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.0"
   }
 }

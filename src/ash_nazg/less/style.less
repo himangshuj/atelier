@@ -1,0 +1,90 @@
+body {
+  // background:#0d6085 url(assets/images/Background-full.jpg) repeat 0 0;
+  background: #0d6085 url("images/bg-mast.png") repeat 0 0;
+  color: #FFF;
+  font-weight: lighter;
+  font-size: 200%;
+}
+
+.page-content, .main-container:after, .navbar, .ace-nav > li > a, .thumbnail {
+  background: inherit;
+  background-color: none;
+  border: none;
+}
+
+.thumbnail {
+  .caption {
+    text-align: center;
+    color: #FFF;
+  }
+}
+
+.masthead {
+  padding: 90px 20px;
+  text-align: center;
+  h1 {
+    font-size: 100px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  p {
+    font-size: 42px;
+  }
+}
+
+.bg-color-grey {
+  background-color: @btn-grey;
+}
+
+.aboutbutton {
+  position: absolute;
+  width: 100%;
+  width: 64px;
+  margin-left: -32px;
+  left: 50%;
+  margin-top: -23px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: lighter;
+}
+
+.thintitle {
+  * {
+    display: inline-block;
+  }
+  .title {
+    @media (min-width: @screen-sm) {
+      //	font-size:72px;
+      margin-right: 10px;
+    }
+  }
+
+}
+
+.main-container-inner {
+  @media (min-width: @screen-sm) {
+    padding: 10px 0px 10px 40px;
+  }
+}
+
+.hiddeninphone {
+  display: none;
+  @media (min-width: @screen-sm) {
+    display: inline-block;
+  }
+}
+
+.expandinphone {
+  width: 100%;
+  @media (min-width: @screen-sm) {
+    width: auto;
+  }
+}
+
+.btn-lg {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
