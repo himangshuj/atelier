@@ -1,0 +1,16 @@
+Template gallery implementation pending
+
+<carousel interval="myInterval">
+    <slide ng-repeat="slide in slides" active="slide.active">
+        <img ng-src="{{slide.image}}" style="margin:auto;">
+
+        <div class="carousel-caption">
+           <h4>Slide {{$index}}</h4>
+
+            <a ui-sref="edit.template({ templateName: slide.text })">
+                go go go
+                <p>{{slide.text}}</p>
+            </a>
+        </div>
+    </slide>
+</carousel>
