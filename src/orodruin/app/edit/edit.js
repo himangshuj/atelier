@@ -1,7 +1,9 @@
 angular.module('sokratik.orodruin.edit', [
         'ui.router',
         'titleService',
-        'plusOne'
+        'plusOne',
+        'orodruin.edit.directives'
+
     ])
 
     .config(function config($stateProvider) {
