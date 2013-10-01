@@ -2,8 +2,8 @@
   "name": "teacher-dashboard",
   "version": "0.3.0",
   "devDependencies": {
-    "angular": "~1.0.8",
-    "angular-mocks": "~1.0.8",
+    "angular": "~1.2.0-rc.2",
+    "angular-mocks": "~1.2.0-rc.2",
     "bootstrap": "~3.0.0",
     "font-awesome": "~3.2.1",
     "angular-bootstrap": "~0.6.0",
@@ -11,7 +11,8 @@
     "angular-ui-utils": "~0.0.4",
     "angular-cookies": "~1.0.8",
     "reveal.js": "~2.5.0",
-    "medium-editor": "git@github.com:daviferreira/medium-editor.git#~1.0.2"
+    "medium-editor": "git@github.com:daviferreira/medium-editor.git#~1.0.2",
+    "angular-sanitize": "~1.0.8"
   },
   "dependencies": {}
 }

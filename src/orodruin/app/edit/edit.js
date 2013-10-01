@@ -2,8 +2,8 @@ angular.module('sokratik.orodruin.edit', [
         'ui.router',
         'titleService',
         'plusOne',
-        'orodruin.edit.directives'
-
+        'orodruin.edit.directives',
+        'ngSanitize'
     ])
 
     .config(function config($stateProvider) {
@@ -16,9 +16,8 @@ angular.module('sokratik.orodruin.edit', [
                 }
             }
         })
-
             .state("edit.template", {
-                url: '',
+                url: '/',
                 views: {
                     "search": {
                         controller: 'SearchCtrl',
@@ -34,12 +33,14 @@ angular.module('sokratik.orodruin.edit', [
             });
 
     })
-    .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state) {
+    .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, $compile, $rootElement) {
         titleService.setTitle('Edit the knowledge');
+        $scope.image4 = "http://hacklibschool.files.wordpress.com/2011/07/personal-branding.png";
         $scope.templateName = $stateParams.templateName;
-        $state.go("edit.template");
+        $state.go("edit.template", {templateName: $stateParams.templateName});
     })
     .controller('SearchCtrl', function SearchController() {
-    })
-;
+    });
+
+
 

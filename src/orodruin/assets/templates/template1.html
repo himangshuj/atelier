@@ -1,25 +1,27 @@
-template1 templateName variable {{ templateName }}
-Editable Header follows
 <hr/>
 <br/>
 <fragment-container>
     <span>
 
-        <sokratik-fragment name="fragment1" fragment="template1/fragment.html" text="true"/>
+        <sokratik-fragment name="fragment1" fragment="template1/fragment.html" type="text" ng-model="fragment1"/>
     </span>
-
     <br/>
     <br/>
     jjjjjjj
     <span>
-        <sokratik-fragment name="fragment2" fragment="template1/fragment2.html" text="true"/>
+        <sokratik-fragment name="fragment2" fragment="template1/fragment2.html" type="text" ng-model="fragment2"/>
     </span>
-
 
     kkkk
     <br/>
 
     <span>
-        <sokratik-fragment name="fragment3" fragment="template1/fragment3.html"/>
+        <sokratik-fragment name="fragment3" fragment="template1/fragment3.html" type="text" ng-model="fragment3"/>
     </span>
+    <sokratik-media ng-src="http://www.techdigest.tv/apple_wwdc_landmark_event0.jpg" type="img" model="image" ng-click="open()">
+        transcluded part
+    </sokratik-media>
+
+
 </fragment-container>
+

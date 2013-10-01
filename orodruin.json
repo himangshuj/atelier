@@ -23,6 +23,7 @@
     "vendor_files": {
         "js": [
             "vendor/angular/angular.min.js",
+            "vendor/angular-sanitize/angular-sanitize.min.js",
             "vendor/angular-cookies/angular-cookies.min.js",
             "vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
             "vendor/reveal.js/js/reveal.min.js",
@@ -33,7 +34,9 @@
             "vendor/medium-editor/dist/js/medium.editor.min.js"
         ],
         "css": [
-            "vendor/medium-editor/dist/css/medium.editor.css"
+            "vendor/medium-editor/dist/css/medium.editor.css",
+            "vendor/bootstrap/dist/css/bootstrap.min.css"
+
         ]
 
     }

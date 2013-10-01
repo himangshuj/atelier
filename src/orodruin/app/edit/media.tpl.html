@@ -1,0 +1,23 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+
+            Enter the url of the {{mediaType}} you want to replace
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li ng-repeat="item in items">
+                    <a ng-click="selected.item = item">{{ item }}</a>
+                </li>
+            </ul>
+            Selected: <b>{{ selected.item }}</b>
+            <input type="text" ng-model="selectedMedia" maxlength="255" width="200" ng-blur="modalMedia.url=selectedMedia"/>
+            {{ selectedMedia }}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="cancel()">Close</button>
+            <button class="btn btn-primary" ng-click="ok()">Ok</button>
+        </div>
+    </div>
+</div>
+
