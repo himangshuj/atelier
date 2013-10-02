@@ -1,54 +1,74 @@
 /**
  * This file contains common directives to control the fragments
  */
+
+
+var sokratikFragmentContainerDirective = function () {
+    return {
+        restrict: "EA",
+        transclude: true,
+        replace: false,
+        template: "<span ng-transclude/> ",
+        scope: false,
+        controller: function ($scope) {
+            var mediaParams = {};
+            this.addVariable = function (variable, value) {
+                mediaParams[variable] = value;
+            };
+            $scope.ok = function () {
+                alert("Going ahead");
+                console.log(mediaParams);
+            };
+        }
+
+    };
+};
+
+
+/**
+ *
+ * @param $http
+ * @param $templateCache
+ * @param $anchorScroll
+ * @param $compile
+ * @returns {{restrict: string, require: string, template: string, scope: boolean, replace: boolean, transclude: boolean, link: Function}}
+ */
 var sokratikFragmentDirective = function ($http, $templateCache, $anchorScroll, $compile) {
     return {
         restrict: "EA",
-        require: "?ngModel",
+        require: '^sokratikFragmentContainer',
         template: '<span ng-transclude/>',
         scope: false,
         replace: true,
         transclude: true,
-        compile: function compile(tElement, tAttrs, transclude) {
-            return{
-                post: function (scope, element, attrs, ngModel) {
-                    $http.get("static/templates/" + attrs.fragment, {cache: $templateCache}).success(function (response) {
-                        element.html(response);
-                        read();
-                    });
-                    $compile(element.contents())(scope);
-                    if (attrs.type == "text") {
-                        new MediumEditor(element);
-                    }
-                    if (!ngModel) {
-                        return;
-                    } // do nothing if no ng-model
+        link: function (scope, element, attrs,  sokratikFragmentContainerCtrl) {
+            $http.get("static/templates/" + attrs.fragment, {cache: $templateCache}).success(function (response) {
+                element.html(response);
+                read();
+            });
+            $compile(element.contents())(scope);
+            if (attrs.type == "text") {
+                new MediumEditor(element);
+            }
 
-                    // Specify how UI should be updated
-                    ngModel.$render = function () {
-                        element.html(ngModel.$viewValue || '');
-                    };
+            // Listen for change events to enable binding
+            element.on('blur keyup change', function () {
+                scope.$apply(read);
+            });
+            read(); // initialize
 
-                    // Listen for change events to enable binding
-                    element.on('blur keyup change', function () {
-                        scope.$apply(read);
-                    });
-                    read(); // initialize
+            // Write data to the model
+            function read() {
+                var html = element.html();
+                sokratikFragmentContainerCtrl.addVariable(attrs.ngModel, html);
+            }
 
-                    // Write data to the model
-                    function read() {
-                        var html = element.html();
-                        ngModel.$setViewValue(html);
-                    }
-
-                }
-
-            };
         }
+
     };
 };
 
-var mediaMap = {"img": "Image", "video": "Video"};
+var mediaMap = {"img": "Image", "YT": "Youtube video"};
 
 /**
  * This function will be used to control modal used to replace image. For now it supports only links later it will take
@@ -58,11 +78,21 @@ var mediaMap = {"img": "Image", "video": "Video"};
  * @param selectedMedia the current media selected
  * @constructor
  */
-var ModalInstanceCtrl = function ($scope, $modalInstance, selectedMedia, mediaType) {
+var ModalInstanceCtrl = function ($scope, $modalInstance, selectedMedia, mediaType, $sce) {
 
     $scope.selectedMedia = selectedMedia;
 
     $scope.modalMedia = {"url": selectedMedia};
+
+    $scope.width = 640;
+
+    $scope.height = 390;
+
+    $scope.YT = mediaType == "YT";
+    if ($scope.YT) {
+        $scope.ytURL = $sce.trustAsResourceUrl("//www.youtube.com/embed/" + selectedMedia + "?enablejsapi=1");
+    }
+
 
     $scope.mediaType = mediaMap[mediaType];
     $scope.ok = function () {
@@ -72,78 +102,82 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, selectedMedia, mediaTy
     $scope.cancel = function () {
         $modalInstance.dismiss($scope.modalMedia.url);
     };
+    $scope.blur = function (selectedMedia) {
+        $scope.modalMedia.url = selectedMedia;
+        $scope.ytURL = $sce.trustAsResourceUrl("//www.youtube.com/embed/" + selectedMedia + "?enablejsapi=1");
+    };
 
 
 };
 
 
-var sokratikMediaDirective = function () {
+var sokratikMediaDirective = function ($log, $compile, $modal) {
+    var imageCompile = function (tAttrs, tElement) {
+        var media = mediaMap[tAttrs.type];
+        var variableName = tAttrs.model;
+        var imgPreFix = tAttrs.type == "YT" ? "//img.youtube.com/vi/" : "";
+        var imgPostFix = tAttrs.type == "YT" ? "/0.jpg" : "";
+        var html = "<img ng-src= \"" + imgPreFix + "{{" + variableName + "}}" + imgPostFix + "\" tooltip=\"Click to change" + media + "\"/>";
+        tElement.html(html);
+    };
+    /**
+     * this function reads the sokratik media directive and creates an editable youtube iframe
+     * @param tAttrs
+     * @param tElement
+     */
+    /*   var ytCompile = function (tAttrs, tElement) {
+     var variableName = tAttrs.model;
+     var html = "<iframe id='player' type='text/html' ng-src= \"{{" + variableName + "}}\" " +
+     "tooltip=\"Click to change media\" width=\"" + (tAttrs.width ? tAttrs.width : 640) +
+     "\" height=\"" + (tAttrs.height ? tAttrs.height : 390 ) + "\"/>";
+     tElement.html(html);
+     };*/
     return {
         restrict: "EA",
         template: '',
-        scope: false,
-        replace: true,
+        require: "^sokratikFragmentContainer",
+        scope: true,
         transclude: true,
-        controller: function ($scope, $element, $attrs, $compile, $log, $modal) {
-            console.log($element);
-            console.log($attrs);
-            var variableName = $attrs.model;
-
-            var currentSource = $attrs.ngSrc;
-            $scope[variableName] = currentSource;
-
-            $compile($element.contents())($scope);
-            $scope.open = function () {
-
-                var modalInstance = $modal.open({
-                    templateUrl: 'edit/media.tpl.html',
-                    controller: ModalInstanceCtrl,
-                    resolve: {
-                        selectedMedia: function () {
-                            return $scope[variableName];
-                        },
-                        mediaType: function () {
-                            return $attrs.type;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (selectedItem) {
-                    console.log(selectedItem);
-                    $scope[variableName] = selectedItem;
-                }, function () {
-                    $log.info('Modal dismissed at: ' + new Date());
-                });
-            };
-
-
-        },
         compile: function compile(tElement, tAttrs) {
+            imageCompile(tAttrs, tElement);
 
-            var media = tAttrs.type;
-            var variableName = tAttrs.model;
-            var html = "<" + media + " ng-src= \"{{" + variableName + "}}\" tooltip=\"Click to change media\"/>";
-            tElement.html(html);
+            return function (scope, element, attrs, sokratikFragmentContainerCtrl) {
+                var variableName = attrs.model;
 
+                var currentSource = attrs.ngSrc;
+                sokratikFragmentContainerCtrl.addVariable(variableName, currentSource);
+                scope[variableName] = currentSource;
+                $compile(element.contents())(scope);
+                scope.open = function () {
+
+                    var modalInstance = $modal.open({
+                        templateUrl: 'edit/media.tpl.html',
+                        controller: ModalInstanceCtrl,
+                        resolve: {
+                            selectedMedia: function () {
+                                return scope[variableName];
+                            },
+                            mediaType: function () {
+                                return attrs.type;
+                            }
+                        }
+                    });
+
+                    modalInstance.result.then(function (selectedItem) {
+                        sokratikFragmentContainerCtrl.addVariable(variableName, selectedItem);
+                        scope[variableName] = selectedItem;
+                    }, function () {
+                        $log.info('Modal dismissed at: ' + new Date());
+                    });
+                };
+
+
+            };
         }
-        /*
-         compile: f
-         return {
-         post: function (scope, element, attrs) {
-         var currentSource = attrs.ngSrc;
-         scope[variableName] = currentSource;
-         scope.open = function () {
-         modalInstanceFn($modal,currentSource,media,scope,variableName);
-         };
-         $compile(element.contents())(scope);
-         }
-
-         };
-         }
-         */
     };
 };
 
 angular.module("orodruin.edit.directives", ['ngCookies'])
+    .directive("sokratikFragmentContainer", sokratikFragmentContainerDirective)
     .directive("sokratikFragment", sokratikFragmentDirective)
     .directive("sokratikMedia", sokratikMediaDirective);
