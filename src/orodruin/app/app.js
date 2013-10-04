@@ -8,7 +8,8 @@ angular.module('sokratik.orodruin', [
         'titleService',
         'ui.bootstrap',
         'sokratik.orodruin.start',
-        'sokratik.orodruin.edit'
+        'sokratik.orodruin.edit',
+        'orodruin.services.istari'
     ])
 
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {

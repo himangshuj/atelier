@@ -3,12 +3,20 @@ angular.module('sokratik.orodruin.edit', [
         'titleService',
         'plusOne',
         'orodruin.edit.directives',
+        'orodruin.services.istari',
         'ngSanitize'
     ])
 
     .config(function config($stateProvider) {
         $stateProvider.state('edit', {
-            url: '/edit/:templateName',
+            url: '/edit/:templateName?templateId',
+            resolve: {
+                templateId: function ($stateParams,anduril) {
+                    var templateId = $stateParams.templateId ? $stateParams.templateId : "default";
+                    anduril.put(templateId,"templateName",$stateParams.templateName);
+                    return templateId;
+                }
+            },
             views: {
                 "main": {
                     templateUrl: "edit/edit.tpl.html",
@@ -17,7 +25,7 @@ angular.module('sokratik.orodruin.edit', [
             }
         })
             .state("edit.template", {
-                url: '/',
+                url: '',
                 views: {
                     "search": {
                         controller: 'SearchCtrl',
@@ -27,20 +35,26 @@ angular.module('sokratik.orodruin.edit', [
                     "template": {
                         templateUrl: function (stateParams) {
                             return "static/templates/" + stateParams.templateName + ".html";
-                        }
+                        },
+                        controller: 'TemplateCtrl'
                     }
                 }
             });
 
     })
-    .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, $compile, $rootElement) {
+    .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, anduril, templateId) {
         titleService.setTitle('Edit the knowledge');
-        $scope.image4 = "http://hacklibschool.files.wordpress.com/2011/07/personal-branding.png";
         $scope.templateName = $stateParams.templateName;
-        $state.go("edit.template", {templateName: $stateParams.templateName});
+        $scope.ok = function () {
+            anduril.post($stateParams.templateName);
+        };
+        $state.go("edit.template", {templateName: $stateParams.templateName, templateId: templateId});
     })
     .controller('SearchCtrl', function SearchController() {
-    });
+    })
+    .controller('TemplateCtrl', function TemplateController(anduril, $scope, templateId) {
+    })
+;
 
 
 
