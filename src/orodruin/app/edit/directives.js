@@ -4,7 +4,7 @@
 
 
 
-var sokratikFragmentDirective = function ($http, $compile, anduril, $stateParams, $sce) {
+var sokratikFragmentDirective = function ($http, $compile, anduril, $stateParams) {
     return {
         restrict: "EA",
         template: '<span ng-transclude></span>',
@@ -13,24 +13,23 @@ var sokratikFragmentDirective = function ($http, $compile, anduril, $stateParams
         transclude: true,
         compile: function (tElement, tAttr) {
             tElement.html("<span ng-bind-html = \"" + tAttr.model + "\"></span>");
-            var jsonValue = anduril.getVar($stateParams.templateId, tAttr.model, "Please <u>Edit</u> <i>me</i>... DEFAULT TEXT") ;
+            var jsonValue = anduril.getVar($stateParams.templateId, tAttr.model, "Please Edit <i>me</i>... DEFAULT TEXT");
             return  function (scope, element, attrs) {
-                $compile(element.contents())(scope);
                 if (attrs.type == "text") {
                     new MediumEditor(element);
                 }
                 scope[attrs.model] = jsonValue;
+                anduril.put($stateParams.templateId, attrs.model, jsonValue);
+                $compile(element.contents())(scope);
 
                 // Listen for change events to enable binding
                 element.on('blur keyup change', function () {
                     scope.$apply(read);
                 });
-                read(); // initialize
 
                 // Write data to the model
                 function read() {
-                    var html = element.html();
-
+                    var html = angular.element(element).children().html();
                     anduril.put($stateParams.templateId, attrs.model, html);
                 }
 
@@ -93,8 +92,8 @@ var sokratikMediaDirective = function ($log, $compile, $modal, anduril, $statePa
         var html = "<img ng-src= \"" + imgPreFix + "{{" + variableName + "}}" + imgPostFix + "\" tooltip=\"Click to change" + media + "\"/>";
         tElement.html(html);
     };
-    var defaultMedia = {"IMG":"//static.guim.co.uk/sys-images/Guardian/Pix/pictures/2012/9/12/1347450703368/Socrates-001.jpg",
-        "YT":"z9JCpMCQ5qM"} ;
+    var defaultMedia = {"IMG": "//static.guim.co.uk/sys-images/Guardian/Pix/pictures/2012/9/12/1347450703368/Socrates-001.jpg",
+        "YT": "z9JCpMCQ5qM"};
     return {
         restrict: "EA",
         template: '',
@@ -104,9 +103,8 @@ var sokratikMediaDirective = function ($log, $compile, $modal, anduril, $statePa
             imageCompile(tAttrs, tElement);
             var variableName = tAttrs.model;
             var currentSource = anduril.getVar($stateParams.templateId, variableName,
-                defaultMedia[angular.uppercase(tAttrs.type)]) ;
-
-
+                defaultMedia[angular.uppercase(tAttrs.type)]);
+            anduril.put($stateParams.templateId, variableName, currentSource);
             return function (scope, element, attrs) {
                 //noinspection JSUnresolvedVariable
                 scope[variableName] = currentSource;

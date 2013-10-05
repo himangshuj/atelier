@@ -11,10 +11,15 @@ angular.module('sokratik.orodruin.edit', [
         $stateProvider.state('edit', {
             url: '/edit/:templateName?templateId',
             resolve: {
-                templateId: function ($stateParams,anduril) {
+                templateId: function ($stateParams, anduril) {
                     var templateId = $stateParams.templateId ? $stateParams.templateId : "default";
-                    anduril.put(templateId,"templateName",$stateParams.templateName);
+                    anduril.put(templateId, "templateName", $stateParams.templateName);
                     return templateId;
+                },
+                templateVars: function($stateParams, anduril){
+                    var templateId = $stateParams.templateId ? $stateParams.templateId : "default";
+                    anduril.fetchVariablesForTemplateId(templateId);
+
                 }
             },
             views: {
@@ -46,7 +51,7 @@ angular.module('sokratik.orodruin.edit', [
         titleService.setTitle('Edit the knowledge');
         $scope.templateName = $stateParams.templateName;
         $scope.ok = function () {
-            anduril.post($stateParams.templateName);
+            $state.go('playback', {templateId: templateId});
         };
         $state.go("edit.template", {templateName: $stateParams.templateName, templateId: templateId});
     })

@@ -24,15 +24,18 @@ var andurilForger = function () {
         this.$get = ["$http", "$log", function ($http, $log) {
             return {
                 put: function (templateId, variableName, value) {
-                    var templateFragment = fetchVariablesForTemplateId(templateId, $http, $log);
+                    var templateFragment = fragments[templateId];   //TODO fix this in a cleaner way
                     templateFragment[variableName] = value;
                 },
                 post: function (templateId) {
                     console.log(fragments[templateId]);
                 },
                 getVar: function (templateId, variable, defaultValue) {
-                    var templateFragment = fetchVariablesForTemplateId(templateId, $http, $log);
+                    var templateFragment = fragments[templateId];   //TODO fix this in a cleaner way
                     return templateFragment[variable] ? templateFragment[variable] : defaultValue;
+                },
+                fetchVariablesForTemplateId: function(templateId){
+                    return fetchVariablesForTemplateId(templateId, $http, $log);
                 }
             };
         }

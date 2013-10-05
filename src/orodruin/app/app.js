@@ -9,7 +9,8 @@ angular.module('sokratik.orodruin', [
         'ui.bootstrap',
         'sokratik.orodruin.start',
         'sokratik.orodruin.edit',
-        'orodruin.services.istari'
+        'orodruin.services.istari',
+        'sokratik.orodruin.playback'
     ])
 
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {
