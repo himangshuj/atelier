@@ -2,25 +2,26 @@ angular.module('sokratik.orodruin.edit', [
         'ui.router',
         'titleService',
         'plusOne',
-        'orodruin.edit.directives',
+        'orodruin.directives.glamdring',
         'orodruin.services.istari',
         'ngSanitize'
     ])
 
     .config(function config($stateProvider) {
         $stateProvider.state('edit', {
-            url: '/edit/:templateName?templateId',
+            url: '/edit/:templateName/:templateId',
             resolve: {
-                templateId: function ($stateParams, anduril) {
+                templateId: function ($stateParams) {
                     var templateId = $stateParams.templateId ? $stateParams.templateId : "default";
-                    anduril.put(templateId, "templateName", $stateParams.templateName);
                     return templateId;
                 },
-                templateVars: function($stateParams, anduril){
+                templateVars: function ($stateParams, anduril) {
                     var templateId = $stateParams.templateId ? $stateParams.templateId : "default";
-                    anduril.fetchVariablesForTemplateId(templateId);
-
+                    return anduril.fetchVariablesForTemplateId(templateId);
                 }
+            },
+            data: {
+                mode: "edit"
             },
             views: {
                 "main": {
@@ -50,6 +51,7 @@ angular.module('sokratik.orodruin.edit', [
     .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, anduril, templateId) {
         titleService.setTitle('Edit the knowledge');
         $scope.templateName = $stateParams.templateName;
+        anduril.put(templateId, "templateName", $stateParams.templateName);
         $scope.ok = function () {
             $state.go('playback', {templateId: templateId});
         };

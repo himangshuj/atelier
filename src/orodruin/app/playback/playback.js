@@ -3,16 +3,18 @@ angular.module('sokratik.orodruin.playback', [
         'titleService',
         'plusOne',
         'orodruin.services.istari',
-        'ngSanitize'
-    ])
+        'ngSanitize'    ])
 
     .config(function config($stateProvider) {
         $stateProvider.state('playback', {
             url: '/playback/:templateId',
             resolve: {
                 templateName: function ($stateParams, anduril) {
-                        return anduril.fetchVariablesForTemplateId($stateParams.templateId);
+                    return anduril.fetchVariablesForTemplateId($stateParams.templateId);
                 }
+            },
+            data: {
+                mode: "play"
             },
             views: {
                 "main": {
@@ -22,7 +24,7 @@ angular.module('sokratik.orodruin.playback', [
             }
         })
             .state('playback.template', {
-                url: '?templateName',
+                url: '/:templateName',
                 views: {
                     "template": {
                         templateUrl: function (stateParams) {
@@ -33,9 +35,7 @@ angular.module('sokratik.orodruin.playback', [
             });
     })
     .controller('PlayCtrl', function PlayController($scope, titleService, anduril, $stateParams, $state) {
-        console.log("2");
         titleService.setTitle("Sokratik | " + anduril.getVar($stateParams.templateId, "title", "Lets Learn"));
         $state.go("playback.template", {templateName: anduril.getVar($stateParams.templateId, "templateName", "Lets Learn"),
             templateId: $stateParams.templateId});
-
     });
