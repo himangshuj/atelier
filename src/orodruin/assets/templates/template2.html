@@ -1,1 +1,32 @@
-<button class="btn" ng-click="open()">Open me!</button>
+<div class="slides">
+    <section class="present">
+        <h3>
+            <sokratik-fragment type="text" model="fragment1"></sokratik-fragment>
+        </h3>
+
+        <div>
+            <sokratik-fragment type="text" model="fragment2"></sokratik-fragment>
+        </div>
+        <div>
+            <sokratik-fragment type="text" model="fragment3"></sokratik-fragment>
+        </div>
+        <div style="width:100%;height:338px">
+            <div style="float:left;display:inline-block">
+                <sokratik-media type="img" model="imageLeft" ng-click="open()" style="height:338px;width:178px">
+                    https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png
+                </sokratik-media>
+            </div>
+            <div style="float:right;display:inline-block">
+                <sokratik-media type="img" model="imageRight" ng-click="open()" style="height:338px;width:178px">
+                    https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png
+                </sokratik-media>
+            </div>
+        </div>
+        <div>
+            <sokratik-fragment type="text" model="fragment4"></sokratik-fragment>
+        </div>
+        <div>
+            <sokratik-fragment type="text" model="fragment5"></sokratik-fragment>
+        </div>
+    </section>
+</div>

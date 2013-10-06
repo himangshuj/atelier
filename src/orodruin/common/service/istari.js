@@ -7,35 +7,35 @@ angular.module("orodruin.services.istari", [], function ($provide) {
 
 var andurilForger = function () {
         var fragments = {};
-        var fetchVariablesForTemplateId = function (templateId, $http, $log) {
-            if (fragments[templateId] == null) {
-                return     $http.get("static/templates/data/" + templateId + ".json", {cache: true})
+        var fetchVariablesForPresentationId = function (presentationId, $http, $log) {
+            if (fragments[presentationId] == null) {
+                return     $http.get("static/presentations/data/" + presentationId + ".json", {cache: true})
                     .success(function (data, status, headers, config) {
-                        return fragments[templateId] = data;
+                        return fragments[presentationId] = data;
                     })
                     .error(function (data, status, headers, config) {
                         $log.info("call failed getting default data");
-                        return fragments[templateId] = {};
+                        return fragments[presentationId] = {};
                     });
             } else {
-                return fragments[templateId];
+                return fragments[presentationId];
             }
         };
         this.$get = ["$http", "$log", function ($http, $log) {
             return {
-                put: function (templateId, variableName, value) {
-                    var templateFragment = fragments[templateId];   //TODO fix this in a cleaner way
-                    templateFragment[variableName] = value;
+                put: function (presentationId, page, variableName, value) {
+                    var templateFragment = fragments[presentationId];   //TODO fix this in a cleaner way
+                    templateFragment[page][variableName] = value;
                 },
-                post: function (templateId) {
-                    console.log(fragments[templateId]);
+                post: function (presentationId) {
+//                    console.log(fragments[presentationId]);
                 },
-                getVar: function (templateId, variable, defaultValue) {
-                    var templateFragment = fragments[templateId];   //TODO fix this in a cleaner way
-                    return templateFragment[variable] ? templateFragment[variable] : defaultValue;
+                getVar: function (presentationId, page, variable, defaultValue) {
+                    var templateFragment = fragments[presentationId];   //TODO fix this in a cleaner way
+                    return templateFragment[page][variable] ? templateFragment[page][variable] : defaultValue;
                 },
-                fetchVariablesForTemplateId: function(templateId){
-                    return fetchVariablesForTemplateId(templateId, $http, $log);
+                fetchVariablesForPresentationId: function(presentationId){
+                    return fetchVariablesForPresentationId(presentationId, $http, $log);
                 }
             };
         }

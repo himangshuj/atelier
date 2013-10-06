@@ -27,6 +27,7 @@
             "vendor/angular-cookies/angular-cookies.min.js",
             "vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
             "vendor/reveal.js/js/reveal.min.js",
+            "vendor/reveal.js/lib/js/head.min.js",
             "vendor/angular-ui-router/release/angular-ui-router.js",
             "vendor/angular-ui-utils/modules/route/route.js",
             "vendor/angular-ui-utils/modules/validate/validate.js",
@@ -35,8 +36,10 @@
         ],
         "css": [
             "vendor/medium-editor/dist/css/medium.editor.css",
-            "vendor/bootstrap/dist/css/bootstrap.min.css"
-
+            "vendor/bootstrap/dist/css/bootstrap.min.css",
+            "vendor/reveal.js/css/reveal.min.css",
+            "vendor/reveal.js/css/theme/default.css",
+            "vendor/reveal.js/css/theme/sky.css"
         ]
 
     }

@@ -19,7 +19,7 @@ var sokratikFragmentDirective = function ($http, $compile, anduril, $stateParams
             // Write data to the model
             function read() {
                 var html = angular.element(element).children().html();
-                anduril.put($stateParams.templateId, attrs.model, html);
+                anduril.put($stateParams.presentationId, $stateParams.page , attrs.model, html);
             }
 
         };
@@ -38,10 +38,10 @@ var sokratikFragmentDirective = function ($http, $compile, anduril, $stateParams
             }
         },
         controller: function ($scope, $compile, anduril, $element, $attrs) {
-            var jsonValue = anduril.getVar($stateParams.templateId, $attrs.model, "Please Edit <i>me</i>... DEFAULT TEXT");
+            var jsonValue = anduril.getVar($stateParams.presentationId, $stateParams.page , $attrs.model, "Please Edit <i>me</i>... DEFAULT TEXT");
             $scope[$attrs.model] = jsonValue;
             $compile($element.contents())($scope);
-            anduril.put($stateParams.templateId, $attrs.model, jsonValue);
+            anduril.put($stateParams.presentationId, $stateParams.page , $attrs.model, jsonValue);
 
         }
 
@@ -113,7 +113,7 @@ var sokratikMediaDirective = function ($log, $compile, $modal, anduril, $statePa
         var editMedia = function (scope, element, attrs) {
             var currentSource = extractSource(attrs);
             scope[attrs.model] = currentSource;
-            anduril.put($stateParams.templateId, attrs.model, currentSource);
+            anduril.put($stateParams.presentationId, $stateParams.page , attrs.model, currentSource);
 
             scope.open = function () {
 
@@ -131,7 +131,7 @@ var sokratikMediaDirective = function ($log, $compile, $modal, anduril, $statePa
                 });
 
                 modalInstance.result.then(function (selectedItem) {
-                    anduril.put($stateParams.templateId, attrs.model, selectedItem);
+                    anduril.put($stateParams.presentationId, $stateParams.page , attrs.model, selectedItem);
                     scope[attrs.model] = selectedItem;
                 }, function () {
                     $log.info('Modal dismissed at: ' + new Date());
@@ -142,7 +142,7 @@ var sokratikMediaDirective = function ($log, $compile, $modal, anduril, $statePa
         };
         var extractSource = function (attrs) {
             var variableName = attrs.model;
-            var currentSource = anduril.getVar($stateParams.templateId, variableName, defaultMedia[angular.uppercase(attrs.type)]);
+            var currentSource = anduril.getVar($stateParams.presentationId, $stateParams.page , variableName, defaultMedia[angular.uppercase(attrs.type)]);
             return currentSource;
         };
         var playMedia = function (scope, element, attrs) {

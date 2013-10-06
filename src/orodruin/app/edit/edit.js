@@ -9,15 +9,18 @@ angular.module('sokratik.orodruin.edit', [
 
     .config(function config($stateProvider) {
         $stateProvider.state('edit', {
-            url: '/edit/:templateName/:templateId',
+            url: '/edit/:templateName/:presentationId/:page',
             resolve: {
-                templateId: function ($stateParams) {
-                    var templateId = $stateParams.templateId ? $stateParams.templateId : "default";
-                    return templateId;
+                presentationId: function ($stateParams) {
+                    var presentationId = $stateParams.presentationId ? $stateParams.presentationId : "defaultPresentation";
+                    return presentationId;
                 },
-                templateVars: function ($stateParams, anduril) {
-                    var templateId = $stateParams.templateId ? $stateParams.templateId : "default";
-                    return anduril.fetchVariablesForTemplateId(templateId);
+                page: function ($stateParams) {
+                    var page = $stateParams.page ? $stateParams.page : "0";
+                    return page;
+                },
+                templateVars: function($stateParams, anduril, presentationId){
+                    return anduril.fetchVariablesForPresentationId(presentationId);
                 }
             },
             data: {
@@ -33,11 +36,6 @@ angular.module('sokratik.orodruin.edit', [
             .state("edit.template", {
                 url: '',
                 views: {
-                    "search": {
-                        controller: 'SearchCtrl',
-                        templateUrl: "edit/search.tpl.html"
-
-                    },
                     "template": {
                         templateUrl: function (stateParams) {
                             return "static/templates/" + stateParams.templateName + ".html";
@@ -48,18 +46,18 @@ angular.module('sokratik.orodruin.edit', [
             });
 
     })
-    .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, anduril, templateId) {
+    .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, anduril, presentationId, page) {
         titleService.setTitle('Edit the knowledge');
         $scope.templateName = $stateParams.templateName;
-        anduril.put(templateId, "templateName", $stateParams.templateName);
+        anduril.put(presentationId, page, "templateName", $stateParams.templateName);
         $scope.ok = function () {
-            $state.go('playback', {templateId: templateId});
+            $state.go('playback', {presentationId: presentationId});
         };
-        $state.go("edit.template", {templateName: $stateParams.templateName, templateId: templateId});
+        $state.go("edit.template", {templateName: $stateParams.templateName});
     })
     .controller('SearchCtrl', function SearchController() {
     })
-    .controller('TemplateCtrl', function TemplateController(anduril, $scope, templateId) {
+    .controller('TemplateCtrl', function TemplateController(anduril, $scope) {
     })
 ;
 
