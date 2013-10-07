@@ -1,16 +1,34 @@
-Template gallery implementation pending
-
-<carousel interval="myInterval">
-    <slide ng-repeat="slide in slides" active="slide.active">
-        <img ng-src="{{slide.image}}" style="margin:auto;">
-
-        <div class="carousel-caption">
-           <h4>Slide {{$index}}</h4>
-
-            <a ui-sref="edit.template({ templateName: slide.text ,templateId: 'abcdefg' })">
-                go go go
-                <p>{{slide.text}}</p>
-            </a>
+<div class="reveal">
+<div class="slides">
+    <section class="present">
+        <br/>
+        <br/>
+        <h1>
+            Sokratik
+        </h1>
+        <p>
+            Click on the right arrow to create a new slide
+        </p>
+        <br/>
+        <p>
+            Use the up/down arrows to cycle between templates
+        </p>
+        <br/>
+        <p>
+            Happy teaching!
+        </p>
+    </section>
+    <aside class="controls" style="display: block;right:40%;bottom:inherit">
+        <a ui-sref="edit({templateName: 'template3', presentationId: 'abcdefg', page: '0'})">
+            <div class="navigate-right enabled">
+            </div>
+        </a>
+        <div class="navigate-left disabled">
         </div>
-    </slide>
-</carousel>
+        <div class="navigate-up">
+        </div>
+        <div class="navigate-down">
+        </div>
+    </aside>
+</div>
+</div>

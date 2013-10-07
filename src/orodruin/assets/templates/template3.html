@@ -1,48 +1,58 @@
 <div class="slides">
     <section class="present">
         <h3>
-            <sokratik-fragment type="text" model="fragment1"></sokratik-fragment>
+            <sokratik-fragment type="text" model="textOnlyTitle"></sokratik-fragment>
         </h3>
         <div class="blackBoard">
             <div>
-                <sokratik-fragment type="text" model="fragment2"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine1"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment3"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine2"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment4"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine3"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment5"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine4"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment6"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine5"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment7"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine6"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment8"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine7"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment9"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine8"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment10"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine9"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment11"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine10"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment12"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine11"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment13"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine12"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment14"></sokratik-fragment>
+                <sokratik-fragment type="text" model="textOnlyLine13"></sokratik-fragment>
             </div>
         </div>
     </section>
+    <aside class="controls" style="display: block;right:40%;bottom:inherit">
+        <div class="navigate-left" ui-sref="edit({templateName: 'template3', presentationId: '{{presentationId}}', page: '{{page-1}}'})">
+        </div>
+        <div class="navigate-right enabled" ui-sref="edit({templateName: 'template3', presentationId: '{{presentationId}}', page: '{{page+1}}'})">
+        </div>
+        <div class="navigate-up">
+        </div>
+        <div class="navigate-down enabled" ui-sref="edit({templateName: 'template2', presentationId: '{{presentationId}}', page: '{{page}}'})">
+        </div>
+    </aside>
 </div>

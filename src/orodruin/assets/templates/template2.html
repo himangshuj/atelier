@@ -1,23 +1,23 @@
 <div class="slides">
     <section class="present">
         <h3>
-            <sokratik-fragment type="text" model="fragment1"></sokratik-fragment>
+            <sokratik-fragment type="text" model="imageTextTitle"></sokratik-fragment>
         </h3>
         <div class="blackBoard">
             <div>
-                <sokratik-fragment type="text" model="fragment2"></sokratik-fragment>
+                <sokratik-fragment type="text" model="imageTextLine1"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment3"></sokratik-fragment>
+                <sokratik-fragment type="text" model="imageTextLine2"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment4"></sokratik-fragment>
+                <sokratik-fragment type="text" model="imageTextLine3"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment5"></sokratik-fragment>
+                <sokratik-fragment type="text" model="imageTextLine4"></sokratik-fragment>
             </div>
             <div>
-                <sokratik-fragment type="text" model="fragment5"></sokratik-fragment>
+                <sokratik-fragment type="text" model="imageTextLine5"></sokratik-fragment>
             </div>
         </div>
         <div class="mediaHolder">
@@ -27,4 +27,14 @@
             </div>
         </div>
     </section>
+    <aside class="controls" style="display: block;right:40%;bottom:inherit">
+        <div class="navigate-left" ui-sref="edit({templateName: 'template3', presentationId: '{{presentationId}}', page: '{{page-1}}'})">
+        </div>
+        <div class="navigate-right enabled" ui-sref="edit({templateName: 'template3', presentationId: '{{presentationId}}', page: '{{page+1}}'})">
+        </div>
+        <div class="navigate-up enabled" ui-sref="edit({templateName: 'template3', presentationId: '{{presentationId}}', page: '{{page}}'})">
+        </div>
+        <div class="navigate-down enabled" ui-sref="edit({templateName: 'template1', presentationId: '{{presentationId}}', page: '{{page}}'})">
+        </div>
+    </aside>
 </div>

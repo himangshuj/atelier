@@ -16,7 +16,7 @@ angular.module('sokratik.orodruin.edit', [
                     return presentationId;
                 },
                 page: function ($stateParams) {
-                    var page = $stateParams.page ? $stateParams.page : "0";
+                    var page = $stateParams.page ? $stateParams.page : '0';
                     return page;
                 },
                 templateVars: function($stateParams, anduril, presentationId){
@@ -41,6 +41,10 @@ angular.module('sokratik.orodruin.edit', [
                             return "static/templates/" + stateParams.templateName + ".html";
                         },
                         controller: 'TemplateCtrl'
+                    },
+                    "control": {
+                        templateUrl: "edit/controller.tpl.html",
+                        controller: 'FlowCtrl'
                     }
                 }
             });
@@ -50,14 +54,20 @@ angular.module('sokratik.orodruin.edit', [
         titleService.setTitle('Edit the knowledge');
         $scope.templateName = $stateParams.templateName;
         anduril.put(presentationId, page, "templateName", $stateParams.templateName);
-        $scope.ok = function () {
-            $state.go('playback', {presentationId: presentationId});
-        };
+
         $state.go("edit.template", {templateName: $stateParams.templateName});
+    })
+    .controller('FlowCtrl', function FlowController($scope) {
+        console.log("here");
+        $scope.ok = function () {
+            alert("hohoho");
+        };
     })
     .controller('SearchCtrl', function SearchController() {
     })
-    .controller('TemplateCtrl', function TemplateController(anduril, $scope) {
+    .controller('TemplateCtrl', function TemplateController(anduril, $scope, $stateParams) {
+        $scope.page=Math.floor($stateParams.page);
+        $scope.presentationId=$stateParams.presentationId;
     })
 ;
 
