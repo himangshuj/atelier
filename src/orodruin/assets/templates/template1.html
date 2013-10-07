@@ -1,25 +1,44 @@
-<span>
-
-        <sokratik-fragment type="text" model="fragment1"/>
-    </span>
-<br/>
-<br/>
-
-<span>
-        <sokratik-fragment type="text" model="fragment2"/>
-    </span>
-
-
-<br/>
-
-<span>
-        <sokratik-fragment type="text" model="fragment3"/>
-    </span>
-<sokratik-media type="img" model="image"
-                ng-click="open()">
-</sokratik-media>
-<div>
-    <sokratik-media type="YT" model="video" ng-click="open()">
-    </sokratik-media>
+<div class="slides">
+    <section class="present">
+        <h3>
+            <sokratik-fragment type="text" model="fragment1"></sokratik-fragment>
+        </h3>
+        <div class="blackBoard">
+            <div>
+                <sokratik-fragment type="text" model="fragment2"></sokratik-fragment>
+            </div>
+            <div>
+                <sokratik-fragment type="text" model="fragment3"></sokratik-fragment>
+            </div>
+            <div>
+                <sokratik-fragment type="text" model="fragment4"></sokratik-fragment>
+            </div>
+            <div>
+                <sokratik-fragment type="text" model="fragment5"></sokratik-fragment>
+            </div>
+            <div>
+                <sokratik-fragment type="text" model="fragment5"></sokratik-fragment>
+            </div>
+        </div>
+        <div class="mediaHolder">
+            <div>
+                    <sokratik-media type="YT" model="video" ng-click="open()">
+                    </sokratik-media>
+            </div>
+        </div>
+    </section>
+<!--Ad hoc, will change-->
+    <aside class="controls" style="display: block;right:40%;bottom:inherit">
+        <div class="navigate-left disabled">
+        </div>
+        <a ui-sref="/edit/template2/abcdefg/2">
+            <div class="navigate-right enabled">
+            </div>
+        </a>
+        <div class="navigate-up">
+        </div>
+        <div class="navigate-down">
+        </div>
+    </aside>
 </div>
 

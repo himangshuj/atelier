@@ -4,7 +4,7 @@
     "app_name": "orodruin",
     "app_files": {
         "js": [ "src/common/**/*.js", "src/orodruin/**/**/**/*.js",
-            "!src/**/**/*.spec.js" ,"!src/orodruin/**/**/*.spec.js"],
+            "!src/**/**/*.spec.js" ,"!src/orodruin/**/**/*.spec.js", "!src/orodruin/common/recordPlayHack/js/*.js", "!src/orodruin/common/recordPlayHack/Recorderjs/*.js"],
         "jsunit": [ "src/common/**/*.spec.js","src/orodruin/**/**/*.spec.js" ],
 
         "coffee": [ "src/common/**/*.coffee","src/orodruin/**/**/*.coffee",
