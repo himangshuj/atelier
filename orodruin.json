@@ -26,20 +26,16 @@
             "vendor/angular-sanitize/angular-sanitize.min.js",
             "vendor/angular-cookies/angular-cookies.min.js",
             "vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
-            "vendor/reveal.js/js/reveal.min.js",
-            "vendor/reveal.js/lib/js/head.min.js",
             "vendor/angular-ui-router/release/angular-ui-router.js",
             "vendor/angular-ui-utils/modules/route/route.js",
             "vendor/angular-ui-utils/modules/validate/validate.js",
             "vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js",
-            "vendor/medium-editor/dist/js/medium.editor.min.js"
+            "vendor/medium-editor/dist/js/medium.editor.min.js",
+            "vendor/underscore/underscore-min.js"
         ],
         "css": [
             "vendor/medium-editor/dist/css/medium.editor.css",
-            "vendor/bootstrap/dist/css/bootstrap.min.css",
-            "vendor/reveal.js/css/reveal.min.css",
-            "vendor/reveal.js/css/theme/default.css",
-            "vendor/reveal.js/css/theme/sky.css"
+            "vendor/bootstrap/dist/css/bootstrap.min.css"
         ]
 
     }

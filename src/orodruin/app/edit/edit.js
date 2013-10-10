@@ -52,22 +52,19 @@ angular.module('sokratik.orodruin.edit', [
     })
     .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, anduril, presentationId, page) {
         titleService.setTitle('Edit the knowledge');
-        $scope.templateName = $stateParams.templateName;
         anduril.put(presentationId, page, "templateName", $stateParams.templateName);
-
-        $state.go("edit.template", {templateName: $stateParams.templateName});
+        $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
     })
-    .controller('FlowCtrl', function FlowController($scope) {
-        console.log("here");
+    .controller('FlowCtrl', function FlowController($scope,$state){
         $scope.ok = function () {
-            alert("hohoho");
+            $state.go("playback");
         };
     })
     .controller('SearchCtrl', function SearchController() {
     })
     .controller('TemplateCtrl', function TemplateController(anduril, $scope, $stateParams) {
-        $scope.page=Math.floor($stateParams.page);
-        $scope.presentationId=$stateParams.presentationId;
+        $scope.page = Math.floor($stateParams.page);
+        $scope.presentationId = $stateParams.presentationId;
     })
 ;
 

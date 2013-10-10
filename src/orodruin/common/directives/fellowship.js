@@ -178,9 +178,27 @@ var sokratikMediaDirective = function ($log, $compile, $modal, anduril, $statePa
                 $compile($element.contents())($scope);
             }
         };
-    }
-    ;
+    };
+
+var sokratikDialogueContainerDirective = function () {
+    return {
+        restrict: "E",
+        template: '<div ng-class=\"presentation.css\"></div><div ng-include=\"templateName\"/>',
+        scope: {
+            presentation: "="
+        },
+
+        controller: function ($scope,$compile,$element) {
+            $scope.templateName="static/templates/"+$scope.presentation.templateName+".html";
+            $compile($element.contents())($scope);
+        }
+
+
+    };
+
+};
 
 angular.module("orodruin.directives.glamdring", ['ngCookies', 'orodruin.services.istari'])
     .directive("sokratikFragment", sokratikFragmentDirective)
+    .directive("sokratikDialogue", sokratikDialogueContainerDirective)
     .directive("sokratikMedia", sokratikMediaDirective);
