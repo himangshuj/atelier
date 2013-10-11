@@ -1,0 +1,55 @@
+[
+    {
+        "fn": "showAllDialogues",
+        "delay": 0,
+        "args": []
+    },
+    {
+        "fn": "zoom",
+        "delay": 5000,
+        "args": [
+            {
+                "page": 0
+            }
+        ]
+    },
+    {
+        "fn": "nextFragment",
+        "delay": 5000,
+        "args": []
+    },
+    {
+        "fn": "nextFragment",
+        "delay": 5000,
+        "args": []
+    },
+    {
+        "fn": "nextFragment",
+        "delay": 5000,
+        "args": []
+    },
+    {
+        "fn": "zoom",
+        "delay": 5000,
+        "args": [
+            {
+                "page": 1
+            }
+        ]
+    },
+    {
+        "fn": "nextFragment",
+        "delay": 5000,
+        "args": []
+    },
+    {
+        "fn": "nextFragment",
+        "delay": 5000,
+        "args": []
+    },
+    {
+        "fn": "nextFragment",
+        "delay": 5000,
+        "args": []
+    }
+]

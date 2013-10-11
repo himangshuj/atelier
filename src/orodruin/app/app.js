@@ -7,9 +7,11 @@ angular.module('sokratik.orodruin', [
         'ngCookies',
         'titleService',
         'ui.bootstrap',
+        'orodruin.directives.minerva',
         'sokratik.orodruin.start',
         'sokratik.orodruin.edit',
-        'sokratik.orodruin.playback'
+        'sokratik.orodruin.record',
+        'sokratik.orodruin.player'
     ])
 
     .config(function myAppConfig($stateProvider, $urlRouterProvider) {

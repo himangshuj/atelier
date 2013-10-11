@@ -4,10 +4,7 @@ this is the place holder for all the templates which are being played
 
 <div ng-repeat="presentation in presentations">
     <div>
-        <sokratik-dialogue presentation="presentation"/>
-    </div>
-    <div>
-        <button class="btn btn-primary" ng-click="changeClass($index)">Next</button>
+        <sokratik-dialogue presentation="presentation" presentations="presentations"/>
     </div>
 </div>
 <div ui-view="control"></div>

@@ -13,7 +13,7 @@
 
         "base":"src/orodruin/app",
         "atpl": [ "src/orodruin/app/**/*.tpl.html" ],
-        "ctpl": [ "src/common/**/*.tpl.html" ],
+        "ctpl": [ "src/common/**/*.tpl.html","src/orodruin/common/**/*.tpl.html" ],
 
         "html": "src/orodruin/index.html" ,
         "less": "src/orodruin/less/main.less",
