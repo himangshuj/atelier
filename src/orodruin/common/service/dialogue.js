@@ -17,10 +17,13 @@
          * @return {Array} the modified presentation
          */
         var _changeSingleDialogue = function (presentationDialogues, title, classToAdd, classToRemove) {
-            console.log(title);
+            console.log("Title is" + title);
+            console.log(presentationDialogues);
             return _.map(presentationDialogues, function (presentationDialog) {
                 presentationDialog.css = _.without(presentationDialog.css, classToAdd, classToRemove);
+                console.log(presentationDialog.title) ;
                 if (presentationDialog.title == title) {
+                    console.log("here");
                     presentationDialog.css = _.union(presentationDialog.css, [classToAdd]);
                 }
 
@@ -61,16 +64,16 @@
             return {
                 zoom: function (context) {
                     console.log("zoom");
-                    return _changeSingleDialogue(context.Dialogues, context.title, "zoom-in", "ng-grid");
+                    return _changeSingleDialogue(context.dialogues, context.title, "zoom-in", "zoom-out");
                 },
                 showAllDialogues: function (context) {
-                    console.log("showAllDialogues");
-
-                    return _changeAllDialogues(context.Dialogues, "zoom-out", "zoom-in");
+                    console.log("context.dialogues");
+                    return _changeAllDialogues(context.dialogues, "zoom-out", "zoom-in");
                 },
                 nextFragment: function (context) {
                     console.log("nextFragment");
-
+                    console.log(context);
+                    console.log(context.index);
                     return _changeFragmentClass(context.fragments[context.index], "visible", "");
                 },
                 prevFragment: function (context) {

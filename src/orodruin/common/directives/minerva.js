@@ -98,17 +98,17 @@
 
                 $scope.next = function () {
                     if (index < _.size(dialogueFragments)) {
-                        dialogue.nextFragment({fragments: dialogueFragments,index: (index ++)});
+                        dialogue.nextFragment({fragments: dialogueFragments, index: (index++)});
                     }
                     else {
                         dialogue.resetFragments(dialogueFragments);
-                        dialogue.showAllDialogues($scope.presentations);
+                        dialogue.showAllDialogues({"dialogues": $scope.presentations});
                     }
 
                 };
                 $scope.prev = function () {
                     if (index < 0) {
-                        dialogue.prevFragment({fragments: dialogueFragments,index: (index --)});
+                        dialogue.prevFragment({fragments: dialogueFragments, index: (index--)});
                     }
                     else {
                         dialogue.showAllDialogues({dialogues: $scope.presentations});

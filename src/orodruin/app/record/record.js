@@ -39,6 +39,6 @@
                 return obj;
             });
             $scope.presentations = presentations;
-            dialogue.showAllDialogues(presentations);
+            dialogue.showAllDialogues({"dialogues": presentations});
         });
 })(angular, "sokratik.orodruin.record");
