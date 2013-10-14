@@ -16,7 +16,7 @@
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
         scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
-        scope.model.class = ["fragment"];
+        scope.model.css = ["fragment"];
         sokratikDialogueCtrl.addFragment(scope.model);
 
     };

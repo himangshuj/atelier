@@ -17,13 +17,10 @@
          * @return {Array} the modified presentation
          */
         var _changeSingleDialogue = function (presentationDialogues, title, classToAdd, classToRemove) {
-            console.log("Title is" + title);
-            console.log(presentationDialogues);
             return _.map(presentationDialogues, function (presentationDialog) {
                 presentationDialog.css = _.without(presentationDialog.css, classToAdd, classToRemove);
                 console.log(presentationDialog.title) ;
                 if (presentationDialog.title == title) {
-                    console.log("here");
                     presentationDialog.css = _.union(presentationDialog.css, [classToAdd]);
                 }
 
@@ -54,10 +51,11 @@
          * @private
          */
         var _changeFragmentClass = function (fragment, classToAdd, classToRemove) {
-            return _.chain(fragment.css)
+            fragment.css = _.chain(fragment.css)
                 .without(classToRemove)
                 .union(classToAdd)
                 .value();
+            return fragment;
         };
 
         this.$get = function () {
@@ -72,7 +70,7 @@
                 },
                 nextFragment: function (context) {
                     console.log("nextFragment");
-                    console.log(context);
+                    console.log(context.fragments[context.index]);
                     console.log(context.index);
                     return _changeFragmentClass(context.fragments[context.index], "visible", "");
                 },
