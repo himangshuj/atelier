@@ -44,7 +44,7 @@
             var scriptInstructions =
                 _.chain(anduril.fetchScriptInstructions($stateParams.scriptId))
                     .map(function (tuple) {
-                        return  _extractFunctionName(tuple.fn, tuple.delay, tuple.args, $scope, $q);
+                        return  _extractFunctionName(tuple.fnName, tuple.delay, tuple.args, $scope, $q);
                     }).value();
              var deferred = scriptInstructions[0]();
             var reducedForm = _.reduce(_.toArray(scriptInstructions).slice(1),function (promiseTillNow, nextPromise) {

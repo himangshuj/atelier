@@ -68,67 +68,114 @@
         };
 
     }];
-    var _sokratikDialogueContainerDirective = ["$state", "dialogue", function ($state, dialogue) {
-        return {
-            restrict: "E",
-            templateUrl: $state.current.data.mode + "/dialogue.tpl.html",
-            scope: {
-                presentation: "=",
-                presentations: "="
-            },
+    var _sokratikDialogueContainerDirective = ["$state", "dialogue", "$q", "anduril",
+        function ($state, dialogue, $q, anduril) {
+            return {
+                restrict: "E",
+                templateUrl: $state.current.data.mode + "/dialogue.tpl.html",
+                scope: {
+                    presentation: "=",
+                    presentations: "=",
+                    index: "@",
+                    scriptId: "@"
+                },
 
-            controller: function ($scope) {
-                $scope.templateName = "static/presentations/templates/" + $scope.presentation.templateName + ".html";
-                $scope.currentFragmentIndex = 0;
-                var dialogueFragments = [];
-                var index = 0;
-                this.addFragment = function (dialogueFragment) {
-                    dialogueFragments = _.chain(dialogueFragments)
-                        .union(dialogueFragment)
-                        .flatten()
-                        .value();
-                };
-                this.getProperty = function (propertyKey, defaultValue) {
-                    return $scope.presentation[propertyKey] || defaultValue;
-                };
+                controller: function ($scope) {
+                    $scope.templateName = "static/presentations/templates/" + $scope.presentation.templateName + ".html";
+                    $scope.currentFragmentIndex = 0;
+                    var dialogueFragments = [];
+                    this.addFragment = function (dialogueFragment) {
+                        dialogueFragments = _.chain(dialogueFragments)
+                            .union(dialogueFragment)
+                            .flatten()
+                            .value();
+                    };
+                    this.getProperty = function (propertyKey, defaultValue) {
+                        return $scope.presentation[propertyKey] || defaultValue;
+                    };
 
-                this.setProperty = function (propertyKey, value) {
-                    $scope.presentation[propertyKey] = value;
-                };
+                    this.setProperty = function (propertyKey, value) {
+                        $scope.presentation[propertyKey] = value;
+                    };
+                    this.getFragments = function () {
+                        return _.clone(dialogueFragments);//returns a shallow copy
+                    };
+                },
+                controllerAs: "dialogueCtrl",
+                link: function (scope) {
+                    var index = 0;
+                    //noinspection JSUnresolvedVariable
+                    var dialogueCtrl = scope.dialogueCtrl;
+                    var fnMap = {};
+                    scope.$watch(index, function () {
+                        var dialogueFragments = dialogueCtrl.getFragments();
+                        if (index > _.size(dialogueCtrl.getFragments())) {
+                            dialogue.resetFragments(dialogueFragments, $q.defer()).then(
+                                function (obj) {
+                                    anduril.recordAction(scope.scriptId, obj);
+                                    console.log(obj);
+                                    $q.when(dialogue.showAllDialogues({"dialogues": scope.presentations}, $q.defer())).
+                                        then(function (resp) {
+                                            anduril.recordAction(scope.scriptId, resp);
+                                        });
 
-                $scope.next = function () {
-                    if (index < _.size(dialogueFragments)) {
-                        dialogue.nextFragment({fragments: dialogueFragments, index: (index++)});
-                    }
-                    else {
-                        dialogue.resetFragments(dialogueFragments);
-                        dialogue.showAllDialogues({"dialogues": $scope.presentations});
-                    }
+                                });
+                        }
+                    });
+                    fnMap.next = function () {
+                        var dialogueFragments = dialogueCtrl.getFragments();
+                        if (index < _.size(dialogueFragments)) {
+                            return    dialogue.nextFragment({fragments: dialogueFragments, index: (index++)}, $q.defer());
+                        }
+                        else {
+                            return dialogue.resetFragments(dialogueFragments, $q.defer()).then(
+                                function (obj) {
+                                    dialogue.showAllDialogues({"dialogues": scope.presentations}, $q.defer());
+                                    return obj;
+                                }
+                            );
+                        }
 
-                };
-                $scope.prev = function () {
-                    if (index < 0) {
-                        dialogue.prevFragment({fragments: dialogueFragments, index: (index--)});
-                    }
-                    else {
-                        dialogue.showAllDialogues({dialogues: $scope.presentations});
-                    }
+                    };
+                    fnMap.previous = function () {
 
-                };
+                        var dialogueFragments = dialogueCtrl.getFragments();
+                        if (index > 0 && index < _.size(dialogueFragments)) {
+                            return dialogue.prevFragment({fragments: dialogueFragments, index: (index--)}, $q.defer());
+                        }
+                        else {
+                            return dialogue.showAllDialogues({dialogues: scope.presentations}, $q.defer());
+                        }
 
-                $scope.zoom_in = function () {
-                    dialogue.zoom({dialogues: $scope.presentations, title: $scope.presentation.title});
-                };
+                    };
 
-                $scope.zoom_out = function () {
-                    dialogue.showAllDialogues({dialogues: $scope.presentations});
-                };
-            }
+                    fnMap.zoom_in = function () {
+                        return  dialogue.zoom({dialogues: scope.presentations, page: scope.index}, $q.defer());
+                    };
+
+                    fnMap.zoom_out = function () {
+                        return dialogue.showAllDialogues({dialogues: scope.presentations}, $q.defer());
+                    };
+                    var _recorderFn = function (prevValue) {
+                        $q.when(prevValue).then(
+                            function (resp) {
+                                anduril.recordAction(scope.scriptId, resp);
+                            }
+                        );
+
+                    };
+
+                    var wrappedFunctions = _.map(fnMap, function (value, key) {
+                        return [key, _.compose(_recorderFn, value)];
+                    });
+                    _.extend(scope, _.object(wrappedFunctions));
+                }
 
 
-        };
 
-    }];
+            };
+
+        }];
     ng.module(app, ['orodruin.services.istari', 'orodruin.services.dialogue'])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective);

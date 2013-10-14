@@ -49,6 +49,21 @@
                     return [];
                 });
         };
+
+        var _recordScript = function (scriptId, tuple) {
+            scripts[scriptId].push(tuple);
+        };
+        var _postScript = function (scriptId) {
+            var script = _.sortBy(scripts[scriptId], function (tuple) {
+                return tuple.delay;
+            });
+            var start = script[0].delay;
+            _.each(script, function (tuple) {
+                tuple.delay = tuple.delay - start;
+            });
+            scripts[scriptId] = script;
+            return {scriptId: scriptId};//to do clean this up with http calls
+        };
         this.$get = ["$http", "$log", function ($http, $log) {
             return {
                 put: function (presentationId, page, presentationMap) {
@@ -70,7 +85,11 @@
                 },
                 fetchScriptInstructions: function (scriptId) {
                     return _fetchPlayScriptForScriptId(scriptId, $http, $log);
-                }
+                },
+                recordAction: _recordScript,
+                completeRecord: _postScript
+
+
             };
         }
         ]

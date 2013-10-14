@@ -10,21 +10,20 @@
         /**
          * This function adds a class to a targeted presentationDialogue and removes the same from all other dialogues
          * @param presentationDialogues the set of all presentation dialogues
-         * @param title the title of the target presentation dialogue
          * @param classToAdd the class to add
          * @param classToRemove the class to remove from all other elements
          * @private
          * @return {Array} the modified presentation
+         * @param index the index of the dialogue to update
          */
-        var _changeSingleDialogue = function (presentationDialogues, title, classToAdd, classToRemove) {
-            return _.map(presentationDialogues, function (presentationDialog) {
+        var _changeSingleDialogue = function (presentationDialogues, index, classToAdd, classToRemove) {
+            _.each(presentationDialogues, function (presentationDialog) {
                 presentationDialog.css = _.without(presentationDialog.css, classToAdd, classToRemove);
-                console.log(presentationDialog.title) ;
-                if (presentationDialog.title == title) {
-                    presentationDialog.css = _.union(presentationDialog.css, [classToAdd]);
-                }
 
             });
+            presentationDialogues[index].css = _.union(presentationDialogues[index].css, [classToAdd]);
+            return presentationDialogues;
+
         };
         /**
          * This function adds one class and removes one class from a set of presentationObjects
@@ -60,32 +59,56 @@
 
         this.$get = function () {
             return {
-                zoom: function (context) {
-                    console.log("zoom");
-                    return _changeSingleDialogue(context.dialogues, context.title, "zoom-in", "zoom-out");
-                },
-                showAllDialogues: function (context) {
-                    console.log("context.dialogues");
-                    return _changeAllDialogues(context.dialogues, "zoom-out", "zoom-in");
-                },
-                nextFragment: function (context) {
-                    console.log("nextFragment");
-                    console.log(context.fragments[context.index]);
-                    console.log(context.index);
-                    return _changeFragmentClass(context.fragments[context.index], "visible", "");
-                },
-                prevFragment: function (context) {
-                    console.log("prevFragment");
-
-                    return _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
+                zoom: function (context, deferred) {
+                    var actionInitiated = new Date().getTime();
+                    _changeSingleDialogue(context.dialogues, context.page, "zoom-in", "zoom-out");
+                    _.delay(function () {
+                        deferred.resolve({"fnName": "zoom", "args": [context.page], delay: actionInitiated });
+                    });
+                    return deferred.promise;
 
                 },
-                resetFragments: function (context) {
-                    console.log("resetFragments");
-                    return _changeAllDialogues(context.fragments, "fragment", "");
+                showAllDialogues: function (context, deferred) {
+                    var actionInitiated = new Date().getTime();
+                    _changeAllDialogues(context.dialogues, "zoom-out", "zoom-in");
+
+                    _.delay(function () {
+                        deferred.resolve({"fnName": "showAllDialogues", "args": [], delay: actionInitiated });
+
+                    });
+                    return deferred.promise;
+
+                },
+                nextFragment: function (context, deferred) {
+                    var actionInitiated = new Date().getTime();
+                    _changeFragmentClass(context.fragments[context.index], "visible", "");
+                    _.delay(function () {
+                        deferred.resolve({"fnName": "nextFragment", "args": [context.index], delay: actionInitiated });
+                    });
+                    return deferred.promise;
+                },
+                prevFragment: function (context, deferred) {
+                    var actionInitiated = new Date().getTime();
+                    _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
+                    _.delay(function () {
+                        deferred.resolve({"fnName": "prevFragment", "args": [context.index], delay: actionInitiated });
+                    });
+                    return deferred.promise;
+
+                },
+                resetFragments: function (context, deferred) {
+                    var actionInitiated = new Date().getTime();
+                    _changeAllDialogues(context.fragments, "fragment", "");
+                    _.delay(function () {
+                        deferred.resolve({"fnName": "resetFragments", "args": [], delay: actionInitiated });
+                    });
+                    return deferred.promise;
+
                 }
             };
+
         };
+
     };
 
     ng.module(app, [], function ($provide) {
