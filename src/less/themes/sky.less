@@ -1,0 +1,46 @@
+@import url(//fonts.googleapis.com/css?family=Quicksand:400,700,400italic,700italic);
+@import url(//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+
+@base-color:#333333;
+@base-font: "Open Sans";
+@heading-font:"Quicksand";
+@base-font-size: 36px;
+@base-font-weight:200;
+@h1-font-size:3.77em;
+@h2-font-size:2.11em;
+@h3-font-size:1.55em;
+@h4-font-size:1em;
+
+body{
+  background: #add9e4;
+  .radial(#f7fbfc,#add9e4);
+  background-color: #f7fbfc;
+}
+.base{
+  font-family: @base-font, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  .font-properties(@base-font-size, @base-font-weight, @base-color, @h1-font-size, @h2-font-size, @h3-font-size, @h4-font-size);
+  h1, h2, h3, h4{
+    font-family: @heading-font, sans-serif;
+    line-height: 0.9em;
+    letter-spacing: -0.08em;
+  }
+  h1 { text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);}
+  img{
+    margin: 15px auto;
+    background: rgba(255, 255, 255, 0.12);
+    border: 4px solid @base-color;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  }
+  .blackBoard{
+    background-color:#000;
+    box-shadow: 4px 4px 1px #888888;
+    color:#FFF;
+  }
+  &:selection {
+    color: white;
+    background: #134674;
+    text-shadow: none;
+  }
+}
