@@ -63,7 +63,7 @@
                     var actionInitiated = new Date().getTime();
                     _changeSingleDialogue(context.dialogues, context.page, "zoom-in", "zoom-out");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "zoom", "args": [context.page], delay: actionInitiated });
+                        deferred.resolve({"fnName": "zoom", "args": [context.page], delay: actionInitiated, presentationIndex: context.page });
                     });
                     return deferred.promise;
 
@@ -73,7 +73,7 @@
                     _changeAllDialogues(context.dialogues, "zoom-out", "zoom-in");
 
                     _.delay(function () {
-                        deferred.resolve({"fnName": "showAllDialogues", "args": [], delay: actionInitiated });
+                        deferred.resolve({"fnName": "showAllDialogues", "args": [], delay: actionInitiated, presentationIndex: context.presentationIndex });
 
                     });
                     return deferred.promise;
@@ -83,7 +83,7 @@
                     var actionInitiated = new Date().getTime();
                     _changeFragmentClass(context.fragments[context.index], "visible", "");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "nextFragment", "args": [context.index], delay: actionInitiated });
+                        deferred.resolve({"fnName": "nextFragment", "args": [context.index], delay: actionInitiated, presentationIndex: context.presentationIndex});
                     });
                     return deferred.promise;
                 },
@@ -91,7 +91,7 @@
                     var actionInitiated = new Date().getTime();
                     _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "prevFragment", "args": [context.index], delay: actionInitiated });
+                        deferred.resolve({"fnName": "prevFragment", "args": [context.index], delay: actionInitiated, presentationIndex: context.presentationIndex});
                     });
                     return deferred.promise;
 
@@ -100,7 +100,7 @@
                     var actionInitiated = new Date().getTime();
                     _changeAllDialogues(context.fragments, "fragment", "");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "resetFragments", "args": [], delay: actionInitiated });
+                        deferred.resolve({"fnName": "resetFragments", "args": [], delay: actionInitiated, presentationIndex: context.presentationIndex });
                     });
                     return deferred.promise;
 

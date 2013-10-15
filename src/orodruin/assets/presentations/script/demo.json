@@ -16,17 +16,23 @@
     {
         "fnName": "nextFragment",
         "delay": 5000,
-        "args": []
+        "args": [{
+            "index":0
+        }]
     },
     {
         "fnName": "nextFragment",
         "delay": 5000,
-        "args": []
+        "args": [{
+            "index":1
+        }]
     },
     {
         "fnName": "nextFragment",
         "delay": 5000,
-        "args": []
+        "args": [{
+            "index":2
+        }]
     },
     {
         "fnName": "zoom",
@@ -40,16 +46,22 @@
     {
         "fnName": "nextFragment",
         "delay": 5000,
-        "args": []
+        "args": [{
+            "index":0
+        }]
     },
     {
         "fnName": "nextFragment",
         "delay": 5000,
-        "args": []
+        "args": [{
+            "index":1
+        }]
     },
     {
         "fnName": "nextFragment",
         "delay": 5000,
-        "args": []
+        "args": [{
+            "index":2
+        }]
     }
 ]

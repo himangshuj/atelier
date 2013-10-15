@@ -1,15 +1,42 @@
 (function (ng, app) {
-    var _extractFunctionName = function (fnName, delay, args, $scope, $q) {
-        return function () {
+    var _executeScriptInstruction = function (fnName, delay, args, $q, presentations, fragmentsFns, dialogue) {
+        return function (presentationIndex) {
             var deferred = $q.defer();
             deferred.notify("update");
-            _.delay(function () {
-                $scope.script = fnName;
-                deferred.resolve(" Funcation : " + fnName + " Delay: " + delay);
-            }, delay);
+            var context = {presentationIndex: presentationIndex};
+            var recordedAction = function () {
+                var fragments = fragmentsFns[presentationIndex]();
+                _.extend(context, {dialogues: presentations}, {fragments: fragments});
+                _.each(args, function (val) {
+                        _.extend(context, val);
+                    }
+                );
+                if (_.size(fragments) > 0) {  //TODO tie this properly with fragments in presentation
+                    dialogue[fnName](context, deferred);//dialogue should resolve this
+                } else {
+                    _.delay(recordedAction, 1000);//dom is not yet ready retry after 1000 ms
+                }
+            };
+            _.delay(recordedAction, delay);
             return deferred.promise;
         };
     };
+
+    function _executeScript(anduril, $stateParams, $q, presentations, fragmentFns, dialogue, $log) {
+        var scriptInstructions =
+            _.chain(anduril.fetchScriptInstructions($stateParams.scriptId))
+                .map(function (tuple) {
+                    return  _executeScriptInstruction(tuple.fnName, tuple.delay, tuple.args, $q, presentations, fragmentFns, dialogue);
+                }).value();
+        var deferred = _.first(scriptInstructions)(0);
+        return _.reduce(_.rest(scriptInstructions), function (promiseTillNow, nextPromise) {
+            return promiseTillNow.then(
+                function (resp) {
+                    return nextPromise(resp.presentationIndex);
+                }
+            );
+        }, deferred);
+    }
 
     ng.module(app, [
             'ui.router',
@@ -40,26 +67,15 @@
                 }
             });
         })
-        .controller("PlayCtrl", function PlayController($stateParams, anduril, $scope, $q, $log) {
-            var scriptInstructions =
-                _.chain(anduril.fetchScriptInstructions($stateParams.scriptId))
-                    .map(function (tuple) {
-                        return  _extractFunctionName(tuple.fnName, tuple.delay, tuple.args, $scope, $q);
-                    }).value();
-             var deferred = scriptInstructions[0]();
-            var reducedForm = _.reduce(_.toArray(scriptInstructions).slice(1),function (promiseTillNow, nextPromise) {
-                return promiseTillNow.then(
-                    function (resp) {
-                        $log.info("Executed" + resp);
-                        return nextPromise();
-                    }
-                );
-            },deferred);
-
-            console.log(reducedForm);
-            $scope.script = "starting";
-
-
+        .controller("PlayCtrl", function PlayController($stateParams, anduril, $scope, $q, $log, dialogue) {
+            $scope.presentations = anduril.fetchVariablesForPresentationId($stateParams.presentationId);
+            $scope.scriptId = $stateParams.scriptId;
+            var fragmentFns = [];
+            var executeScript = _.after(_.size($scope.presentations), _executeScript); //this has to be executed only after all the fragments are populated
+            $scope.addFragment = function (fragment) {
+                fragmentFns.push(fragment);
+                executeScript(anduril, $stateParams, $q, $scope.presentations, fragmentFns, dialogue, $log);
+            };
         });
 
 })(angular, "sokratik.orodruin.player");
