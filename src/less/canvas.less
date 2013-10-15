@@ -1,0 +1,72 @@
+@import '../../vendor/bootstrap/less/mixins.less';
+@import '../../vendor/bootstrap/less/variables.less';
+@import 'themes/sky.less';
+
+// The base theme class for each slide. These are standard properties
+// in addition to the properties defined in the theme file
+.base{
+  .make-xs-column(12); //Full page width in mobile devices
+  .make-md-column(6);  //Half page width in tablets and larger devices
+  overflow:hidden;
+  text-align: center;
+  vertical-align: baseline;
+  h1, h2, h3, h4{
+    text-transform: uppercase;
+    text-shadow: none;
+    word-wrap: break-word;
+    display: block;
+  }
+  .mediaInherit{
+    width:inherit;
+    height:inherit;
+  }
+
+  .mediaHolder{
+    width:100%;
+    height:340px; //TODO change this
+  }
+}
+
+// The following define the transition classes. Slide elements have no display.
+// Zoom-in is active dialogue class.
+// Zoom-out is all classes
+// Fragment is a animatable piece of a presentation
+// Visible is the visible state of a fragment
+
+.slide{
+    display:none;
+}
+.zoom-out, .zoom-in {
+  .transitions(all, 0.5s);
+}
+
+.zoom-out,
+.zoom-in.zoom-in-active{
+  zoom:50%;
+}
+
+.zoom-in,
+.zoom-out.zoom-out-active{
+  zoom:100%;
+}
+
+.zoom-in{
+  .make-xs-column(12); //Full page-width in all devices when zoomed in
+    display:block;
+  .fragment, .fragment.visible {
+    .transitions(all, 0.5s);
+  }
+  .fragment,
+  .fragment.visible.visible-active
+  {
+    opacity:0;
+  }
+  .fragment.visible,
+  {
+    opacity:1;
+  }
+}
+
+.zoom-out{
+  display: block;
+}

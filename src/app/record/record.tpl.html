@@ -1,0 +1,14 @@
+<!--
+this is the place holder for all the templates which are being played
+-->
+
+<div ng-repeat="presentation in presentations">
+    <div>
+        <sokratik-dialogue presentation="presentation" presentations="presentations" index="{{$index}}"
+                           script-id="{{scriptId}}"/>
+    </div>
+</div>
+<div>
+    <button class="btn btn-primary" ng-click="play()">Play</button>
+
+</div>

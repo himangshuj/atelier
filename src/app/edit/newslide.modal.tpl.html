@@ -1,0 +1,25 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+
+            Select the templateName
+        </div>
+        <div class="modal-body">
+
+            <ul>
+                <li ng-repeat="template in templates">
+                    <a ng-click="selected.template = template">{{ template }}</a>
+                </li>
+            </ul>
+
+            Selected: <b>{{ selected.template }}</b>
+
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="cancel()">Close</button>
+            <button class="btn btn-primary" ng-click="ok()">Ok</button>
+        </div>
+    </div>
+</div>
+

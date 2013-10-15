@@ -22,8 +22,7 @@ module.exports = function (grunt) {
     /**
      * Load in our build configuration file.
      */
-
-    var appConfig = grunt.file.readJSON(grunt.option('appConfigLocation'));
+    var userConfig = require('./build.config.js');
 
     /**
      * This is the configuration object Grunt uses to give each plugin its
@@ -101,8 +100,8 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: [ '**' ],
-                        dest: '<%= build_dir %>/static/',
-                        cwd: 'src/<%= app_name %>/assets',
+                        dest: '<%= build_dir %>/assets/',
+                        cwd: 'src/assets',
                         expand: true
                     }
                 ]
@@ -117,10 +116,20 @@ module.exports = function (grunt) {
                     }
                 ]
             },
-            build_vendorjs: {
+            build_vendor_js: {
                 files: [
                     {
                         src: [ '<%= vendor_files.js %>' ],
+                        dest: '<%= build_dir %>/',
+                        cwd: '.',
+                        expand: true
+                    }
+                ]
+            },
+            build_vendorcss: {
+                files: [
+                    {
+                        src: [ '<%= vendor_files.css %>' ],
                         dest: '<%= build_dir %>/',
                         cwd: '.',
                         expand: true
@@ -131,8 +140,8 @@ module.exports = function (grunt) {
                 files: [
                     {
                         src: [ '**' ],
-                        dest: '<%= compile_dir %>/static',
-                        cwd: '<%= build_dir %>/static',
+                        dest: '<%= compile_dir %>/assets',
+                        cwd: '<%= build_dir %>/assets',
                         expand: true
                     }
                 ]
@@ -160,7 +169,7 @@ module.exports = function (grunt) {
                     '<%= vendor_files.js %>',
                     'module.suffix'
                 ],
-                dest: '<%= compile_dir %>/static/<%= pkg.name %>.js'
+                dest: '<%= compile_dir %>/assets/<%= pkg.name %>.js'
             }
         },
 
@@ -223,7 +232,7 @@ module.exports = function (grunt) {
         recess: {
             build: {
                 src: [ '<%= app_files.less %>' ],
-                dest: '<%= build_dir %>/static/<%= pkg.name %>.css',
+                dest: '<%= build_dir %>/assets/<%= pkg.name %>.css',
                 options: {
                     compile: true,
                     compress: false,
@@ -305,7 +314,7 @@ module.exports = function (grunt) {
              */
             app: {
                 options: {
-                    base: '<%= app_files.base %>'
+                    base: 'src/app'
                 },
                 src: [ '<%= app_files.atpl %>' ],
                 dest: '<%= build_dir %>/templates-app.js'
@@ -455,7 +464,7 @@ module.exports = function (grunt) {
              */
             assets: {
                 files: [
-                    'src/**/assets/**/*'
+          'src/assets/**/*'
                 ],
                 tasks: [ 'copy:build_assets' ]
             },
@@ -517,7 +526,7 @@ module.exports = function (grunt) {
         }
     };
 
-    grunt.initConfig(grunt.util._.extend(taskConfig, appConfig));
+    grunt.initConfig(grunt.util._.extend(taskConfig, userConfig));
 
     /**
      * In order to make it safe to just compile or copy *only* what was changed,
@@ -539,7 +548,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('build', [
         'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'recess:build',
-        'copy:build_assets', 'copy:build_appjs', 'copy:build_vendorjs',
+        'copy:build_assets', 'copy:build_appjs', 'copy:build_vendor_js', 'copy:build_vendorcss',
         'index:build', 'karmaconfig', 'karma:continuous'
     ]);
 
@@ -583,7 +592,8 @@ module.exports = function (grunt) {
         var cssFiles = filterForCSS(this.filesSrc).map(function (file) {
             return file.replace(dirRE, '');
         });
-        grunt.file.copy(grunt.config("app_files.html"), this.data.dir + "/" + grunt.config("app_files.destination"), {
+
+        grunt.file.copy('src/index.html', this.data.dir + '/index.html', {
             process: function (contents, path) {
                 return grunt.template.process(contents, {
                     data: {
