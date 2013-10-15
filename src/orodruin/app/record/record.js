@@ -5,7 +5,8 @@
             'plusOne',
             'orodruin.services.istari',
             'orodruin.services.dialogue',
-            'ngSanitize'    ])
+            'ngSanitize',
+            'ngAnimate'])
 
         .config(function config($stateProvider) {
             $stateProvider.state('record', {
@@ -41,7 +42,7 @@
 
             var presentations = _.map(anduril.fetchVariablesForPresentationId($stateParams.presentationId), function (obj) { //todo move to clojure script
                 obj.templateName = obj.templateName || "master";
-                obj.css = ["slide", "ng-grid"];
+                obj.css = ["slide", "base"];
                 return obj;
             });
             $scope.presentations = presentations;

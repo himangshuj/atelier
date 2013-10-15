@@ -1,0 +1,129 @@
+@import '../../../vendor/bootstrap/less/mixins.less';
+@import '../../../vendor/bootstrap/less/variables.less';
+
+@import url(//fonts.googleapis.com/css?family=Quicksand:400,700,400italic,700italic);
+@import url(//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+//TODO delete unnecessary comments
+
+.transitions{
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  -moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  -o-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+
+body {
+  background: #add9e4;  //TODO move to variables
+  background: -moz-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #f7fbfc), color-stop(100%, #add9e4));
+  background: -webkit-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: -o-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: -ms-radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background: radial-gradient(center, circle cover, #f7fbfc 0%, #add9e4 100%);
+  background-color: #f7fbfc;   //TODO move to variables
+}
+
+.base{
+  .make-xs-column(12); //TODO document this
+  .make-md-column(6);
+  font-family: "Open Sans", sans-serif; //TODO font is a variable anc create a mixin for font
+  overflow:hidden;
+  text-align: center;
+  font-size: 36px;
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  vertical-align: baseline;
+  color: #333333;
+  h1, h2, h3, h4{
+//    margin: 0 20px 20px 0;
+    font-family: "Quicksand", sans-serif;
+    line-height: 0.9em;
+    letter-spacing: -0.08em;
+    text-transform: uppercase;
+    text-shadow: none;
+    word-wrap: break-word;
+    display: block;
+  }
+  h1 { font-size: 3.77em; text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);}
+  h2 { font-size: 2.11em;	}
+  h3 { font-size: 1.55em;	}
+  h4 { font-size: 1em;	}
+  img{
+    margin: 15px auto;
+    background: rgba(255, 255, 255, 0.12);
+    border: 4px solid #333333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  }
+  .blackBoard{
+    background-color:#000;
+    box-shadow: 4px 4px 1px #888888;
+    color:#FFF;
+  }
+  &:selection {
+    color: white;
+    background: #134674;
+    text-shadow: none;
+  }
+}
+.slide{
+    display:none;
+}
+.zoom-out, .zoom-in {
+  .transitions;
+}
+
+.zoom-out,
+.zoom-in.zoom-in-active{
+  zoom:50%;
+}
+
+.zoom-in,
+.zoom-out.zoom-out-active{
+  zoom:100%;
+}
+
+
+
+
+.zoom-in{
+  .make-xs-column(12);
+    display:block;
+  .fragment, .fragment.visible {
+    .transitions;
+  }
+  .fragment,
+  .fragment.visible.visible-active
+  {
+    opacity:0;
+//    color:#C00;
+  }
+  .fragment.visible,
+  {
+    opacity:1;
+//    color:#0CC;
+  }
+
+/*  .fragment{
+    display: none;
+  }
+  .visible{
+    display: block;
+  }*/
+}
+
+.zoom-out{
+  display: block;
+/*
+  h1 h2 h3 h4 h5 h6{
+    display: block;
+  }
+  .thumb{
+    display: block;
+    *{
+      display: block;
+    }
+  }
+*/
+}
+
