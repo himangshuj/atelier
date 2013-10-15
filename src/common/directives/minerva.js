@@ -95,10 +95,9 @@
 
             };
             fnMap.previous = function () {
-
                 var dialogueFragments = dialogueCtrl.getFragments();
-                if (index > 0 && index < _.size(dialogueFragments)) {
-                    return _injectors.dialogue.prevFragment({fragments: dialogueFragments, index: (index--)}, _injectors.$q.defer());
+                if (index > 0) {
+                    return _injectors.dialogue.prevFragment({fragments: dialogueFragments, index: (--index)}, _injectors.$q.defer());
                 }
                 else {
                     return _injectors.dialogue.showAllDialogues({dialogues: scope.presentations}, _injectors.$q.defer());
@@ -160,7 +159,6 @@
             _injectors.anduril = anduril;
             return {
                 restrict: "E",
-                templateUrl: $state.current.data.mode + "/dialogue.tpl.html",
                 scope: {
                     presentation: "=",
                     presentations: "=",
@@ -168,9 +166,10 @@
                     scriptId: "@",
                     addFragment: "&?"
                 },
+                templateUrl: function(tAttrs){return tAttrs[0].attributes['mode'].value + "/dialogue.tpl.html";},
 
                 controller: function ($scope) {
-                    $scope.templateName = "static/presentations/templates/" + ($scope.presentation.templateName || "master") + ".html";
+                    $scope.templateName = "assets/presentations/templates/" + ($scope.presentation.templateName || "master") + ".html";
                     $scope.currentFragmentIndex = 0;
                     var dialogueFragments = [];
                     this.addFragment = function (dialogueFragment) {

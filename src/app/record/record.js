@@ -39,7 +39,6 @@
         })
         .controller('RecordCtrl', function RecordController($scope, titleService, anduril, $stateParams, dialogue, $q, scriptId, $state) {
             titleService.setTitle("Sokratik | " + (anduril.fetchVariablesForPresentationId($stateParams.presentationId).title || "Lets Learn"));
-
             var presentations = _.map(anduril.fetchVariablesForPresentationId($stateParams.presentationId), function (obj) { //todo move to clojure script
                 obj.templateName = obj.templateName || "master";
                 obj.css = ["slide", "base"];

@@ -11,7 +11,7 @@
         var scripts = {};
         var fetchVariablesForPresentationId = function (presentationId, $http, $log) {
             if (fragments[presentationId] == null) {
-                return     $http.get("static/presentations/data/" + presentationId + ".json", {cache: true})
+                return     $http.get("assets/presentations/data/" + presentationId + ".json", {cache: true})
                     .success(function (data, status, headers, config) {
                         return fragments[presentationId] = data;
                     })
@@ -26,7 +26,7 @@
 
         var _fetchPlayScriptForScriptId = function (scriptId, $http, $log) {
             if (scripts[scriptId] == null) {
-                return     $http.get("static/presentations/script/" + scriptId + ".json", {cache: true})
+                return     $http.get("assets/presentations/script/" + scriptId + ".json", {cache: true})
                     .success(function (data, status, headers, config) {
                         return scripts[scriptId] = data;
                     })
@@ -40,7 +40,7 @@
         };
 
         var _getAllTemplates = function ($http, $log) {
-            return $http.get("static/presentations/data/templates.json", {cache: true})
+            return $http.get("assets/presentations/data/templates.json", {cache: true})
                 .success(function (data, status, headers, config) {
                     return data;
                 })
