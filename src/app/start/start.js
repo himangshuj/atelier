@@ -19,4 +19,4 @@
         .controller('StartCtrl', function HomeController($scope, titleService) {
             titleService.setTitle('Start Creating');
         });
-})(angular, "sokratik.kamillion.start");
+})(angular, "sokratik.atelier.start");

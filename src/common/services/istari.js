@@ -1,4 +1,4 @@
-//this file contains services which will be used to communicate across various apps of KAMillion
+//this file contains services which will be used to communicate across various apps of atelier
 //the breed of istari will guide individual apps to achieve their task.
 (function (ng, app) {
     ng.module(app, [], function ($provide) {
@@ -95,4 +95,4 @@
         ]
         ;
     };
-})(angular, "sokratik.kamillion.services.istari");
+})(angular, "sokratik.atelier.services.istari");

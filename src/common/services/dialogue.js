@@ -115,4 +115,4 @@
         $provide.provider("dialogue", dialogueService);
 
     });
-})(angular, "sokratik.kamillion.services.dialogue");
+})(angular, "sokratik.atelier.services.dialogue");

@@ -3,8 +3,8 @@
             'ui.router',
             'titleService',
             'plusOne',
-            'sokratik.kamillion.services.istari',
-            'sokratik.kamillion.services.dialogue',
+            'sokratik.atelier.services.istari',
+            'sokratik.atelier.services.dialogue',
             'ngSanitize',
             'ngAnimate'])
 
@@ -56,4 +56,4 @@
             };
             dialogue.showAllDialogues({"dialogues": presentations}, $q.defer());
         });
-})(angular, "sokratik.kamillion.record");
+})(angular, "sokratik.atelier.record");

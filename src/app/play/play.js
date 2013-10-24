@@ -42,8 +42,8 @@
             'ui.router',
             'titleService',
             'plusOne',
-            'sokratik.kamillion.services.istari',
-            'sokratik.kamillion.services.dialogue',
+            'sokratik.atelier.services.istari',
+            'sokratik.atelier.services.dialogue',
             'ngSanitize' ])
         .config(function config($stateProvider) {
             $stateProvider.state('play', {
@@ -78,4 +78,4 @@
             };
         });
 
-})(angular, "sokratik.kamillion.player");
+})(angular, "sokratik.atelier.player");

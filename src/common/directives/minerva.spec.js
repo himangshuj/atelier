@@ -5,7 +5,7 @@
  * automatically.
  */
 describe( 'minerva section', function() {
-    beforeEach( module( 'sokratik.kamillion.directives.minerva' ) );
+    beforeEach( module( 'sokratik.atelier.directives.minerva' ) );
 
     it( 'minerva compilation test', inject( function() {
         expect( true ).toBeTruthy();

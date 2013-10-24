@@ -200,8 +200,8 @@
             };
 
         }];
-    ng.module(app, ['sokratik.kamillion.services.istari', 'sokratik.kamillion.services.dialogue'])
+    ng.module(app, ['sokratik.atelier.services.istari', 'sokratik.atelier.services.dialogue'])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective);
 
-})(angular, "sokratik.kamillion.directives.minerva");
+})(angular, "sokratik.atelier.directives.minerva");

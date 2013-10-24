@@ -18,8 +18,8 @@
             'ui.router',
             'titleService',
             'plusOne',
-            'sokratik.kamillion.directives.minerva',
-            'sokratik.kamillion.services.istari',
+            'sokratik.atelier.directives.minerva',
+            'sokratik.atelier.services.istari',
             'ngSanitize'
         ])
 
@@ -103,7 +103,7 @@
         .controller('TemplateCtrl', function TemplateController(anduril, $scope, $stateParams, page, templateVars) {
 
         });
-})(angular, "sokratik.kamillion.edit");
+})(angular, "sokratik.atelier.edit");
 
 
 

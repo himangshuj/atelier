@@ -1,12 +1,17 @@
 {
   "author": "Himangshu",
-  "name": "sokratik",
-  "version": "0.1.0",
-  "homepage": "https://bitbucket.org/sokratik/sokratik-frontend/wiki/Home",
-  "bugs": "https://bitbucket.org/sokratik/sokratik-frontend/issues",
+    "name": "atelier",
+  "version": "0.4.0",
+    "homepage": "https://gitlab.com/sokratik/atelier/wikis/home",
+    "bugs": "https://gitlab.com/sokratik/atelier/issues",
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:sokratik/sokratik-frontend.git"
+        "url": "https://gitlab.com/sokratik/atelier"
+    },
+    "scripts": {
+        "start": "node node_modules/grunt-cli/bin/grunt",
+        "test": "node node_modules/grunt-cli/bin/grunt test",
+        "postinstall": "bower install"
   },
   "dependencies": {},
   "devDependencies": {

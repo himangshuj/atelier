@@ -5,7 +5,7 @@
  * automatically.
  */
 describe( 'dialogue section', function() {
-    beforeEach( module( 'sokratik.kamillion.services.dialogue' ) );
+    beforeEach( module( 'sokratik.atelier.services.dialogue' ) );
 
     it( 'dialogue compilation test', inject( function() {
         expect( true ).toBeTruthy();
@@ -13,7 +13,7 @@ describe( 'dialogue section', function() {
 });
 
 describe( 'istari section', function() {
-    beforeEach( module( 'sokratik.kamillion.services.istari' ) );
+    beforeEach( module( 'sokratik.atelier.services.istari' ) );
 
     it( 'istari compilation test', inject( function() {
         expect( true ).toBeTruthy();
