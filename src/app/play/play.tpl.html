@@ -1,0 +1,9 @@
+<div ng-repeat="presentation in presentations">
+    <div>
+        <sokratik-dialogue presentation="presentation" presentations="presentations" index="{{$index}}"
+                           script-id="{{scriptId}}" add-fragment="addFragment(fragment)"/>
+    </div>
+</div>
+<div ui-view="control">
+    aha
+</div>

@@ -1,0 +1,44 @@
+{
+    "build_dir": "build/orodruin",
+    "compile_dir": "bin/orodruin",
+    "app_name": "orodruin",
+    "app_files": {
+        "js": [ "src/common/**/*.js", "src/orodruin/**/**/**/*.js",
+            "!src/**/**/*.spec.js" ,"!src/orodruin/**/**/*.spec.js"],
+        "jsunit": [ "src/common/**/*.spec.js","src/orodruin/**/**/*.spec.js" ],
+
+        "coffee": [ "src/common/**/*.coffee","src/orodruin/**/**/*.coffee",
+            "!src/common/**/*.spec.coffee","!src/ash_nazq/app/**/*.spec.coffee" ],
+        "coffeeunit": [ "src/common/**/*.spec.coffee","src/orodruin/app/**/*.spec.coffee" ],
+
+        "base":"src/orodruin/app",
+        "atpl": [ "src/orodruin/app/**/*.tpl.html" ],
+        "ctpl": [ "src/common/**/*.tpl.html","src/orodruin/common/**/*.tpl.html" ],
+
+        "html": "src/orodruin/index.html" ,
+        "less": "src/orodruin/less/main.less",
+        "destination":"index.html"
+    },
+    //TODO use cdns
+
+    "vendor_files": {
+        "js": [
+            "vendor/angular/angular.min.js",
+            "vendor/angular-sanitize/angular-sanitize.min.js",
+            "vendor/angular-cookies/angular-cookies.min.js",
+            "vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
+            "vendor/angular-ui-router/release/angular-ui-router.js",
+            "vendor/angular-ui-utils/modules/route/route.js",
+            "vendor/angular-ui-utils/modules/validate/validate.js",
+            "vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js",
+            "vendor/medium-editor/dist/js/medium.editor.min.js",
+            "vendor/underscore/underscore-min.js",
+            "vendor/angular-animate/angular-animate.min.js"
+        ],
+        "css": [
+            "vendor/medium-editor/dist/css/medium.editor.css",
+            "vendor/bootstrap/dist/css/bootstrap.min.css"
+        ]
+
+    }
+}
