@@ -21,7 +21,7 @@
         .run(function run(titleService) {
         })
 
-        .controller('AppCtrl', function AppCtrl($scope, $location) {
+        .controller('AppCtrlDemo', function AppCtrl($scope, $location) {
         });
-})(angular, "sokratik.atelier");
+})(angular, "sokratik.atelier.demo");
 

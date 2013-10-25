@@ -24,7 +24,7 @@
 
     var _fragmentLink = {
         "edit": {
-            "text": function (scope, element, attrs, sokratikDialogueCtrl) {
+            "text": ["scope", "element", "attrs", "sokratikDialogueCtrl",function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 new MediumEditor(element);
                 // Listen for change events to enable binding
@@ -39,27 +39,27 @@
                     scope.model.value = _injectors.$sce.trustAsHtml(html);
                     sokratikDialogueCtrl.setProperty(attrs.model, html);
                 }
-            }
+            }]
         },
         "record": {
-            "text": function (scope, element, attrs, sokratikDialogueCtrl) {
+            "text":["scope", "element", "attrs", "sokratikDialogueCtrl", function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
-            }
+            }]
         },
         "play": {
-            "text": function (scope, element, attrs, sokratikDialogueCtrl) {
+            "text":["scope", "element", "attrs", "sokratikDialogueCtrl", function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
-            }
+            }]
 
         }
     };
 
     var _dialogueLink = {
-        "edit": function (scope, $q, anduril, dialogue) {
-        },
-        "record": function (scope) {
+        "edit": ["scope",function (scope) {
+        }],
+        "record": ["scope", function (scope) {
             var index = 0;
             //noinspection JSUnresolvedVariable
             var dialogueCtrl = scope.dialogueCtrl;
@@ -70,7 +70,6 @@
                     _injectors.dialogue.resetFragments(dialogueFragments, _injectors.$q.defer()).then(
                         function (obj) {
                             _injectors.anduril.recordAction(scope.scriptId, obj);
-                            console.log(obj);
                             _injectors.$q.when(_injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer())).
                                 then(function (resp) {
                                     _injectors.anduril.recordAction(scope.scriptId, resp);
@@ -126,11 +125,11 @@
                 return [key, _.compose(_recorderFn, value)];
             });
             _.extend(scope, _.object(wrappedFunctions));
-        },
-        "play": function (scope) {
+        }],
+        "play":["scope", function (scope) {
             scope.addFragment({fragment: scope.dialogueCtrl.getFragments });
 
-        }
+        }]
 
     };
 
@@ -169,7 +168,7 @@
                     addFragment: "&?"
                 },
 
-                controller: function ($scope) {
+                controller: ["$scope",function ($scope) {
                     $scope.templateName = "static/presentations/templates/" + ($scope.presentation.templateName || "master") + ".html";
                     $scope.currentFragmentIndex = 0;
                     var dialogueFragments = [];
@@ -189,7 +188,7 @@
                     this.getFragments = function () {
                         return _.clone(dialogueFragments);//returns a shallow copy
                     };
-                },
+                }],
                 controllerAs: "dialogueCtrl",
                 compile: function () {
                     return _dialogueLink[$state.current.data.mode];

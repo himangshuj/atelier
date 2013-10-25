@@ -111,8 +111,8 @@
 
     };
 
-    ng.module(app, [], function ($provide) {
+    ng.module(app, [], ["$provide", function ($provide) {
         $provide.provider("dialogue", dialogueService);
 
-    });
+    }]);
 })(angular, "sokratik.atelier.services.dialogue");

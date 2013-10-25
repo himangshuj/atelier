@@ -5,7 +5,7 @@
             'plusOne'
         ])
 
-        .config(function config($stateProvider) {
+        .config(["$stateProvider",function config($stateProvider) {
             $stateProvider.state('start', {
                 url: '/start',
                 views: {
@@ -15,8 +15,8 @@
                     }
                 }
             });
-        })
-        .controller('StartCtrl', function HomeController($scope, titleService) {
+        }])
+        .controller('StartCtrl',["$state","titleService", function ($state, titleService) {
             titleService.setTitle('Start Creating');
-        });
+        }]);
 })(angular, "sokratik.atelier.start");

@@ -6,3 +6,4 @@ vendor/
 .idea
 node_modules
 *.iml
+bin

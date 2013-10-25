@@ -1,27 +1,23 @@
 //this file contains services which will be used to communicate across various apps of atelier
 //the breed of istari will guide individual apps to achieve their task.
 (function (ng, app) {
-    ng.module(app, [], function ($provide) {
+    ng.module(app, [], ["$provide", function ($provide) {
         $provide.provider("anduril", andurilForger);
 
-    });
+    }]);
 
     var andurilForger = function () {
         var fragments = {};
         var scripts = {};
-        var fetchVariablesForPresentationId = function (presentationId, $http, $log) {
-            if (fragments[presentationId] == null) {
-                return     $http.get("static/presentations/data/" + presentationId + ".json", {cache: true})
-                    .success(function (data, status, headers, config) {
-                        return fragments[presentationId] = data;
-                    })
-                    .error(function (data, status, headers, config) {
-                        $log.info("call failed getting default data");
-                        return fragments[presentationId] = {};
-                    });
-            } else {
-                return fragments[presentationId];
-            }
+        var _fetchVariablesForPresentationId = function (presentationId, $http, $log) {
+
+            return fragments[presentationId];
+
+        };
+
+        var _initPresentation = function (presentationId, presentationMap) {
+            fragments[presentationId] = presentationMap;
+
         };
 
         var _fetchPlayScriptForScriptId = function (scriptId, $http, $log) {
@@ -39,14 +35,14 @@
             }
         };
 
-        var _getAllTemplates = function ($http, $log) {
-            return $http.get("static/presentations/data/templates.json", {cache: true})
+        var _getAllTemplates = function ($http, $log,deferred) {
+            return $http.get("/templates/list", {cache: true})
                 .success(function (data, status, headers, config) {
-                    return data;
+                    deferred.resolve(data);
                 })
                 .error(function (data, status, headers, config) {
                     $log.info("call failed getting default data");
-                    return [];
+                    deferred.resolve([]);
                 });
         };
 
@@ -64,7 +60,7 @@
             scripts[scriptId] = script;
             return {scriptId: scriptId};//to do clean this up with http calls
         };
-        this.$get = ["$http", "$log", function ($http, $log) {
+        this.$get = ["$http", "$log", "$q", function ($http, $log, $q) {
             return {
                 put: function (presentationId, page, presentationMap) {
                     var templateFragment = fragments[presentationId];   //TODO fix this in a cleaner way
@@ -78,16 +74,19 @@
                     return templateFragment[page][variable] ? templateFragment[page][variable] : defaultValue;
                 },
                 fetchVariablesForPresentationId: function (presentationId) {
-                    return fetchVariablesForPresentationId(presentationId, $http, $log);
+                    return _fetchVariablesForPresentationId(presentationId, $http, $log);
                 },
                 getAllTemplates: function () {
-                    return   _getAllTemplates($http, $log);
+                    var deferred = $q.defer();
+                    _getAllTemplates($http, $log, deferred);
+                    return $q.promise;
                 },
                 fetchScriptInstructions: function (scriptId) {
                     return _fetchPlayScriptForScriptId(scriptId, $http, $log);
                 },
                 recordAction: _recordScript,
-                completeRecord: _postScript
+                completeRecord: _postScript,
+                initPresentation: _initPresentation
 
 
             };
