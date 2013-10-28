@@ -45,10 +45,9 @@
                 $scope.play = function () {
                     $q.when(anduril.completeRecord(answer._id))
                         .then(function (resp) {
-                            console.log(resp);
-                            $state.go("play", {presentationId: answer._id,
-                                scriptId: resp.scriptId});
                         });
+                    $state.go("play", {presentationId: answer._id});
+
                 };
                 dialogue.showAllDialogues({"dialogues": presentations}, $q.defer());
             }]);

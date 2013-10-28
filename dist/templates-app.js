@@ -132,11 +132,11 @@ angular.module("play/play.tpl.html", []).run(["$templateCache", function($templa
     "<div ng-repeat=\"presentation in presentations\">\n" +
     "    <div>\n" +
     "        <sokratik-dialogue presentation=\"presentation\" presentations=\"presentations\" index=\"{{$index}}\"\n" +
-    "                           script-id=\"{{scriptId}}\" add-fragment=\"addFragment(fragment)\"/>\n" +
+    "                           presentation-id=\"{{presentationId}}\" add-fragment=\"addFragment(fragment)\"/>\n" +
     "    </div>\n" +
     "</div>\n" +
     "<div ui-view=\"control\">\n" +
-    "    aha\n" +
+    "    control\n" +
     "</div>");
 }]);
 

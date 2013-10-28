@@ -20,8 +20,8 @@
       return deferred.promise;
     };
   };
-  function _executeScript(anduril, $stateParams, $q, presentations, fragmentFns, dialogue, $log) {
-    var scriptInstructions = _.chain(anduril.fetchScriptInstructions($stateParams.scriptId)).map(function (tuple) {
+  function _executeScript(answer, $q, presentations, fragmentFns, dialogue, $log) {
+    var scriptInstructions = _.chain(answer.script).map(function (tuple) {
         return _executeScriptInstruction(tuple.fnName, tuple.delay, tuple.args, $q, presentations, fragmentFns, dialogue);
       }).value();
     var deferred = _.first(scriptInstructions)(0);
@@ -37,34 +37,48 @@
     'plusOne',
     'sokratik.atelier.services.istari',
     'sokratik.atelier.services.dialogue',
-    'ngSanitize'
-  ]).config(function config($stateProvider) {
-    $stateProvider.state('play', {
-      url: '/play/:presentationId/:scriptId',
-      resolve: {
-        presentationVars: function ($stateParams, anduril) {
-          return anduril.fetchVariablesForPresentationId($stateParams.presentationId);
+    'ngSanitize',
+    'ngAnimate'
+  ]).config([
+    '$stateProvider',
+    function config($stateProvider) {
+      $stateProvider.state('play', {
+        url: '/play/:presentationId',
+        resolve: {
+          answer: [
+            '$stateParams',
+            'anduril',
+            function ($stateParams, anduril) {
+              return anduril.fetchAnswer($stateParams.presentationId);
+            }
+          ]
         },
-        scriptInstructions: function ($stateParams, anduril) {
-          return anduril.fetchScriptInstructions($stateParams.scriptId);
+        data: { mode: 'play' },
+        views: {
+          'main': {
+            controller: 'PlayCtrl',
+            templateUrl: 'play/play.tpl.html'
+          }
         }
-      },
-      data: { mode: 'play' },
-      views: {
-        'main': {
-          controller: 'PlayCtrl',
-          templateUrl: 'play/play.tpl.html'
-        }
-      }
-    });
-  }).controller('PlayCtrl', function PlayController($stateParams, anduril, $scope, $q, $log, dialogue) {
-    $scope.presentations = anduril.fetchVariablesForPresentationId($stateParams.presentationId);
-    $scope.scriptId = $stateParams.scriptId;
-    var fragmentFns = [];
-    var executeScript = _.after(_.size($scope.presentations), _executeScript);
-    $scope.addFragment = function (fragment) {
-      fragmentFns.push(fragment);
-      executeScript(anduril, $stateParams, $q, $scope.presentations, fragmentFns, dialogue, $log);
-    };
-  });
+      });
+    }
+  ]).controller('PlayCtrl', [
+    '$stateParams',
+    'anduril',
+    '$scope',
+    '$q',
+    '$log',
+    'dialogue',
+    'answer',
+    function ($stateParams, anduril, $scope, $q, $log, dialogue, answer) {
+      $scope.presentations = _.pluck(answer.presentationData, 'keyVals');
+      $scope.presentationId = $stateParams.presentationId;
+      var fragmentFns = [];
+      var executeScript = _.after(_.size($scope.presentations), _executeScript);
+      $scope.addFragment = function (fragment) {
+        fragmentFns.push(fragment);
+        executeScript(answer, $q, $scope.presentations, fragmentFns, dialogue, $log);
+      };
+    }
+  ]);
 }(angular, 'sokratik.atelier.player'));

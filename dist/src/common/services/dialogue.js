@@ -24,7 +24,7 @@
           _.delay(function () {
             deferred.resolve({
               'fnName': 'zoom',
-              'args': [context.page],
+              'args': [{ 'page': context.page }],
               delay: actionInitiated,
               presentationIndex: context.page
             });
@@ -50,7 +50,7 @@
           _.delay(function () {
             deferred.resolve({
               'fnName': 'nextFragment',
-              'args': [context.index],
+              'args': [{ 'index': context.index }],
               delay: actionInitiated,
               presentationIndex: context.presentationIndex
             });
@@ -63,7 +63,7 @@
           _.delay(function () {
             deferred.resolve({
               'fnName': 'prevFragment',
-              'args': [context.index],
+              'args': [{ 'index': context.index }],
               delay: actionInitiated,
               presentationIndex: context.presentationIndex
             });

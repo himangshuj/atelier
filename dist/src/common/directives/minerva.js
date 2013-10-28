@@ -87,7 +87,6 @@
         };
         var _recorderFn = function (prevValue) {
           _injectors.$q.when(prevValue).then(function (resp) {
-            console.log(resp);
             _injectors.anduril.recordAction(scope.presentationId, resp);
           });
         };

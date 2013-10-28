@@ -114,7 +114,6 @@
             var _recorderFn = function (prevValue) {
                 _injectors.$q.when(prevValue).then(
                     function (resp) {
-                        console.log(resp);
                         _injectors.anduril.recordAction(scope.presentationId, resp);
                     }
                 );
@@ -127,6 +126,7 @@
             _.extend(scope, _.object(wrappedFunctions));
         },
         "play": function (scope) {
+
             scope.addFragment({fragment: scope.dialogueCtrl.getFragments });
 
         }

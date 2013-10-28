@@ -63,7 +63,7 @@
                     var actionInitiated = new Date().getTime();
                     _changeSingleDialogue(context.dialogues, context.page, "zoom-in", "zoom-out");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "zoom", "args": [context.page], delay: actionInitiated, presentationIndex: context.page });
+                        deferred.resolve({"fnName": "zoom", "args": [{"page": context.page}], delay: actionInitiated, presentationIndex: context.page });
                     });
                     return deferred.promise;
 
@@ -83,7 +83,7 @@
                     var actionInitiated = new Date().getTime();
                     _changeFragmentClass(context.fragments[context.index], "visible", "");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "nextFragment", "args": [context.index], delay: actionInitiated, presentationIndex: context.presentationIndex});
+                        deferred.resolve({"fnName": "nextFragment", "args": [{"index": context.index}], delay: actionInitiated, presentationIndex: context.presentationIndex});
                     });
                     return deferred.promise;
                 },
@@ -91,7 +91,7 @@
                     var actionInitiated = new Date().getTime();
                     _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "prevFragment", "args": [context.index], delay: actionInitiated, presentationIndex: context.presentationIndex});
+                        deferred.resolve({"fnName": "prevFragment", "args": [{"index": context.index}], delay: actionInitiated, presentationIndex: context.presentationIndex});
                     });
                     return deferred.promise;
 
