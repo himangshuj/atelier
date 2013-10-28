@@ -10,8 +10,7 @@
                 url: '/start',
                 views: {
                     "main": {
-                        controller: 'StartCtrl',
-                        templateUrl: 'start/start.tpl.html'
+                        controller: 'StartCtrl'
                     }
                 }
             });

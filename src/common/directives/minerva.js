@@ -24,9 +24,8 @@
 
     var _fragmentLink = {
         "edit": {
-            "text": ["scope", "element", "attrs", "sokratikDialogueCtrl",function (scope, element, attrs, sokratikDialogueCtrl) {
+            "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                new MediumEditor(element);
                 // Listen for change events to enable binding
                 element.on('blur keyup change', function () {
                     scope.$apply(read);
@@ -39,27 +38,27 @@
                     scope.model.value = _injectors.$sce.trustAsHtml(html);
                     sokratikDialogueCtrl.setProperty(attrs.model, html);
                 }
-            }]
+            }
         },
         "record": {
-            "text":["scope", "element", "attrs", "sokratikDialogueCtrl", function (scope, element, attrs, sokratikDialogueCtrl) {
+            "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
-            }]
+            }
         },
         "play": {
-            "text":["scope", "element", "attrs", "sokratikDialogueCtrl", function (scope, element, attrs, sokratikDialogueCtrl) {
+            "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
-            }]
+            }
 
         }
     };
 
     var _dialogueLink = {
-        "edit": ["scope",function (scope) {
-        }],
-        "record": ["scope", function (scope) {
+        "edit": function (scope) {
+        },
+        "record": function (scope) {
             var index = 0;
             //noinspection JSUnresolvedVariable
             var dialogueCtrl = scope.dialogueCtrl;
@@ -125,15 +124,15 @@
                 return [key, _.compose(_recorderFn, value)];
             });
             _.extend(scope, _.object(wrappedFunctions));
-        }],
-        "play":["scope", function (scope) {
+        },
+        "play": function (scope) {
             scope.addFragment({fragment: scope.dialogueCtrl.getFragments });
 
-        }]
+        }
 
     };
 
-    var _sokratikFragmentDirective = ["$state", "$sce", function ($state, $sce) {
+    var _sokratikFragmentDirective = ["$state", "$sce", "$log", function ($state, $sce, $log) {
         _injectors.$sce = $sce;
         return {
             "restrict": "E",
@@ -168,8 +167,8 @@
                     addFragment: "&?"
                 },
 
-                controller: ["$scope",function ($scope) {
-                    $scope.templateName = "static/presentations/templates/" + ($scope.presentation.templateName || "master") + ".html";
+                controller: ["$scope",  function ($scope) {
+                    $scope.templateName = "/views/templates/" + ($scope.presentation.templateName || "master") + ".html";
                     $scope.currentFragmentIndex = 0;
                     var dialogueFragments = [];
                     this.addFragment = function (dialogueFragment) {

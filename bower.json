@@ -7,11 +7,14 @@
         "angular-sanitize": "~1.2.0-rc.3",
         "angular-animate": "~1.2.0-rc.3",
         "angular-cookies": "~1.2.0-rc.3",
+        "angular-resource": "~1.2.0-rc.3",
 
         "bootstrap": "~3.0.0",
         "angular-bootstrap": "~0.6.0",
         "angular-ui-router": "~0.2.0",
         "angular-ui-utils": "~0.0.4",
+        "angular-ui-utils": "~0.0.4",
+
         "medium-editor": "git@github.com:daviferreira/medium-editor.git#~1.0.2",
         "underscore": "~1.5.2"
     },

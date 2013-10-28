@@ -1,7 +1,7 @@
 (function (ng, app) {
 
-    var _newSlideModalCtrl = function ($scope, $modalInstance, templates) {
-        $scope.templates = templates.data;
+    var _newSlideModalCtrl = ["$scope", "$modalInstance", "templates", function ($scope, $modalInstance, templates) {
+        $scope.templates = templates;
         $scope.selected = {
             template: $scope.templates[0]
         };
@@ -13,7 +13,7 @@
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    };
+    }];
     ng.module(app, [
             'ui.router',
             'titleService',
@@ -32,10 +32,10 @@
 
                     }],
                     page: ["$stateParams", function ($stateParams) {
-                        return $stateParams.page ? $stateParams.page : '0';
+                        return parseInt($stateParams.page ? $stateParams.page : 0, 10);
                     }],
-                    templateVars: ["$stateParams", "anduril", "presentationId", function ($stateParams, anduril, presentationId) {
-                        return anduril.fetchVariablesForPresentationId(presentationId);
+                    answer: ["anduril", "presentationId", function (anduril, presentationId) {
+                        return anduril.fetchAnswer(presentationId);
                     }]
                 },
                 data: {
@@ -70,28 +70,29 @@
         }])
 
         .controller('EditCtrl',
-            ["titleService", "$stateParams", "$scope", "$state", "anduril", "presentationId", "page", function (titleService, $stateParams, $scope, $state, anduril, presentationId, page) {
-                titleService.setTitle('Edit the knowledge');
-                $scope.page = page = parseInt(page, 10);
-                $scope.presentationId = presentationId;
-                console.log(presentationId);
-                $scope.presentation = anduril.fetchVariablesForPresentationId(presentationId)[page] || {};
-                console.log($scope.presentation);
-                $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
-                $scope.presentation.css = ["zoom-in"];
-                $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
-            }])
+            ["titleService", "$stateParams", "$scope", "$state", "anduril", "presentationId", "page", "answer",
+                function (titleService, $stateParams, $scope, $state, anduril, presentationId, page, answer) {
+                    titleService.setTitle('Edit the knowledge');
+                    $scope.page = page = parseInt(page, 10);
+                    $scope.presentationId = presentationId;
+                    $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
+                    $scope.presentation.keyVals = _.extend({},$scope.presentation.keyVals);
+                    anduril.put(presentationId, page, $scope.presentation);
+                    $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
+                    $scope.presentation.css = ["zoom-in"];
+                    $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
+                }])
 
         .controller('FlowCtrl', ["$scope", "$state", "anduril", "presentationId", "$modal", "$log", "page", "templates",
             function ($scope, $state, anduril, presentationId, $modal, $log, page, templates) {
+                page = parseInt(page, 10);
                 $scope.resume = function () {
-                    anduril.post();
                     anduril.put(presentationId, page, $scope.presentation);
+                    anduril.post(presentationId);
                     $state.go("record");
                 };
                 $scope.templates = templates;
                 $scope.add = function () {
-
                     var modalInstance = $modal.open({
                         templateUrl: 'edit/newslide.modal.tpl.html',
                         controller: _newSlideModalCtrl,
@@ -104,7 +105,9 @@
 
                     modalInstance.result.then(function (selectedTemplate) {
                         $scope.selected = selectedTemplate;
-                        $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": $scope.page + 1 });
+                        anduril.put(presentationId, page, $scope.presentation);
+                        anduril.post(presentationId);
+                        $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });
                     }, function () {
                         $log.info('Modal dismissed at: ' + new Date());
                     });
