@@ -67,10 +67,10 @@
         };
         fnMap.previous = function () {
           var dialogueFragments = dialogueCtrl.getFragments();
-          if (index > 0) {
+          if (index > 0 && index < _.size(dialogueFragments)) {
             return _injectors.dialogue.prevFragment({
               fragments: dialogueFragments,
-              index: --index
+              index: index--
             }, _injectors.$q.defer());
           } else {
             return _injectors.dialogue.showAllDialogues({ dialogues: scope.presentations }, _injectors.$q.defer());
@@ -153,10 +153,10 @@
                 dialogueFragments = _.chain(dialogueFragments).union(dialogueFragment).flatten().value();
               };
               this.getProperty = function (propertyKey, defaultValue) {
-                return $scope.presentation.keyVals[propertyKey] || defaultValue;
+                return ($scope.presentation.keyVals || {})[propertyKey] || defaultValue;
               };
               this.setProperty = function (propertyKey, value) {
-                $scope.presentation.keyVals[propertyKey] = value;
+                ($scope.presentation.keyVals || {})[propertyKey] = value;
               };
               this.getFragments = function () {
                 return _.clone(dialogueFragments);
