@@ -181,11 +181,11 @@
                             .value();
                     };
                     this.getProperty = function (propertyKey, defaultValue) {
-                        return $scope.presentation[propertyKey] || defaultValue;
+                        return $scope.presentation.keyVals[propertyKey] || defaultValue;
                     };
 
                     this.setProperty = function (propertyKey, value) {
-                        $scope.presentation[propertyKey] = value;
+                        $scope.presentation.keyVals[propertyKey] = value;
                     };
                     this.getFragments = function () {
                         return _.clone(dialogueFragments);//returns a shallow copy

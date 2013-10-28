@@ -40,7 +40,7 @@
                     obj.css = ["slide", "base"];
                     return obj;
                 });
-                $scope.presentations = _.pluck(presentations, "keyVals");
+                $scope.presentations = presentations;
                 $scope.presentationId = answer._id;
                 $scope.play = function () {
                     $q.when(anduril.completeRecord(answer._id))
