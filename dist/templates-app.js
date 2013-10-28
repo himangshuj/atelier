@@ -20,7 +20,7 @@ angular.module("edit/dialogue.tpl.html", []).run(["$templateCache", function($te
 
 angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/edit.tpl.html",
-    "<div class=\"reveal\" ui-view=\"template\"></div>\n" +
+    "<div class=\"edit\" ui-view=\"template\"></div>\n" +
     "\n" +
     "<div ui-view=\"control\" class=\"controlBar\"></div>\n" +
     "\n" +

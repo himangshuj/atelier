@@ -67,10 +67,10 @@
         };
         fnMap.previous = function () {
           var dialogueFragments = dialogueCtrl.getFragments();
-          if (index > 0 && index < _.size(dialogueFragments)) {
+          if (index > 0) {
             return _injectors.dialogue.prevFragment({
               fragments: dialogueFragments,
-              index: index--
+              index: --index
             }, _injectors.$q.defer());
           } else {
             return _injectors.dialogue.showAllDialogues({ dialogues: scope.presentations }, _injectors.$q.defer());
