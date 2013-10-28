@@ -76,20 +76,21 @@
                     $scope.page = page = parseInt(page, 10);
                     $scope.presentationId = presentationId;
                     $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
-                    $scope.presentation.keyVals = _.extend({},$scope.presentation.keyVals);
+                    $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(presentationId, page, $scope.presentation);
                     $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
                     $scope.presentation.css = ["zoom-in"];
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                 }])
 
-        .controller('FlowCtrl', ["$scope", "$state", "anduril", "presentationId", "$modal", "$log", "page", "templates",
-            function ($scope, $state, anduril, presentationId, $modal, $log, page, templates) {
+        .controller('FlowCtrl', ["$scope", "$state", "anduril", "presentationId", "$modal", "$log", "page", "templates", "answer",
+            function ($scope, $state, anduril, presentationId, $modal, $log, page, templates, answer) {
                 page = parseInt(page, 10);
                 $scope.resume = function () {
                     anduril.put(presentationId, page, $scope.presentation);
                     anduril.post(presentationId);
                     $state.go("record");
+
                 };
                 $scope.templates = templates;
                 $scope.add = function () {

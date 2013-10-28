@@ -8,19 +8,13 @@
             'ngSanitize',
             'ngAnimate'])
 
-        .config(function config($stateProvider) {
+        .config(["$stateProvider", function config($stateProvider) {
             $stateProvider.state('record', {
-                url: '/record/:presentationId/:scriptId',
+                url: '/record/:presentationId',
                 resolve: {
-                    presentationVars: function ($stateParams, anduril) {
-                        return anduril.fetchVariablesForPresentationId($stateParams.presentationId);
-                    },
-                    scriptId: function ($stateParams) {
-                        return $stateParams.scriptId || "init";
-                    },
-                    scriptVars: function (anduril, scriptId) {
-                        return anduril.fetchScriptInstructions(scriptId);
-                    }
+                    answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
+                        return anduril.fetchAnswer($stateParams.presentationId);
+                    }]
                 },
                 data: {
                     mode: "record"
@@ -36,24 +30,26 @@
             ;
 
 
-        })
-        .controller('RecordCtrl', function RecordController($scope, titleService, anduril, $stateParams, dialogue, $q, scriptId, $state) {
-            titleService.setTitle("Sokratik | " + (anduril.fetchVariablesForPresentationId($stateParams.presentationId).title || "Lets Learn"));
+        }])
+        .controller('RecordCtrl', ["$scope", "titleService", "anduril", "$stateParams", "answer", "$q", "$state", "dialogue",
+            function ($scope, titleService, anduril, $stateParams, answer, $q, $state, dialogue) {
+                titleService.setTitle("Sokratik | " + (answer.title || "Lets Learn"));
 
-            var presentations = _.map(anduril.fetchVariablesForPresentationId($stateParams.presentationId), function (obj) { //todo move to clojure script
-                obj.templateName = obj.templateName || "master";
-                obj.css = ["slide", "base"];
-                return obj;
-            });
-            $scope.presentations = presentations;
-            $scope.scriptId = scriptId;
-            $scope.play = function () {
-                $q.when(anduril.completeRecord(scriptId))
-                    .then(function (resp) {
-                        $state.go("play", {presentationId: $stateParams.presentationId,
-                            scriptId: resp.scriptId});
-                    });
-            };
-            dialogue.showAllDialogues({"dialogues": presentations}, $q.defer());
-        });
+                var presentations = _.map(answer.presentationData, function (obj) { //todo move to clojure script
+                    obj.templateName = obj.templateName || "master";
+                    obj.css = ["slide", "base"];
+                    return obj;
+                });
+                $scope.presentations = _.pluck(presentations, "keyVals");
+                $scope.presentationId = answer._id;
+                $scope.play = function () {
+                    $q.when(anduril.completeRecord(answer._id))
+                        .then(function (resp) {
+                            console.log(resp);
+                            $state.go("play", {presentationId: answer._id,
+                                scriptId: resp.scriptId});
+                        });
+                };
+                dialogue.showAllDialogues({"dialogues": presentations}, $q.defer());
+            }]);
 })(angular, "sokratik.atelier.record");

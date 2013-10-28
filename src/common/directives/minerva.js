@@ -68,10 +68,10 @@
                 if (index > _.size(dialogueCtrl.getFragments())) {
                     _injectors.dialogue.resetFragments(dialogueFragments, _injectors.$q.defer()).then(
                         function (obj) {
-                            _injectors.anduril.recordAction(scope.scriptId, obj);
+                            _injectors.anduril.recordAction(scope.presentationId, obj);
                             _injectors.$q.when(_injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer())).
                                 then(function (resp) {
-                                    _injectors.anduril.recordAction(scope.scriptId, resp);
+                                    _injectors.anduril.recordAction(scope.presentationId, resp);
                                 });
 
                         });
@@ -114,7 +114,8 @@
             var _recorderFn = function (prevValue) {
                 _injectors.$q.when(prevValue).then(
                     function (resp) {
-                        _injectors.anduril.recordAction(scope.scriptId, resp);
+                        console.log(resp);
+                        _injectors.anduril.recordAction(scope.presentationId, resp);
                     }
                 );
 
@@ -158,16 +159,18 @@
             _injectors.anduril = anduril;
             return {
                 restrict: "E",
-                templateUrl: $state.current.data.mode + "/dialogue.tpl.html",
+                templateUrl: function () {
+                    return $state.current.data.mode + "/dialogue.tpl.html";
+                },
                 scope: {
                     presentation: "=",
                     presentations: "=",
                     index: "@",
-                    scriptId: "@",
+                    presentationId: "@",
                     addFragment: "&?"
                 },
 
-                controller: ["$scope",  function ($scope) {
+                controller: ["$scope", function ($scope) {
                     $scope.templateName = "/views/templates/" + ($scope.presentation.templateName || "master") + ".html";
                     $scope.currentFragmentIndex = 0;
                     var dialogueFragments = [];

@@ -109,7 +109,8 @@
     '$log',
     'page',
     'templates',
-    function ($scope, $state, anduril, presentationId, $modal, $log, page, templates) {
+    'answer',
+    function ($scope, $state, anduril, presentationId, $modal, $log, page, templates, answer) {
       page = parseInt(page, 10);
       $scope.resume = function () {
         anduril.put(presentationId, page, $scope.presentation);

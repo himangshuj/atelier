@@ -8,23 +8,8 @@
 
     var andurilForger = function () {
         var fragments = {};
-        var scripts = {};
         var injectors = {};
 
-        var _fetchPlayScriptForScriptId = function (scriptId, $http, $log) {
-            if (scripts[scriptId] == null) {
-                return     $http.get("static/presentations/script/" + scriptId + ".json", {cache: true})
-                    .success(function (data) {
-                        return scripts[scriptId] = data;
-                    })
-                    .error(function (data) {
-                        $log.info("call failed getting default data");
-                        return scripts[scriptId] = {};
-                    });
-            } else {
-                return scripts[scriptId];
-            }
-        };
 
         var _getAllTemplates = function () {
             var deferred = injectors.$q.defer();
@@ -39,19 +24,19 @@
             return deferred.promise;
         };
 
-        var _recordScript = function (scriptId, tuple) {
-            scripts[scriptId].push(tuple);
+        var _recordScript = function (presentationId, tuple) {
+            fragments[presentationId].script.push(tuple);
         };
-        var _postScript = function (scriptId) {
-            var script = _.sortBy(scripts[scriptId], function (tuple) {
+        var _postScript = function (presentationId) {
+            var script = _.sortBy(fragments[presentationId].script, function (tuple) {
                 return tuple.delay;
             });
             var start = script[0].delay;
             _.each(script, function (tuple) {
                 tuple.delay = tuple.delay - start;
             });
-            scripts[scriptId] = script;
-            return {scriptId: scriptId};//to do clean this up with http calls
+            fragments[presentationId].script = script;
+            return fragments[presentationId].$update();
         };
         this.$get = ["$http", "$log", "$q", "$resource", function ($http, $log, $q, $resource) {
             injectors.$http = $http;
@@ -73,17 +58,13 @@
                     templateFragment[page] = presentationMap;
                 },
                 post: function (presentationId) {
-                    fragments[presentationId].$update(function (resp) {
-                    });
+                    return fragments[presentationId].$update();
                 },
                 getVar: function (presentationId, page, variable, defaultValue) {
                     var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
                     return (templateFragment[page].keyVals || {})[variable] || defaultValue;
                 },
                 getAllTemplates: _getAllTemplates,
-                fetchScriptInstructions: function (scriptId) {
-                    return _fetchPlayScriptForScriptId(scriptId, $http, $log);
-                },
                 fetchAnswer: function (answerId) {
 
                     var deferred = $q.defer();

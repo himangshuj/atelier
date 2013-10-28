@@ -175,7 +175,7 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "<div ng-repeat=\"presentation in presentations\">\n" +
     "    <div>\n" +
     "        <sokratik-dialogue presentation=\"presentation\" presentations=\"presentations\" index=\"{{$index}}\"\n" +
-    "                           script-id=\"{{scriptId}}\"/>\n" +
+    "                           presentation-id=\"{{presentationId}}\"/>\n" +
     "    </div>\n" +
     "</div>\n" +
     "<div>\n" +
