@@ -1,10 +1,9 @@
 *.sw*
 *~
 build/
-bin/
 node_modules/
 vendor/
 .idea
 node_modules
 *.iml
-dist
+bin

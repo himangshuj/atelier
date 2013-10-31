@@ -5,7 +5,7 @@
  * automatically.
  */
 describe( 'edit section', function() {
-    beforeEach( module( 'sokratik.kamillion.edit' ) );
+    beforeEach( module( 'sokratik.atelier.edit' ) );
 
     it( 'should have a dummy test', inject( function() {
         expect( true ).toBeTruthy();

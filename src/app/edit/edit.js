@@ -1,7 +1,7 @@
 (function (ng, app) {
 
-    var _newSlideModalCtrl = function ($scope, $modalInstance, templates) {
-        $scope.templates = templates.data;
+    var _newSlideModalCtrl = ["$scope", "$modalInstance", "templates", function ($scope, $modalInstance, templates) {
+        $scope.templates = templates;
         $scope.selected = {
             template: $scope.templates[0]
         };
@@ -13,29 +13,30 @@
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-    };
+    }];
     ng.module(app, [
             'ui.router',
             'titleService',
             'plusOne',
-            'sokratik.kamillion.directives.minerva',
-            'sokratik.kamillion.services.istari',
+            'sokratik.atelier.directives.minerva',
+            'sokratik.atelier.services.istari',
             'ngSanitize'
         ])
 
-        .config(function config($stateProvider) {
+        .config(["$stateProvider", function config($stateProvider) {
             $stateProvider.state('edit', {
                 url: '/edit/:templateName/:presentationId/:page',
                 resolve: {
-                    presentationId: function ($stateParams) {
+                    presentationId: ["$stateParams", function ($stateParams) {
                         return $stateParams.presentationId ? $stateParams.presentationId : "default";
-                    },
-                    page: function ($stateParams) {
-                        return $stateParams.page ? $stateParams.page : '0';
-                    },
-                    templateVars: function ($stateParams, anduril, presentationId) {
-                        return anduril.fetchVariablesForPresentationId(presentationId);
-                    }
+
+                    }],
+                    page: ["$stateParams", function ($stateParams) {
+                        return parseInt($stateParams.page ? $stateParams.page : 0, 10);
+                    }],
+                    answer: ["anduril", "presentationId", function (anduril, presentationId) {
+                        return anduril.fetchAnswer(presentationId);
+                    }]
                 },
                 data: {
                     mode: "edit"
@@ -49,6 +50,11 @@
             })
                 .state("edit.template", {
                     url: '/',
+                    resolve: {
+                        templates: ["anduril", function (anduril) {
+                            return anduril.getAllTemplates();
+                        }]
+                    },
                     views: {
                         "template": {
                             templateUrl: "edit/template.tpl.html",
@@ -61,49 +67,58 @@
                     }
                 });
 
-        })
+        }])
 
-        .controller('EditCtrl', function EditController(titleService, $stateParams, $scope, $state, anduril, presentationId, page, templateVars) {
-            titleService.setTitle('Edit the knowledge');
-            $scope.page = page = parseInt(page, 10);
-            $scope.presentationId = $stateParams.presentationId;
-            $scope.presentation = anduril.fetchVariablesForPresentationId(presentationId)[page] || {};
-            $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
-            $scope.presentation.css = ["zoom-in"];
-            $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
-        })
-        .controller('FlowCtrl', function FlowController($scope, $state, anduril, presentationId, $modal, $log,page) {
-            $scope.resume = function () {
-                anduril.post();
-                anduril.put(presentationId,page,$scope.presentation);
-                $state.go("record");
-            };
-            $scope.templates = anduril.getAllTemplates();
-            $scope.add = function () {
+        .controller('EditCtrl',
+            ["titleService", "$stateParams", "$scope", "$state", "anduril", "presentationId", "page", "answer",
+                function (titleService, $stateParams, $scope, $state, anduril, presentationId, page, answer) {
+                    titleService.setTitle('Edit the knowledge');
+                    $scope.page = page = parseInt(page, 10);
+                    $scope.presentationId = presentationId;
+                    $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
+                    $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
+                    anduril.put(presentationId, page, $scope.presentation);
+                    $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
+                    $scope.presentation.css = [""];
+                    $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
+                }])
 
-                var modalInstance = $modal.open({
-                    templateUrl: 'edit/newslide.modal.tpl.html',
-                    controller: _newSlideModalCtrl,
-                    resolve: {
-                        templates: function () {
-                            return $scope.templates;
+        .controller('FlowCtrl', ["$scope", "$state", "anduril", "presentationId", "$modal", "$log", "page", "templates", "answer",
+            function ($scope, $state, anduril, presentationId, $modal, $log, page, templates, answer) {
+                page = parseInt(page, 10);
+                $scope.resume = function () {
+                    anduril.put(presentationId, page, $scope.presentation);
+                    anduril.post(presentationId);
+                    $state.go("record");
+
+                };
+                $scope.templates = templates;
+                $scope.add = function () {
+                    var modalInstance = $modal.open({
+                        templateUrl: 'edit/newslide.modal.tpl.html',
+                        controller: _newSlideModalCtrl,
+                        resolve: {
+                            templates: function () {
+                                return $scope.templates;
+                            }
                         }
-                    }
-                });
+                    });
 
-                modalInstance.result.then(function (selectedTemplate) {
-                    $scope.selected = selectedTemplate;
-                    $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": $scope.page + 1 });
-                }, function () {
-                    $log.info('Modal dismissed at: ' + new Date());
-                });
+                    modalInstance.result.then(function (selectedTemplate) {
+                        $scope.selected = selectedTemplate;
+                        anduril.put(presentationId, page, $scope.presentation);
+                        anduril.post(presentationId);
+                        $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });
+                    }, function () {
+                        $log.info('Modal dismissed at: ' + new Date());
+                    });
 
-            };
-        })
-        .controller('TemplateCtrl', function TemplateController(anduril, $scope, $stateParams, page, templateVars) {
+                };
+            }])
+        .controller('TemplateCtrl', function TemplateController() {
 
         });
-})(angular, "sokratik.kamillion.edit");
+})(angular, "sokratik.atelier.edit");
 
 
 

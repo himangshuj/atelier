@@ -5,18 +5,17 @@
             'plusOne'
         ])
 
-        .config(function config($stateProvider) {
+        .config(["$stateProvider",function config($stateProvider) {
             $stateProvider.state('start', {
                 url: '/start',
                 views: {
                     "main": {
-                        controller: 'StartCtrl',
-                        templateUrl: 'start/start.tpl.html'
+                        controller: 'StartCtrl'
                     }
                 }
             });
-        })
-        .controller('StartCtrl', function HomeController($scope, titleService) {
+        }])
+        .controller('StartCtrl',["$state","titleService", function ($state, titleService) {
             titleService.setTitle('Start Creating');
-        });
-})(angular, "sokratik.kamillion.start");
+        }]);
+})(angular, "sokratik.atelier.start");
