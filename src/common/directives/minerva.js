@@ -26,7 +26,6 @@
         "edit": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                new MediumEditor(element);
                 // Listen for change events to enable binding
                 element.on('blur keyup change', function () {
                     scope.$apply(read);
@@ -57,7 +56,7 @@
     };
 
     var _dialogueLink = {
-        "edit": function (scope, $q, anduril, dialogue) {
+        "edit": function (scope) {
         },
         "record": function (scope) {
             var index = 0;
@@ -69,11 +68,10 @@
                 if (index > _.size(dialogueCtrl.getFragments())) {
                     _injectors.dialogue.resetFragments(dialogueFragments, _injectors.$q.defer()).then(
                         function (obj) {
-                            _injectors.anduril.recordAction(scope.scriptId, obj);
-                            console.log(obj);
+                            _injectors.anduril.recordAction(scope.presentationId, obj);
                             _injectors.$q.when(_injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer())).
                                 then(function (resp) {
-                                    _injectors.anduril.recordAction(scope.scriptId, resp);
+                                    _injectors.anduril.recordAction(scope.presentationId, resp);
                                 });
 
                         });
@@ -116,7 +114,7 @@
             var _recorderFn = function (prevValue) {
                 _injectors.$q.when(prevValue).then(
                     function (resp) {
-                        _injectors.anduril.recordAction(scope.scriptId, resp);
+                        _injectors.anduril.recordAction(scope.presentationId, resp);
                     }
                 );
 
@@ -128,6 +126,8 @@
             _.extend(scope, _.object(wrappedFunctions));
         },
         "play": function (scope) {
+
+            //noinspection JSUnresolvedVariable
             scope.addFragment({fragment: scope.dialogueCtrl.getFragments });
 
         }
@@ -160,17 +160,19 @@
             _injectors.anduril = anduril;
             return {
                 restrict: "E",
-                templateUrl: $state.current.data.mode + "/dialogue.tpl.html",
+                templateUrl: function () {
+                    return $state.current.data.mode + "/dialogue.tpl.html";
+                },
                 scope: {
                     presentation: "=",
                     presentations: "=",
                     index: "@",
-                    scriptId: "@",
+                    presentationId: "@",
                     addFragment: "&?"
                 },
 
-                controller: function ($scope) {
-                    $scope.templateName = "static/presentations/templates/" + ($scope.presentation.templateName || "master") + ".html";
+                controller: ["$scope", function ($scope) {
+                    $scope.templateName = "/views/templates/" + ($scope.presentation.templateName || "master") + ".html";
                     $scope.currentFragmentIndex = 0;
                     var dialogueFragments = [];
                     this.addFragment = function (dialogueFragment) {
@@ -180,16 +182,16 @@
                             .value();
                     };
                     this.getProperty = function (propertyKey, defaultValue) {
-                        return $scope.presentation[propertyKey] || defaultValue;
+                        return ($scope.presentation.keyVals || {})[propertyKey] || defaultValue;
                     };
 
                     this.setProperty = function (propertyKey, value) {
-                        $scope.presentation[propertyKey] = value;
+                        ($scope.presentation.keyVals|| {})[propertyKey] = value;
                     };
                     this.getFragments = function () {
                         return _.clone(dialogueFragments);//returns a shallow copy
                     };
-                },
+                }],
                 controllerAs: "dialogueCtrl",
                 compile: function () {
                     return _dialogueLink[$state.current.data.mode];
@@ -200,8 +202,8 @@
             };
 
         }];
-    ng.module(app, ['sokratik.kamillion.services.istari', 'sokratik.kamillion.services.dialogue'])
+    ng.module(app, ['sokratik.atelier.services.istari', 'sokratik.atelier.services.dialogue'])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective);
 
-})(angular, "sokratik.kamillion.directives.minerva");
+})(angular, "sokratik.atelier.directives.minerva");

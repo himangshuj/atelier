@@ -9,7 +9,7 @@ module.exports = {
      * development and the `compile_dir` folder is where our app resides once it's
      * completely built.
      */
-    "build_dir": "build",
+    "build_dir": "dist",
     "compile_dir": "bin",
 
     /**
@@ -22,7 +22,7 @@ module.exports = {
      * app's unit tests.
      */
     app_files: {
-        js: [ 'src/**/*.js', '!src/**/*.spec.js' ],
+        js: [ 'src/**/*.js', '!src/**/*.spec.js','!src/**/app.*' ],
         jsunit: [ 'src/**/*.spec.js' ],
 
         coffee: [ 'src/**/*.coffee', '!src/**/*.spec.coffee' ],
@@ -54,6 +54,7 @@ module.exports = {
             "vendor/angular/angular.js",
             "vendor/angular-sanitize/angular-sanitize.min.js",
             "vendor/angular-cookies/angular-cookies.min.js",
+            "vendor/angular-resource/angular-resource.min.js",
             "vendor/angular-bootstrap/ui-bootstrap-tpls.min.js",
             "vendor/angular-ui-router/release/angular-ui-router.js",
             "vendor/angular-ui-utils/modules/route/route.js",
