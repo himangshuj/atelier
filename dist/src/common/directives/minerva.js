@@ -105,8 +105,7 @@
   var _sokratikFragmentDirective = [
       '$state',
       '$sce',
-      '$log',
-      function ($state, $sce, $log) {
+      function ($state, $sce) {
         _injectors.$sce = $sce;
         return {
           'restrict': 'E',

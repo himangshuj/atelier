@@ -127,13 +127,14 @@
         },
         "play": function (scope) {
 
+            //noinspection JSUnresolvedVariable
             scope.addFragment({fragment: scope.dialogueCtrl.getFragments });
 
         }
 
     };
 
-    var _sokratikFragmentDirective = ["$state", "$sce", "$log", function ($state, $sce, $log) {
+    var _sokratikFragmentDirective = ["$state", "$sce", function ($state, $sce) {
         _injectors.$sce = $sce;
         return {
             "restrict": "E",
@@ -181,7 +182,7 @@
                             .value();
                     };
                     this.getProperty = function (propertyKey, defaultValue) {
-                        return ($scope.presentation.keyVals|| {})[propertyKey] || defaultValue;
+                        return ($scope.presentation.keyVals || {})[propertyKey] || defaultValue;
                     };
 
                     this.setProperty = function (propertyKey, value) {

@@ -79,7 +79,7 @@
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(presentationId, page, $scope.presentation);
                     $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
-                    $scope.presentation.css = ["zoom-in"];
+                    $scope.presentation.css = [""];
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                 }])
 

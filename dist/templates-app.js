@@ -101,7 +101,7 @@ angular.module("edit/search.tpl.html", []).run(["$templateCache", function($temp
 
 angular.module("edit/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/template.tpl.html",
-    "<sokratik-dialogue presentation=\"presentation.keyVals\"/>\n" +
+    "<sokratik-dialogue presentation=\"presentation\"/>\n" +
     "\n" +
     "");
 }]);
