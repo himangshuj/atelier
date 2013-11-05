@@ -1,0 +1,27 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+
+            Select the image
+        </div>
+        <div class="modal-body">
+            <table>
+                <tr ng-repeat="imageGroup in imageGroups">
+                    <td ng-repeat="image in imageGroup">
+                        <img ng-src="{{image.thumbnail}}" ng-click="selected.image = image.url"/>
+                    </td>
+                </tr>
+            </table>
+
+
+            Selected: <b><img ng-src="{{selected.image}}"/></b>
+
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="cancel()">Close</button>
+            <button class="btn btn-primary" ng-click="ok()">Ok</button>
+        </div>
+    </div>
+</div>
+

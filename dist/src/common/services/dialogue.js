@@ -2,9 +2,9 @@
   var dialogueService = function () {
     var _changeSingleDialogue = function (presentationDialogues, index, classToAdd, classToRemove) {
       _.each(presentationDialogues, function (presentationDialog) {
-        presentationDialog.css = _.without(presentationDialog.css, classToAdd, classToRemove);
+        presentationDialog.css = _.without(presentationDialog.css, classToAdd);
       });
-      presentationDialogues[index].css = _.union(presentationDialogues[index].css, [classToAdd]);
+      presentationDialogues[index].css = _.chain(presentationDialogues[index].css).union([classToAdd]).without(classToRemove).value();
       return presentationDialogues;
     };
     var _changeAllDialogues = function (presentationDialogues, classToAdd, classToRemove) {
@@ -72,7 +72,7 @@
         },
         resetFragments: function (context, deferred) {
           var actionInitiated = new Date().getTime();
-          _changeAllDialogues(context.fragments, 'fragment', '');
+          _changeAllDialogues(context.fragments, 'fragment', 'visible');
           _.delay(function () {
             deferred.resolve({
               'fnName': 'resetFragments',

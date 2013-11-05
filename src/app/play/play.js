@@ -23,19 +23,24 @@
     };
 
     function _executeScript(answer, $q, presentations, fragmentFns, dialogue, $log) {
+        var totalSteps = _.size(answer.script);
+        var currentStep = 0;
         var scriptInstructions =
             _.chain(answer.script)
                 .map(function (tuple) {
                     return  _executeScriptInstruction(tuple.fnName, tuple.delay, tuple.args, $q, presentations, fragmentFns, dialogue);
                 }).value();
-        var deferred = _.first(scriptInstructions)(0);
-        return _.reduce(_.rest(scriptInstructions), function (promiseTillNow, nextPromise) {
+        var init = dialogue.showAllDialogues({dialogues: presentations,presentationIndex: 0},$q.defer());
+        return _.reduce(scriptInstructions, function (promiseTillNow, nextPromise) {
             return promiseTillNow.then(
                 function (resp) {
+                    $log.info("Response: "+ng.toJson(resp));
+                    console.log("Css"+ng.toJson(_.pluck(presentations, "css")));
+                    $log.info("Remaining steps" + (totalSteps - (++currentStep)));
                     return nextPromise(resp.presentationIndex);
                 }
             );
-        }, deferred);
+        }, init);
     }
 
     ng.module(app, [
@@ -67,7 +72,7 @@
         }])
         .controller("PlayCtrl", ["$stateParams", "anduril", "$scope", "$q", "$log", "dialogue", "answer",
             function ($stateParams, anduril, $scope, $q, $log, dialogue, answer) {
-                $scope.presentations = _.pluck(answer.presentationData, "keyVals");
+                $scope.presentations = answer.presentationData;
                 $scope.presentationId = $stateParams.presentationId;
                 var fragmentFns = [];
                 var executeScript = _.after(_.size($scope.presentations), _executeScript); //this has to be executed only after all the fragments are populated

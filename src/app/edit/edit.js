@@ -25,17 +25,21 @@
 
         .config(["$stateProvider", function config($stateProvider) {
             $stateProvider.state('edit', {
-                url: '/edit/:templateName/:presentationId/:page',
+                url: '/edit/:questionId/:templateName/:presentationId/:page',
                 resolve: {
                     presentationId: ["$stateParams", function ($stateParams) {
                         return $stateParams.presentationId ? $stateParams.presentationId : "default";
 
                     }],
                     page: ["$stateParams", function ($stateParams) {
+                        //noinspection JSUnresolvedFunction
                         return parseInt($stateParams.page ? $stateParams.page : 0, 10);
                     }],
                     answer: ["anduril", "presentationId", function (anduril, presentationId) {
                         return anduril.fetchAnswer(presentationId);
+                    }],
+                    images: ["$stateParams","anduril", function ($stateParams,anduril) {
+                        return anduril.fetchImages($stateParams.questionId);
                     }]
                 },
                 data: {
@@ -73,6 +77,7 @@
             ["titleService", "$stateParams", "$scope", "$state", "anduril", "presentationId", "page", "answer",
                 function (titleService, $stateParams, $scope, $state, anduril, presentationId, page, answer) {
                     titleService.setTitle('Edit the knowledge');
+                    //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
                     $scope.presentationId = presentationId;
                     $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
@@ -83,8 +88,9 @@
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                 }])
 
-        .controller('FlowCtrl', ["$scope", "$state", "anduril", "presentationId", "$modal", "$log", "page", "templates", "answer",
-            function ($scope, $state, anduril, presentationId, $modal, $log, page, templates, answer) {
+        .controller('FlowCtrl', ["$scope", "$state", "anduril", "presentationId", "$modal", "$log", "page", "templates",
+            function ($scope, $state, anduril, presentationId, $modal, $log, page, templates) {
+                //noinspection JSUnresolvedFunction
                 page = parseInt(page, 10);
                 $scope.resume = function () {
                     anduril.put(presentationId, page, $scope.presentation);
@@ -110,6 +116,7 @@
                         anduril.post(presentationId);
                         $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });
                     }, function () {
+                        //noinspection JSUnresolvedFunction
                         $log.info('Modal dismissed at: ' + new Date());
                     });
 
