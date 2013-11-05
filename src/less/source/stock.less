@@ -1,16 +1,16 @@
-@import '../../../../../vendor/bootstrap/less/mixins.less';
-@import '../../../../../vendor/bootstrap/less/variables.less';
+@import '../../../vendor/bootstrap/less/mixins.less';
+@import '../../../vendor/bootstrap/less/variables.less';
 @import 'stock-settings.less';
 @import 'stock-mixins.less';
 /*
 TODO this should be more elegant , write code not type text
 */
 .base{
-  .make-xs-column(12); //Full page width in all devices
   overflow:hidden;
   text-align: center;
   vertical-align: baseline;
   font: inherit;
+  margin-top:3%;
   h1, h2, h3, h4{
     text-transform: uppercase;
     text-shadow: none;
@@ -27,13 +27,18 @@ TODO this should be more elegant , write code not type text
     height:340px; //TODO change this
   }
   ul{
+    display: inline-block;
     text-align: left;
+    margin: 0 0 0 1em;
   }
 }
 
 .slide{
+  .make-xs-column(12); //Full page width in all devices
+  .make-md-column(6); //Half page width in all devices
   display:none;
 }
+
 .zoom-out, .zoom-in {
   .transitions(all, 0.5s);
 }

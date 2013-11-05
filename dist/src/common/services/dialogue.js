@@ -20,8 +20,8 @@
       return {
         zoom: function (context, deferred) {
           var actionInitiated = new Date().getTime();
-          _changeSingleDialogue(context.dialogues, context.page, 'zoom-in', 'zoom-out');
           _.delay(function () {
+            _changeSingleDialogue(context.dialogues, context.page, 'zoom-in', 'zoom-out');
             deferred.resolve({
               'fnName': 'zoom',
               'args': [{ 'page': context.page }],
@@ -33,8 +33,8 @@
         },
         showAllDialogues: function (context, deferred) {
           var actionInitiated = new Date().getTime();
-          _changeAllDialogues(context.dialogues, 'zoom-out', 'zoom-in');
           _.delay(function () {
+            _changeAllDialogues(context.dialogues, 'zoom-out', 'zoom-in');
             deferred.resolve({
               'fnName': 'showAllDialogues',
               'args': [],
