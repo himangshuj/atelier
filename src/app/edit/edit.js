@@ -83,7 +83,7 @@
                     $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(presentationId, page, $scope.presentation);
-                    $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
+                    $scope.presentation.templateName = $stateParams.templateName || $scope.presentation.templateName;
                     $scope.presentation.css = [""];
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                 }])

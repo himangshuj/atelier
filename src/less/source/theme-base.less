@@ -23,31 +23,28 @@ body {
   text-shadow: none;
 }
 
-/*********************************************
- * HEADERS
- *********************************************/
 
-.base h1,
-.base h2,        //TODO type less
-.base h3,
-.base h4,
-.base h5,
-.base h6 {
-  margin: @headingMargin;
-  color: @headingColor;
+.base {
 
-  font-family: @headingFont;
-  line-height: @headingLineHeight;
-  letter-spacing: @headingLetterSpacing;
+  /*********************************************
+   * HEADERS
+   *********************************************/
 
-  text-transform: @headingTextTransform;
-  text-shadow: @headingTextShadow;
+  h1, h2, h3, h4, h5, h6 {
+    margin: @headingMargin;
+    color: @headingColor;
+
+    font-family: @headingFont;
+    line-height: @headingLineHeight;
+    letter-spacing: @headingLetterSpacing;
+
+    text-transform: @headingTextTransform;
+    text-shadow: @headingTextShadow;
+  }
+  h1 {
+    text-shadow: @heading1TextShadow;
+  }
 }
-
-.base h1 {
-  text-shadow: @heading1TextShadow;
-}
-
 
 /*********************************************
  * LINKS
@@ -159,3 +156,5 @@ body {
   -o-transition: width 800ms cubic-bezier(0.260, 0.860, 0.440, 0.985);
   transition: width 800ms cubic-bezier(0.260, 0.860, 0.440, 0.985);
 }
+
+
