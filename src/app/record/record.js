@@ -37,7 +37,7 @@
 
                 var presentations = _.map(answer.presentationData, function (obj) { //todo move to clojure script
                     obj.templateName = obj.templateName || "master";
-                    obj.css = ["slide", "base","zoom-out"];
+                    obj.css = ["slide", "zoom-out"];
                     return obj;
                 });
                 $scope.presentations = presentations;
