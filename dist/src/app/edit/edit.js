@@ -25,7 +25,7 @@
     '$stateProvider',
     function config($stateProvider) {
       $stateProvider.state('edit', {
-        url: '/edit/:templateName/:presentationId/:page',
+        url: '/edit/:questionId/:templateName/:presentationId/:page',
         resolve: {
           presentationId: [
             '$stateParams',
@@ -44,6 +44,13 @@
             'presentationId',
             function (anduril, presentationId) {
               return anduril.fetchAnswer(presentationId);
+            }
+          ],
+          images: [
+            '$stateParams',
+            'anduril',
+            function ($stateParams, anduril) {
+              return anduril.fetchImages($stateParams.questionId);
             }
           ]
         },
@@ -109,8 +116,7 @@
     '$log',
     'page',
     'templates',
-    'answer',
-    function ($scope, $state, anduril, presentationId, $modal, $log, page, templates, answer) {
+    function ($scope, $state, anduril, presentationId, $modal, $log, page, templates) {
       page = parseInt(page, 10);
       $scope.resume = function () {
         anduril.put(presentationId, page, $scope.presentation);

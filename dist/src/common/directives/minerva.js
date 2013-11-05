@@ -1,6 +1,23 @@
 (function (ng, app) {
   'use strict';
   var _injectors = {};
+  var _imageSelectionModal = [
+      '$scope',
+      '$modalInstance',
+      'images',
+      function ($scope, $modalInstance, images) {
+        $scope.selected = { image: images[0].url };
+        $scope.imageGroups = _.chain(images).groupBy(function (image, index) {
+          return Math.floor(index / 5);
+        }).values().value();
+        $scope.ok = function () {
+          $modalInstance.close($scope.selected.image);
+        };
+        $scope.cancel = function () {
+          $modalInstance.dismiss('cancel');
+        };
+      }
+    ];
   var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
     scope.model = {};
     scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
@@ -20,15 +37,42 @@
             scope.model.value = _injectors.$sce.trustAsHtml(html);
             sokratikDialogueCtrl.setProperty(attrs.model, html);
           }
+        },
+        'image': function (scope, element, attrs, sokratikDialogueCtrl) {
+          _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+          sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, 'default'));
+          scope.addImage = function () {
+            var modalInstance = _injectors.$modal.open({
+                templateUrl: 'edit/image.modal.tpl.html',
+                controller: _imageSelectionModal,
+                resolve: {
+                  images: function () {
+                    return _injectors.anduril.fetchImages(_injectors.$stateParams.questionId);
+                  }
+                }
+              });
+            modalInstance.result.then(function (selectedImage) {
+              scope.model.value = _injectors.$sce.trustAsHtml(selectedImage);
+              sokratikDialogueCtrl.setProperty(attrs.model, selectedImage);
+            }, function () {
+              _injectors.$log.info('Modal dismissed at: ' + new Date());
+            });
+          };
         }
       },
       'record': {
         'text': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+        },
+        image: function (scope, element, attrs, sokratikDialogueCtrl) {
+          _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
         }
       },
       'play': {
         'text': function (scope, element, attrs, sokratikDialogueCtrl) {
+          _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+        },
+        image: function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
         }
       }
@@ -59,7 +103,7 @@
               index: index++
             }, _injectors.$q.defer());
           } else {
-            return _injectors.dialogue.resetFragments(dialogueFragments, _injectors.$q.defer()).then(function (obj) {
+            return _injectors.dialogue.resetFragments({ fragments: dialogueFragments }, _injectors.$q.defer()).then(function (obj) {
               _injectors.dialogue.showAllDialogues({ 'dialogues': scope.presentations }, _injectors.$q.defer());
               return obj;
             });
@@ -67,23 +111,28 @@
         };
         fnMap.previous = function () {
           var dialogueFragments = dialogueCtrl.getFragments();
-          if (index > 0 && index < _.size(dialogueFragments)) {
+          if (index > 0 && index <= _.size(dialogueFragments)) {
             return _injectors.dialogue.prevFragment({
               fragments: dialogueFragments,
-              index: index--
+              index: --index
             }, _injectors.$q.defer());
           } else {
             return _injectors.dialogue.showAllDialogues({ dialogues: scope.presentations }, _injectors.$q.defer());
           }
         };
         fnMap.zoom_in = function () {
+          index = 0;
           return _injectors.dialogue.zoom({
             dialogues: scope.presentations,
             page: scope.index
           }, _injectors.$q.defer());
         };
         fnMap.zoom_out = function () {
-          return _injectors.dialogue.showAllDialogues({ dialogues: scope.presentations }, _injectors.$q.defer());
+          var dialogueFragments = dialogueCtrl.getFragments();
+          return _injectors.dialogue.resetFragments({ fragments: dialogueFragments }, _injectors.$q.defer()).then(function (resp) {
+            _injectors.anduril.recordAction(scope.presentationId, resp);
+            return _injectors.dialogue.showAllDialogues({ 'dialogues': scope.presentations }, _injectors.$q.defer());
+          });
         };
         var _recorderFn = function (prevValue) {
           _injectors.$q.when(prevValue).then(function (resp) {
@@ -105,8 +154,14 @@
   var _sokratikFragmentDirective = [
       '$state',
       '$sce',
-      function ($state, $sce) {
+      'anduril',
+      '$stateParams',
+      '$modal',
+      function ($state, $sce, anduril, $stateParams, $modal) {
         _injectors.$sce = $sce;
+        _injectors.anduril = anduril;
+        _injectors.$modal = $modal;
+        _injectors.$stateParams = $stateParams;
         return {
           'restrict': 'E',
           'transclude': true,
@@ -140,7 +195,8 @@
             presentations: '=',
             index: '@',
             presentationId: '@',
-            addFragment: '&?'
+            addFragment: '&?',
+            questionId: '@?'
           },
           controller: [
             '$scope',

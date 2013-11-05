@@ -46,7 +46,8 @@
           obj.templateName = obj.templateName || 'master';
           obj.css = [
             'slide',
-            'base'
+            'base',
+            'zoom-out'
           ];
           return obj;
         });

@@ -18,6 +18,16 @@
       });
       return deferred.promise;
     };
+    var _fetchImages = function (questionId) {
+      var deferred = injectors.$q.defer();
+      injectors.$http.get('/related-images/' + questionId, { cache: true }).success(function (data) {
+        deferred.resolve(data);
+      }).error(function () {
+        injectors.$log.info('call failed getting images');
+        deferred.resolve([]);
+      });
+      return deferred.promise;
+    };
     var _recordScript = function (presentationId, tuple) {
       fragments[presentationId].script.push(tuple);
     };
@@ -25,9 +35,11 @@
       var script = _.sortBy(fragments[presentationId].script, function (tuple) {
           return tuple.delay;
         });
-      var start = script[0].delay;
+      var offset = script[0].delay;
       _.each(script, function (tuple) {
-        tuple.delay = tuple.delay - start;
+        tuple.delay = tuple.delay - offset;
+        offset = tuple.delay + offset;
+        console.log('original :' + offset + 'delay :' + tuple.delay);
       });
       fragments[presentationId].script = script;
       return fragments[presentationId].$update();
@@ -51,11 +63,8 @@
           post: function (presentationId) {
             return fragments[presentationId].$update();
           },
-          getVar: function (presentationId, page, variable, defaultValue) {
-            var templateFragment = fragments[presentationId].presentationData;
-            return (templateFragment[page].keyVals || {})[variable] || defaultValue;
-          },
           getAllTemplates: _getAllTemplates,
+          fetchImages: _fetchImages,
           fetchAnswer: function (answerId) {
             var deferred = $q.defer();
             Answer.get({ answerId: answerId }, function (answer) {

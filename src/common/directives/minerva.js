@@ -6,6 +6,32 @@
 
     var _injectors = {};
 
+    /*   */
+    /**
+     * the modal which will be used to populate images
+     * @type {Array} the list of angular dependencies and the modal controoler
+     * @private
+     */
+    var _imageSelectionModal = ["$scope", "$modalInstance", "images", function ($scope, $modalInstance, images) {
+        $scope.selected = {
+            image: images[0].url
+        };
+        $scope.imageGroups = _.chain(images).
+            groupBy(function (image, index) {
+                //noinspection JSUnresolvedVariable
+                return Math.floor(index / 5);//splitting images into groups of 5
+            })
+            .values()
+            .value();
+        $scope.ok = function () {
+            $modalInstance.close($scope.selected.image);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }];
+
     /**
      * Common actions performed by all post link functions of sokratik fragment
      * @param scope the scope for the directive , this is isolated
@@ -30,6 +56,7 @@
                 element.on('blur keyup change', function () {
                     scope.$apply(read);
                 });
+                //registers the current value in the parent dialogue which is aware of the entire presentation
                 sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, "default"));
 
                 // Write data to the model
@@ -38,16 +65,50 @@
                     scope.model.value = _injectors.$sce.trustAsHtml(html);
                     sokratikDialogueCtrl.setProperty(attrs.model, html);
                 }
+            },
+            "image": function (scope, element, attrs, sokratikDialogueCtrl) {
+                _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+                //registers the current value in the parent dialogue which is aware of the entire presentation
+                sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, "default"));
+                scope.addImage = function () {
+                    var modalInstance = _injectors.$modal.open({
+                        templateUrl: 'edit/image.modal.tpl.html',
+                        controller: _imageSelectionModal,
+                        resolve: {
+                            images: function () {
+                                return _injectors.anduril.fetchImages(_injectors.$stateParams.questionId);
+                            }
+                        }
+                    });
+
+                    modalInstance.result.then(function (selectedImage) {
+                        scope.model.value = _injectors.$sce.trustAsHtml(selectedImage);
+                        sokratikDialogueCtrl.setProperty(attrs.model, selectedImage);
+                    }, function () {
+                        //noinspection JSUnresolvedFunction
+                        _injectors.$log.info('Modal dismissed at: ' + new Date());
+                    });
+                };
+
             }
+
         },
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
+                _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+
+            },
+            image: function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             }
         },
         "play": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
+                _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+
+            },
+            image: function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             }
@@ -80,10 +141,10 @@
             fnMap.next = function () {
                 var dialogueFragments = dialogueCtrl.getFragments();
                 if (index < _.size(dialogueFragments)) {
-                    return    _injectors.dialogue.nextFragment({fragments: dialogueFragments, index: (index++)}, _injectors.$q.defer());
+                    return    _injectors.dialogue.nextFragment({fragments: dialogueFragments, index: index++}, _injectors.$q.defer());
                 }
                 else {
-                    return _injectors.dialogue.resetFragments(dialogueFragments, _injectors.$q.defer()).then(
+                    return _injectors.dialogue.resetFragments({fragments: dialogueFragments}, _injectors.$q.defer()).then(
                         function (obj) {
                             _injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer());
                             return obj;
@@ -95,8 +156,8 @@
             fnMap.previous = function () {
 
                 var dialogueFragments = dialogueCtrl.getFragments();
-                if (index > 0 && index < _.size(dialogueFragments)) {
-                    return _injectors.dialogue.prevFragment({fragments: dialogueFragments, index: (index--)}, _injectors.$q.defer());
+                if (index > 0 && index <= _.size(dialogueFragments)) {
+                    return _injectors.dialogue.prevFragment({fragments: dialogueFragments, index: --index}, _injectors.$q.defer());
                 }
                 else {
                     return _injectors.dialogue.showAllDialogues({dialogues: scope.presentations}, _injectors.$q.defer());
@@ -105,11 +166,18 @@
             };
 
             fnMap.zoom_in = function () {
+                index = 0;
                 return  _injectors.dialogue.zoom({dialogues: scope.presentations, page: scope.index}, _injectors.$q.defer());
             };
 
             fnMap.zoom_out = function () {
-                return _injectors.dialogue.showAllDialogues({dialogues: scope.presentations}, _injectors.$q.defer());
+                var dialogueFragments = dialogueCtrl.getFragments();
+                return _injectors.dialogue.resetFragments({fragments: dialogueFragments}, _injectors.$q.defer()).then(
+                    function (resp) {
+                        _injectors.anduril.recordAction(scope.presentationId, resp);
+                        return _injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer());
+                    }
+                );
             };
             var _recorderFn = function (prevValue) {
                 _injectors.$q.when(prevValue).then(
@@ -134,25 +202,29 @@
 
     };
 
-    var _sokratikFragmentDirective = ["$state", "$sce", function ($state, $sce) {
-        _injectors.$sce = $sce;
-        return {
-            "restrict": "E",
-            "transclude": true,
-            "templateUrl": function (tElement, tAttrs) {
-                return $state.current.data.mode + "/" + ng.lowercase(tAttrs.type || "text") + ".fragment.tpl.html";
-            },
-            require: "?^sokratikDialogue",
-            "scope": {
-                "model": "="
-            },
-            compile: function (tElement, tAttrs) {
-                return _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || "text")];
-            }
+    var _sokratikFragmentDirective = ["$state", "$sce", "anduril", "$stateParams", "$modal",
+        function ($state, $sce, anduril, $stateParams, $modal) {
+            _injectors.$sce = $sce;
+            _injectors.anduril = anduril;
+            _injectors.$modal = $modal;
+            _injectors.$stateParams = $stateParams;
+            return {
+                "restrict": "E",
+                "transclude": true,
+                "templateUrl": function (tElement, tAttrs) {
+                    return $state.current.data.mode + "/" + ng.lowercase(tAttrs.type || "text") + ".fragment.tpl.html";
+                },
+                require: "?^sokratikDialogue",
+                "scope": {
+                    "model": "="
+                },
+                compile: function (tElement, tAttrs) {
+                    return _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || "text")];
+                }
 
-        };
+            };
 
-    }];
+        }];
     var _sokratikDialogueContainerDirective = ["$state", "dialogue", "$q", "anduril",
         function ($state, dialogue, $q, anduril) {
             _injectors.$q = $q;
@@ -168,7 +240,8 @@
                     presentations: "=",
                     index: "@",
                     presentationId: "@",
-                    addFragment: "&?"
+                    addFragment: "&?",
+                    questionId: "@?"
                 },
 
                 controller: ["$scope", function ($scope) {
@@ -186,7 +259,7 @@
                     };
 
                     this.setProperty = function (propertyKey, value) {
-                        ($scope.presentation.keyVals|| {})[propertyKey] = value;
+                        ($scope.presentation.keyVals || {})[propertyKey] = value;
                     };
                     this.getFragments = function () {
                         return _.clone(dialogueFragments);//returns a shallow copy

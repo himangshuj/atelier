@@ -1,4 +1,4 @@
-angular.module('templates-app', ['edit/controller.tpl.html', 'edit/dialogue.tpl.html', 'edit/edit.tpl.html', 'edit/image.tpl.html', 'edit/media.modal.tpl.html', 'edit/newslide.modal.tpl.html', 'edit/search.tpl.html', 'edit/template.tpl.html', 'edit/text.fragment.tpl.html', 'play/controller.tpl.html', 'play/dialogue.tpl.html', 'play/play.tpl.html', 'play/text.fragment.tpl.html', 'record/dialogue.tpl.html', 'record/record.tpl.html', 'record/text.fragment.tpl.html', 'start/start.tpl.html']);
+angular.module('templates-app', ['edit/controller.tpl.html', 'edit/dialogue.tpl.html', 'edit/edit.tpl.html', 'edit/image.fragment.tpl.html', 'edit/image.modal.tpl.html', 'edit/media.modal.tpl.html', 'edit/newslide.modal.tpl.html', 'edit/search.tpl.html', 'edit/template.tpl.html', 'edit/text.fragment.tpl.html', 'play/controller.tpl.html', 'play/dialogue.tpl.html', 'play/image.fragment.tpl.html', 'play/play.tpl.html', 'play/text.fragment.tpl.html', 'record/dialogue.tpl.html', 'record/image.fragment.tpl.html', 'record/record.tpl.html', 'record/text.fragment.tpl.html', 'start/start.tpl.html']);
 
 angular.module("edit/controller.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/controller.tpl.html",
@@ -20,7 +20,7 @@ angular.module("edit/dialogue.tpl.html", []).run(["$templateCache", function($te
 
 angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/edit.tpl.html",
-    "<div class=\"edit\" ui-view=\"template\"></div>\n" +
+    "<div class=\"edit base\" ui-view=\"template\"></div>   <!--TODO move this to jade-->\n" +
     "\n" +
     "<div ui-view=\"control\" class=\"controlBar\"></div>\n" +
     "\n" +
@@ -29,9 +29,44 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
     "");
 }]);
 
-angular.module("edit/image.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("edit/image.tpl.html",
-    "image");
+angular.module("edit/image.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("edit/image.fragment.tpl.html",
+    "<span ng-class=\"model.css\">\n" +
+    "     <img ng-src=\"{{model.value}}\" ng-click=\"addImage()\" tooltip=\"click to change image\"/>\n" +
+    "</span>\n" +
+    "");
+}]);
+
+angular.module("edit/image.modal.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("edit/image.modal.tpl.html",
+    "<div class=\"modal-dialog\">\n" +
+    "    <div class=\"modal-content\">\n" +
+    "        <div class=\"modal-header\">\n" +
+    "\n" +
+    "            Select the image\n" +
+    "        </div>\n" +
+    "        <div class=\"modal-body\">\n" +
+    "            <table>\n" +
+    "                <tr ng-repeat=\"imageGroup in imageGroups\">\n" +
+    "                    <td ng-repeat=\"image in imageGroup\">\n" +
+    "                        <img ng-src=\"{{image.thumbnail}}\" ng-click=\"selected.image = image.url\"/>\n" +
+    "                    </td>\n" +
+    "                </tr>\n" +
+    "            </table>\n" +
+    "\n" +
+    "\n" +
+    "            Selected: <b><img ng-src=\"{{selected.image}}\"/></b>\n" +
+    "\n" +
+    "\n" +
+    "        </div>\n" +
+    "        <div class=\"modal-footer\">\n" +
+    "            <button class=\"btn btn-warning\" ng-click=\"cancel()\">Close</button>\n" +
+    "            <button class=\"btn btn-primary\" ng-click=\"ok()\">Ok</button>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "\n" +
+    "");
 }]);
 
 angular.module("edit/media.modal.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -127,6 +162,14 @@ angular.module("play/dialogue.tpl.html", []).run(["$templateCache", function($te
     "</div>");
 }]);
 
+angular.module("play/image.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("play/image.fragment.tpl.html",
+    "<span ng-class=\"model.css\">\n" +
+    "     <img ng-src=\"{{model.value}}\" src=\"\"/>\n" +
+    "</span>\n" +
+    "");
+}]);
+
 angular.module("play/play.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("play/play.tpl.html",
     "<div ng-repeat=\"presentation in presentations\">\n" +
@@ -135,9 +178,7 @@ angular.module("play/play.tpl.html", []).run(["$templateCache", function($templa
     "                           presentation-id=\"{{presentationId}}\" add-fragment=\"addFragment(fragment)\"/>\n" +
     "    </div>\n" +
     "</div>\n" +
-    "<div ui-view=\"control\">\n" +
-    "    control\n" +
-    "</div>");
+    "");
 }]);
 
 angular.module("play/text.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -164,6 +205,14 @@ angular.module("record/dialogue.tpl.html", []).run(["$templateCache", function($
     "\n" +
     "\n" +
     "</div>");
+}]);
+
+angular.module("record/image.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("record/image.fragment.tpl.html",
+    "<span ng-class=\"model.css\">\n" +
+    "     <img ng-src=\"{{model.value}}\"/>\n" +
+    "</span>\n" +
+    "");
 }]);
 
 angular.module("record/record.tpl.html", []).run(["$templateCache", function($templateCache) {
