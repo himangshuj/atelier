@@ -178,6 +178,7 @@ angular.module("play/play.tpl.html", []).run(["$templateCache", function($templa
     "                           presentation-id=\"{{presentationId}}\" add-fragment=\"addFragment(fragment)\"/>\n" +
     "    </div>\n" +
     "</div>\n" +
+    "<audio autoplay=\"true\" ng-src=\"{{audioLocation}}\"/>\n" +
     "");
 }]);
 
@@ -229,6 +230,8 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "</div>\n" +
     "<div>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"play()\">Play</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"record()\">Record Audio</button>\n" +
+    "\n" +
     "\n" +
     "</div>");
 }]);

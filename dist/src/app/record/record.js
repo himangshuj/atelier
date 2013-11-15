@@ -67,7 +67,9 @@
           ];
           return obj;
         });
-      acoustics.resume(audioNode, stream);
+      $scope.record = function () {
+        acoustics.resume(audioNode, stream);
+      };
       $scope.presentations = presentations;
       $scope.presentationId = answer._id;
       $scope.play = function () {

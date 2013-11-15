@@ -5,10 +5,7 @@
 
     var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
     var volume = context.createGain ? context.createGain() : {};
-    if (!!context.createJavaScriptNode) {
-        volume.connect(recorder);
-        recorder.connect(context.destination);
-    }
+
     var acoustics = function () {
         this.$get = ["$log", "$location", "$q", function ($log, $location, $q) {
             return {
@@ -29,6 +26,7 @@
                                 view.setInt16(index + 2, right[i] * 0x7FFF, true);
                                 index += 4;
                             }
+                            console.log("posting");
                             stream.write(buffer);
                         };
                         stream.pause();
@@ -53,6 +51,7 @@
                 pause: function (audioInput, stream) {
                     audioInput.disconnect();
                     recorder.disconnect();
+                    volume.disconnect();
                     stream.pause();
                 },
                 resume: function (audioInput, stream) {

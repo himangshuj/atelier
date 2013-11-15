@@ -19,7 +19,7 @@
                     stream: [ "acoustics", "$stateParams", function (acoustics, $stateParams) {
                         return acoustics.stream($stateParams.presentationId);
                     }],
-                    audioNode: ["acoustics",  function (acoustics) {
+                    audioNode: ["acoustics", function (acoustics) {
                         return acoustics.getAudioNode();
                     }]
 
@@ -48,17 +48,21 @@
                     obj.css = ["slide", "zoom-out"];
                     return obj;
                 });
-                acoustics.resume(audioNode, stream);
+                $scope.record = function () {
+                    acoustics.resume(audioNode, stream);
+                };
                 $scope.presentations = presentations;
                 $scope.presentationId = answer._id;
                 $scope.play = function () {
+                    acoustics.stopRecording(audioNode, stream);
                     $q.when(anduril.completeRecord(answer._id))
                         .then(function (resp) {
                         });
-                    acoustics.stopRecording(audioNode, stream);
                     $state.go("play", {presentationId: answer._id});
 
                 };
-                dialogue.showAllDialogues({"dialogues": presentations}, $q.defer());
+                dialogue.showAllDialogues({"dialogues": presentations}, $q.defer()).then(function (resp) {
+                    acoustics.resume(audioNode, stream);
+                });
             }]);
 })(angular, "sokratik.atelier.record");

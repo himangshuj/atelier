@@ -81,6 +81,7 @@
     function ($stateParams, anduril, $scope, $q, $log, dialogue, answer) {
       $scope.presentations = answer.presentationData;
       $scope.presentationId = $stateParams.presentationId;
+      $scope.audioLocation = '/recordings/' + $stateParams.presentationId + '.wav';
       var fragmentFns = [];
       var executeScript = _.after(_.size($scope.presentations), _executeScript);
       $scope.addFragment = function (fragment) {
