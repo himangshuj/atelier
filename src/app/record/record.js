@@ -15,14 +15,12 @@
                 resolve: {
                     answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
                         return anduril.fetchAnswer($stateParams.presentationId);
+                    }], audioNode: ["acoustics", function (acoustics) {
+                        return acoustics.getAudioNode();
                     }],
                     stream: [ "acoustics", "$stateParams", function (acoustics, $stateParams) {
                         return acoustics.stream($stateParams.presentationId);
-                    }],
-                    audioNode: ["acoustics", function (acoustics) {
-                        return acoustics.getAudioNode();
                     }]
-
                 },
                 data: {
                     mode: "record"
@@ -33,36 +31,66 @@
                         templateUrl: 'record/record.tpl.html'
                     }
                 }
-            })
-
-            ;
-
+            });
+            //this state represents the master view of all the slides
+            $stateProvider.state('record.master', {
+                url: "/master",
+                views: {
+                    "workspace": {
+                        controller: 'RecordMaster',
+                        templateUrl: 'record/master.tpl.html'
+                    }
+                }
+            });
+            $stateProvider.state('record.activate', {
+                url: "/activate/:page",
+                views: {
+                    "workspace": {
+                        controller: 'RecordDialogue',
+                        templateUrl: 'record/active.tpl.html'
+                    }
+                }
+            });
 
         }])
-        .controller('RecordCtrl', ["$scope", "titleService", "anduril", "$stateParams", "answer", "$q", "$state",
-            "dialogue", "stream", "acoustics", "audioNode",
-            function ($scope, titleService, anduril, $stateParams, answer, $q, $state, dialogue, stream, acoustics, audioNode) {
-                titleService.setTitle("Sokratik | " + (answer.title || "Lets Learn"));
-                var presentations = _.map(answer.presentationData, function (obj) { //todo move to clojure script
-                    obj.templateName = obj.templateName || "master";
-                    obj.css = ["slide", "zoom-out"];
-                    return obj;
-                });
+        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream",
+            function ($scope, acoustics, audioNode, $state, anduril, $q, stream) {
                 $scope.record = function () {
+                    $scope.recording = true;
                     acoustics.resume(audioNode, stream);
                 };
-                $scope.presentations = presentations;
-                $scope.presentationId = answer._id;
                 $scope.play = function () {
-                    acoustics.stopRecording(audioNode, stream);
+                    acoustics.stopRecording(audioNode, stream, answer._id);
                     $q.when(anduril.completeRecord(answer._id))
                         .then(function (resp) {
                         });
                     $state.go("play", {presentationId: answer._id});
 
                 };
-                dialogue.showAllDialogues({"dialogues": presentations}, $q.defer()).then(function (resp) {
-                    acoustics.resume(audioNode, stream);
+                $scope.pause = function () {
+                    acoustics.pause(audioNode, stream);
+                    $scope.recording = false;
+                };
+                $scope.recording = true;
+            }])
+        .controller('RecordMaster', ["$scope", "answer", "acoustics", "audioNode", "stream",
+            function ($scope, answer, acoustics, audioNode, stream) {
+                $scope.presentations = _.map(answer.presentationData, function (obj) { //todo move to clojure script
+                    obj.templateName = obj.templateName || "master";
+                    return obj;
                 });
-            }]);
-})(angular, "sokratik.atelier.record");
+                $scope.presentationId = answer._id;
+                acoustics.resume(audioNode, stream);
+
+            }])
+        .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "$q",
+            function ($scope, answer, anduril, dialogue, $stateParams, $q) {
+                $scope.presentation = answer.presentationData[parseInt($stateParams.page || 0, 10)];
+                dialogue.resetFragments({fragments: $scope.presentation}, $q.defer()).then(function(resp){
+                    console.log(resp);
+                });
+            }
+        ])
+    ;
+})
+    (angular, "sokratik.atelier.record");
