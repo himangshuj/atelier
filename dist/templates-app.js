@@ -186,9 +186,17 @@ angular.module("play/text.fragment.tpl.html", []).run(["$templateCache", functio
 angular.module("record/active.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("record/active.tpl.html",
     "<div>\n" +
-    "    <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\" presentation-id=\"{{presentationId}}\"/>\n" +
+    "    <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\" presentation-id=\"{{presentationId}}\" class=\"zoom-in\"\n" +
+    "                       add-fragment=\"addFragment(fragment)\"/>\n" +
     "</div>\n" +
+    "<div>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"masterView()\">MasterView</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"next()\">Next Fragment</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"previous()\">Previous Fragment</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"nextSlide()\">Next Slide</button>\n" +
     "\n" +
+    "\n" +
+    "</div>\n" +
     "");
 }]);
 

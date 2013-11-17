@@ -70,7 +70,8 @@
     'anduril',
     '$q',
     'stream',
-    function ($scope, acoustics, audioNode, $state, anduril, $q, stream) {
+    'answer',
+    function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer) {
       $scope.record = function () {
         $scope.recording = true;
         acoustics.resume(audioNode, stream);
@@ -85,6 +86,15 @@
         acoustics.pause(audioNode, stream);
         $scope.recording = false;
       };
+      $scope.$on('$stateChangeStart', function (event, toState, toParams) {
+        anduril.recordAction(answer._id, {
+          fnName: 'stateChange',
+          args: {
+            state: toState.name,
+            params: toParams
+          }
+        });
+      });
       $scope.recording = true;
     }
   ]).controller('RecordMaster', [
@@ -108,11 +118,47 @@
     'dialogue',
     '$stateParams',
     '$q',
-    function ($scope, answer, anduril, dialogue, $stateParams, $q) {
+    '$state',
+    function ($scope, answer, anduril, dialogue, $stateParams, $q, $state) {
       $scope.presentation = answer.presentationData[parseInt($stateParams.page || 0, 10)];
-      dialogue.resetFragments({ fragments: $scope.presentation }, $q.defer()).then(function (resp) {
-        console.log(resp);
-      });
+      var fragmentFn = null;
+      $scope.addFragment = function (fragment) {
+        fragmentFn = fragment;
+        function resetFragments() {
+          dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer()).then(function (resp) {
+            anduril.recordAction(answer._id, resp);
+          });
+        }
+        if (_.size(fragment()) > 0) {
+          resetFragments();
+        } else {
+          _.delay(resetFragments, 1000);
+        }
+      };
+      $scope.masterView = function () {
+        $state.go('record.master');
+      };
+      var index = 0;
+      $scope.next = function () {
+        dialogue.makeVisible({
+          fragments: fragmentFn(),
+          index: index++
+        }, $q.defer()).then(function (resp) {
+          anduril.recordAction(answer._id, resp);
+        });
+      };
+      $scope.previous = function () {
+        dialogue.hide({
+          fragments: fragmentFn(),
+          index: --index
+        }, $q.defer()).then(function (resp) {
+          anduril.recordAction(answer._id, resp);
+        });
+      };
+      $scope.nextSlide = function () {
+        var page = parseInt($stateParams.page, 10);
+        $state.go('record.activate', { page: ++page });
+      };
     }
   ]);
   ;

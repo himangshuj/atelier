@@ -70,6 +70,24 @@
                     });
 
                     return deferred.promise;
+                },
+                makeVisible:function(context,deferred){
+                    var actionInitiated = new Date().getTime();
+                    _.delay(function(){
+                        _changeFragmentClass(context.fragments[context.index],"visible","");
+                        deferred.resolve({"fnName": "makeVisible", "args": [{index:context.index}],
+                            actionInitiated: actionInitiated });
+                    });
+                    return deferred.promise;
+                },
+                hide:function(context,deferred){
+                    var actionInitiated = new Date().getTime();
+                    _.delay(function(){
+                        _changeFragmentClass(context.fragments[context.index],"fragment","visible");
+                        deferred.resolve({"fnName": "makeVisible", "args": [{index:context.index}],
+                            actionInitiated: actionInitiated });
+                    });
+                    return deferred.promise;
                 }
             };
 

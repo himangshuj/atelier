@@ -81,12 +81,13 @@
       'edit': function (scope) {
       },
       'record': function (scope) {
+        (scope.addFragment || ng.noop)({ fragment: scope.dialogueCtrl.getFragments });
         scope.activate = function () {
           _injectors.$state.go('record.activate', { page: scope.index });
         };
       },
       'play': function (scope) {
-        scope.addFragment({ fragment: scope.dialogueCtrl.getFragments });
+        (scope.addFragment || ng.noop)({ fragment: scope.dialogueCtrl.getFragments });
       }
     };
   var _sokratikFragmentDirective = [
@@ -109,7 +110,7 @@
           require: '?^sokratikDialogue',
           'scope': { 'model': '=' },
           compile: function (tElement, tAttrs) {
-            return _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || 'text')];
+            return { pre: _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || 'text')] };
           }
         };
       }

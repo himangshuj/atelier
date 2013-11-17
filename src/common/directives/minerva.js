@@ -120,6 +120,8 @@
         "edit": function (scope) {
         },
         "record": function (scope) {
+            //noinspection JSUnresolvedVariable
+            (scope.addFragment || ng.noop)({fragment: scope.dialogueCtrl.getFragments });
             scope.activate = function () {
                 _injectors.$state.go("record.activate", {page: scope.index});
             };
@@ -127,7 +129,7 @@
         },
         "play": function (scope) {
             //noinspection JSUnresolvedVariable
-            scope.addFragment({fragment: scope.dialogueCtrl.getFragments });
+            (scope.addFragment || ng.noop)({fragment: scope.dialogueCtrl.getFragments });
 
         }
 
@@ -150,7 +152,8 @@
                     "model": "="
                 },
                 compile: function (tElement, tAttrs) {
-                    return _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || "text")];
+                    return {pre: _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || "text")]};
+
                 }
 
             };
