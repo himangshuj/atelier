@@ -4,3 +4,8 @@ this is the place holder for all the templates which are being played
 <div>
     <div ui-view="workspace" class="workspace"/>
 </div>
+<div>
+    <button class="btn btn-primary" ng-click="play()">Play</button>
+    <button class="btn btn-primary" ng-click="record()" ng-hide="recording">Record Audio</button>
+    <button class="btn btn-primary" ng-click="pause()" ng-show="recording">Pause Recording</button>
+</div>

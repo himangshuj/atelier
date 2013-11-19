@@ -82,9 +82,6 @@
       },
       'record': function (scope) {
         (scope.addFragment || ng.noop)({ fragment: scope.dialogueCtrl.getFragments });
-        scope.activate = function () {
-          _injectors.$state.go('record.activate', { page: scope.index });
-        };
       },
       'play': function (scope) {
         (scope.addFragment || ng.noop)({ fragment: scope.dialogueCtrl.getFragments });
@@ -153,7 +150,7 @@
                 ($scope.presentation.keyVals || {})[propertyKey] = value;
               };
               this.getFragments = function () {
-                return _.clone(dialogueFragments);
+                return dialogueFragments;
               };
             }
           ],

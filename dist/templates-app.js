@@ -1,4 +1,4 @@
-angular.module('templates-app', ['edit/dialogue.tpl.html', 'edit/edit.tpl.html', 'edit/image.fragment.tpl.html', 'edit/image.modal.tpl.html', 'edit/media.modal.tpl.html', 'edit/newslide.modal.tpl.html', 'edit/search.tpl.html', 'edit/template.tpl.html', 'edit/text.fragment.tpl.html', 'play/controller.tpl.html', 'play/dialogue.tpl.html', 'play/image.fragment.tpl.html', 'play/play.tpl.html', 'play/text.fragment.tpl.html', 'record/active.tpl.html', 'record/dialogue.tpl.html', 'record/image.fragment.tpl.html', 'record/master.tpl.html', 'record/record.tpl.html', 'record/text.fragment.tpl.html', 'start/start.tpl.html']);
+angular.module('templates-app', ['edit/dialogue.tpl.html', 'edit/edit.tpl.html', 'edit/image.fragment.tpl.html', 'edit/image.modal.tpl.html', 'edit/media.modal.tpl.html', 'edit/newslide.modal.tpl.html', 'edit/search.tpl.html', 'edit/template.tpl.html', 'edit/text.fragment.tpl.html', 'play/activate.tpl.html', 'play/controller.tpl.html', 'play/dialogue.tpl.html', 'play/image.fragment.tpl.html', 'play/master.tpl.html', 'play/play.tpl.html', 'play/text.fragment.tpl.html', 'record/active.tpl.html', 'record/dialogue.tpl.html', 'record/image.fragment.tpl.html', 'record/master.tpl.html', 'record/record.tpl.html', 'record/text.fragment.tpl.html', 'start/start.tpl.html']);
 
 angular.module("edit/dialogue.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/dialogue.tpl.html",
@@ -142,6 +142,20 @@ angular.module("edit/text.fragment.tpl.html", []).run(["$templateCache", functio
     "");
 }]);
 
+angular.module("play/activate.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("play/activate.tpl.html",
+    "<div>\n" +
+    "    <sokratik-dialogue presentation=\"presentation\"  presentation-id=\"{{presentationId}}\" class=\"zoom-in\"\n" +
+    "                       add-fragment=\"addFragment(fragment)\"/>\n" +
+    "</div>\n" +
+    "        {{presentation}}\n" +
+    "\n" +
+    "        {{presentationId}}\n" +
+    "<div>\n" +
+    "    <div ui-view=\"transition\"></div>\n" +
+    "</div>");
+}]);
+
 angular.module("play/controller.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("play/controller.tpl.html",
     "control bar");
@@ -165,14 +179,25 @@ angular.module("play/image.fragment.tpl.html", []).run(["$templateCache", functi
     "");
 }]);
 
-angular.module("play/play.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("play/play.tpl.html",
+angular.module("play/master.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("play/master.tpl.html",
     "<div ng-repeat=\"presentation in presentations\">\n" +
     "    <div>\n" +
-    "        <sokratik-dialogue presentation=\"presentation\" presentations=\"presentations\" index=\"{{$index}}\"\n" +
-    "                           presentation-id=\"{{presentationId}}\" add-fragment=\"addFragment(fragment)\"/>\n" +
+    "        <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\"\n" +
+    "                           presentation-id=\"{{presentationId}}\" ng-click=\"activate($index)\"/>\n" +
     "    </div>\n" +
     "</div>\n" +
+    "\n" +
+    "\n" +
+    "");
+}]);
+
+angular.module("play/play.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("play/play.tpl.html",
+    "<div>\n" +
+    "    <div ui-view=\"screen\"></div>\n" +
+    "</div>\n" +
+    "\n" +
     "<audio autoplay=\"true\" ng-src=\"{{audioLocation}}\"/>\n" +
     "");
 }]);
@@ -202,7 +227,9 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
 
 angular.module("record/dialogue.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("record/dialogue.tpl.html",
-    "    <div ng-include=\"templateName\"/>\n" +
+    "   <div>\n" +
+    "       <div ng-include=\"templateName\"/>\n" +
+    "   </div>\n" +
     "");
 }]);
 
@@ -220,14 +247,10 @@ angular.module("record/master.tpl.html", []).run(["$templateCache", function($te
     "    <div>\n" +
     "\n" +
     "        <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\"\n" +
-    "                           presentation-id=\"{{presentationId}}\" ng-click=\"activate()\"/>\n" +
+    "                           presentation-id=\"{{presentationId}}\" ng-click=\"activate($index)\"/>\n" +
     "    </div>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"play()\">Play</button>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"record()\" ng-hide=\"recording\">Record Audio</button>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"pause()\" ng-show=\"recording\">Pause Recording</button>\n" +
-    "</div>");
+    "");
 }]);
 
 angular.module("record/record.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -238,7 +261,11 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "<div>\n" +
     "    <div ui-view=\"workspace\" class=\"workspace\"/>\n" +
     "</div>\n" +
-    "");
+    "<div>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"play()\">Play</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"record()\" ng-hide=\"recording\">Record Audio</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"pause()\" ng-show=\"recording\">Pause Recording</button>\n" +
+    "</div>");
 }]);
 
 angular.module("record/text.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {

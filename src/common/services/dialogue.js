@@ -60,38 +60,51 @@
             return fragment;
         };
 
-        this.$get = function () {
+        this.$get = ["$state", function ($state) {
             return {
                 resetFragments: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
-                    _.delay(function(){
-                        _changeAllDialogues(context.fragments,"fragment","visible");
-                        deferred.resolve({"fnName": "resetFragments", "args": [], actionInitiated: actionInitiated });
+                    _.delay(function () {
+                        _changeAllDialogues(context.fragments, "fragment", "visible");
+                        deferred.resolve({"fnName": "resetFragments", "args": {}, actionInitiated: actionInitiated });
                     });
 
                     return deferred.promise;
                 },
-                makeVisible:function(context,deferred){
+                makeVisible: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
-                    _.delay(function(){
-                        _changeFragmentClass(context.fragments[context.index],"visible","");
-                        deferred.resolve({"fnName": "makeVisible", "args": [{index:context.index}],
+                    _.delay(function () {
+                        console.log(context);
+                        _changeFragmentClass(context.fragments[context.index], "visible", "");
+                        deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
                             actionInitiated: actionInitiated });
                     });
                     return deferred.promise;
                 },
-                hide:function(context,deferred){
+                hide: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
-                    _.delay(function(){
-                        _changeFragmentClass(context.fragments[context.index],"fragment","visible");
-                        deferred.resolve({"fnName": "makeVisible", "args": [{index:context.index}],
+                    _.delay(function () {
+
+                        _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
+                        deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
                             actionInitiated: actionInitiated });
                     });
                     return deferred.promise;
+                },
+                changeState: function (context) {
+                    "use strict";
+
+                    var result = {fnName: "changeState",
+                        args: {subState: context.subState, params: context.params},
+                        actionInitiated: new Date().getTime()};
+                    _.defer(function () {
+                        $state.go($state.current.data.mode + context.subState, context.params);
+                    });
+                    return  result;
                 }
             };
 
-        };
+        }];
 
     };
 

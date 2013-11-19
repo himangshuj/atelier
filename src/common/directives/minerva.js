@@ -122,9 +122,7 @@
         "record": function (scope) {
             //noinspection JSUnresolvedVariable
             (scope.addFragment || ng.noop)({fragment: scope.dialogueCtrl.getFragments });
-            scope.activate = function () {
-                _injectors.$state.go("record.activate", {page: scope.index});
-            };
+
 
         },
         "play": function (scope) {
@@ -196,7 +194,7 @@
                         ($scope.presentation.keyVals || {})[propertyKey] = value;
                     };
                     this.getFragments = function () {
-                        return _.clone(dialogueFragments);//returns a shallow copy
+                        return dialogueFragments;//returns a shallow copy
                     };
                 }],
                 controllerAs: "dialogueCtrl",
