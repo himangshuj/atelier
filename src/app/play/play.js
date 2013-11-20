@@ -1,38 +1,39 @@
-(function (ng, app) {
+var atelierPlayer = function (ng, app, answer) {
+    console.log(answer._id);
     var _injectors = {};
     var fragmentFn = ng.noop;//global variable is this really bad
     var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q) {
         "use strict";
-        var index = scriptIndex || 0;
-        var instruction = instructions[index];
-        var delay = instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
-
-        var intraState = function (args) {
-            console.log(args);
-            _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated,$q);
-        };
-        _.delay(function () {
-            var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated}, (instruction.args || {}).params);
-            var postExecute = ng.equals(instruction.fnName, "changeState") ? ng.noop : intraState;
-            $q.when(dialogue[instruction.fnName](_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
-        }, delay);
+        if (scriptIndex < _.size(instructions)) {
+            var index = scriptIndex || 0;
+            var instruction = instructions[index];
+            var delay = instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
+            var intraState = function () {
+                _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q);
+            };
+            _.delay(function () {
+                var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated}, (instruction.args || {}).params);
+                var postExecute = ng.equals(instruction.fnName, "changeState") ? ng.noop : intraState;
+                console.log(instruction);
+                $q.when(dialogue[instruction.fnName](_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
+            }, delay);
+        }
     };
     ng.module(app, [
             'ui.router',
-            'titleService',
-            'plusOne',
-            'sokratik.atelier.services.istari',
+            'ui.route',
+            'sokratik.atelier.services.istari',            ,
             'sokratik.atelier.services.dialogue',
+            'sokratik.atelier.directives.minerva',
+            'ui.bootstrap',
             'ngSanitize',
             'ngAnimate'])
         .config(["$stateProvider", function config($stateProvider) {
             $stateProvider.state('play', {
-                url: '/play/:presentationId/:scriptIndex/:timeStamp',
+                url: '/play/:scriptIndex/:timeStamp',
+                abstract: true,
                 resolve: {
-                    answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
-                        return anduril.fetchAnswer($stateParams.presentationId);
-                    }],
-                    instructionDetails: ["answer", "$stateParams", function (answer, $stateParams) {
+                    instructionDetails: [ "$stateParams", function ($stateParams) {
                         "use strict";
                         var index = $stateParams.scriptIndex || 0;
                         var instruction = answer.script[index];
@@ -68,32 +69,27 @@
                         }
                     }
                 })
-                .state('play.activate.transition', {
-                    url: '/transition',
+                .state('play.init', {
+                    url: '/init',
                     views: {
-                        "transition": {
-                            template: '',
-                            controller: 'PlayTransition'
+                        "audio": {
+                            controller: 'PlayAudio'
                         }
                     }
                 })
             ;
         }])
-        .controller("PlayCtrl", ["$scope", "answer", "$stateParams", "dialogue", "$state", "$q",
-            function ($scope, answer, $stateParams, dialogue, $state, $q) {
+        .controller("PlayCtrl", ["$scope", "$stateParams", "dialogue",
+            function ($scope, $stateParams, dialogue) {
+                //noinspection JSUnresolvedVariable
                 $scope.presentations = answer.presentationData;
-                $scope.presentationId = $stateParams.presentationId;
+                $scope.presentationId = answer._id;
                 _injectors.dialogue = dialogue;
-                $scope.audioLocation = "/recordings/" + $stateParams.presentationId + ".wav";
                 console.log("parent");
-                if ($stateParams.scriptIndex === '0') {
-                    _executeInstruction(answer.script,
-                        dialogue, $state,
-                        $stateParams.scriptIndex, $stateParams.timeStamp, $q);
-                }
+
             }])
-        .controller("PlayMaster", ["$scope", "$state", "answer", "dialogue", "$stateParams", "$q",
-            function ($scope, $state, answer, dialogue, $stateParams, $q) {
+        .controller("PlayMaster", ["$scope", "$state", "dialogue", "$stateParams", "$q",
+            function ($scope, $state, dialogue, $stateParams, $q) {
                 "use strict";
                 console.log("master");
                 _executeInstruction(answer.script,
@@ -102,19 +98,32 @@
 
 
             }])
+        .controller("PlayAudio", ["$scope", "$state", "dialogue", "$stateParams", "$q",
+            function ($scope, $state, dialogue, $stateParams, $q) {
+                "use strict";
+                console.log("init");
+                //TODO skip audio if time Stamp does not match
+                var timeToSkip = answer.script[$stateParams.scriptIndex].actionInitiated - $stateParams.timeStamp;
+                console.log(timeToSkip);
+                _executeInstruction(answer.script,
+                    dialogue, $state,
+                    $stateParams.scriptIndex, $stateParams.timeStamp, $q);
 
-        .controller("PlayActive", ["$scope", "$state", "$stateParams", "answer", "dialogue", "$q",
-            function ($scope, $state, $stateParams, answer, dialogue, $q) {
+
+            }])
+
+        .controller("PlayActive", ["$scope", "$state", "$stateParams", "dialogue", "$q",
+            function ($scope, $state, $stateParams, dialogue, $q) {
                 "use strict";
                 var page = parseInt($stateParams.page, 10);
                 console.log("activate");
+                //noinspection JSUnresolvedVariable
                 $scope.presentation = answer.presentationData[page];
-                $scope.presentationId = $stateParams.presentationId;
-
+                $scope.presentationId = answer._id;
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
                     function resetFragments() {
-                        dialogue.resetFragments({fragments: fragmentFn()}, ng.noop);
+                        dialogue.resetFragments({fragments: fragmentFn()}, $q.defer());
                         _executeInstruction(answer.script,
                             dialogue, $state,
                             $stateParams.scriptIndex, $stateParams.timeStamp, $q);
@@ -128,4 +137,4 @@
                     }
                 };
             }]);
-})(angular, "sokratik.atelier.player");
+};

@@ -71,6 +71,15 @@
           }
         }
       });
+      $stateProvider.state('complete', {
+        url: '/complete/:answerId',
+        views: {
+          'main': {
+            controller: 'RecordComplete',
+            templateUrl: 'record/complete.tpl.html'
+          }
+        }
+      });
     }
   ]).controller('RecordCtrl', [
     '$scope',
@@ -83,17 +92,19 @@
     'answer',
     function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer) {
       answer.script = [];
+      var recordingStart = new Date().getTime();
+      $scope.presentationId = answer._id;
+      answer.recordingStarted = recordingStart;
       $scope.record = function () {
         $scope.recording = true;
         acoustics.resume(audioNode, stream);
       };
-      $scope.play = function () {
+      var answerId = answer._id;
+      $scope.complete = function () {
         acoustics.stopRecording(audioNode, stream, answer._id);
         $q.when(anduril.completeRecord(answer._id)).then(function (resp) {
-        });
-        $state.go('play', {
-          presentationId: answer._id,
-          scriptIndex: 0
+          'use strict';
+          $state.go('complete', { answerId: answerId });
         });
       };
       $scope.pause = function () {
@@ -182,6 +193,13 @@
           params: { page: ++page }
         }));
       };
+    }
+  ]).controller('RecordComplete', [
+    '$scope',
+    '$stateParams',
+    function ($scope, $stateParams) {
+      'use strict';
+      $scope.answerId = $stateParams.answerId;
     }
   ]);
 }(angular, 'sokratik.atelier.record'));

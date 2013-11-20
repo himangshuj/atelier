@@ -57,21 +57,37 @@
                     }
                 }
             });
+            $stateProvider.state('complete', {
+                url: "/complete/:answerId",
+                views: {
+                    "main": {
+                        controller: 'RecordComplete',
+                        templateUrl: 'record/complete.tpl.html'
+                    }
+                }
+            });
 
         }])
         .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer",
             function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer) {
                 answer.script = [];//reseting the script
+                var recordingStart = new Date().getTime();
+                $scope.presentationId = answer._id;
+
+                answer.recordingStarted = recordingStart;
                 $scope.record = function () {
                     $scope.recording = true;
                     acoustics.resume(audioNode, stream);
                 };
-                $scope.play = function () {
+                var answerId = answer._id;//this is a HACK replace with restangular why this is hack log the answer in
+                //then clause
+                $scope.complete = function () {
                     acoustics.stopRecording(audioNode, stream, answer._id);
                     $q.when(anduril.completeRecord(answer._id))
                         .then(function (resp) {
+                            "use strict";
+                            $state.go("complete", {answerId: answerId});
                         });
-                    $state.go("play", {presentationId: answer._id, scriptIndex: 0});
 
                 };
                 $scope.pause = function () {
@@ -142,5 +158,9 @@
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 };
             }
-        ]);
+        ])
+        .controller('RecordComplete', ["$scope", "$stateParams", function ($scope, $stateParams) {
+            "use strict";
+            $scope.answerId = $stateParams.answerId;
+        }]);
 })(angular, "sokratik.atelier.record");

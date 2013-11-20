@@ -29,7 +29,6 @@
       return deferred.promise;
     };
     var _recordScript = function (presentationId, tuple) {
-      console.log(tuple);
       fragments[presentationId].script.push(tuple);
     };
     var _postScript = function (presentationId) {

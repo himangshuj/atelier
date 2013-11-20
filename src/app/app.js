@@ -10,8 +10,7 @@
             'ui.bootstrap',
             'sokratik.atelier.start',
             'sokratik.atelier.edit',
-            'sokratik.atelier.record',
-            'sokratik.atelier.player'
+            'sokratik.atelier.record'
         ])
 
         .config(function myAppConfig($stateProvider, $urlRouterProvider) {
