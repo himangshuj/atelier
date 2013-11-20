@@ -1,15 +1,11 @@
 <!--
 this is the place holder for all the templates which are being played
 -->
-
-<div ng-repeat="presentation in presentations">
-    <div>
-        <sokratik-dialogue presentation="presentation" presentations="presentations" index="{{$index}}"
-                           presentation-id="{{presentationId}}"/>
-    </div>
+<div>
+    <div ui-view="workspace" class="workspace"/>
 </div>
 <div>
-    <button class="btn btn-primary" ng-click="play()">Play</button>
-    <button class="btn btn-primary" ng-click="record()">Record Audio</button>
-
+    <button class="btn btn-primary" ng-click="complete()">Complete</button>
+    <button class="btn btn-primary" ng-click="record()" ng-hide="recording">Record Audio</button>
+    <button class="btn btn-primary" ng-click="pause()" ng-show="recording">Pause Recording</button>
 </div>

@@ -32,16 +32,6 @@
       fragments[presentationId].script.push(tuple);
     };
     var _postScript = function (presentationId) {
-      var script = _.sortBy(fragments[presentationId].script, function (tuple) {
-          return tuple.delay;
-        });
-      var offset = script[0].delay;
-      _.each(script, function (tuple) {
-        tuple.delay = tuple.delay - offset;
-        offset = tuple.delay + offset;
-        console.log('original :' + offset + 'delay :' + tuple.delay);
-      });
-      fragments[presentationId].script = script;
       return fragments[presentationId].$update();
     };
     this.$get = [

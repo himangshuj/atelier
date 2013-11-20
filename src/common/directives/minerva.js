@@ -120,83 +120,14 @@
         "edit": function (scope) {
         },
         "record": function (scope) {
-            var index = 0;
             //noinspection JSUnresolvedVariable
-            var dialogueCtrl = scope.dialogueCtrl;
-            var fnMap = {};
-            scope.$watch(index, function () {
-                var dialogueFragments = dialogueCtrl.getFragments();
-                if (index > _.size(dialogueCtrl.getFragments())) {
-                    _injectors.dialogue.resetFragments(dialogueFragments, _injectors.$q.defer()).then(
-                        function (obj) {
-                            _injectors.anduril.recordAction(scope.presentationId, obj);
-                            _injectors.$q.when(_injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer())).
-                                then(function (resp) {
-                                    _injectors.anduril.recordAction(scope.presentationId, resp);
-                                });
+            (scope.addFragment || ng.noop)({fragment: scope.dialogueCtrl.getFragments });
 
-                        });
-                }
-            });
-            fnMap.next = function () {
-                var dialogueFragments = dialogueCtrl.getFragments();
-                if (index < _.size(dialogueFragments)) {
-                    return    _injectors.dialogue.nextFragment({fragments: dialogueFragments, index: index++}, _injectors.$q.defer());
-                }
-                else {
-                    return _injectors.dialogue.resetFragments({fragments: dialogueFragments}, _injectors.$q.defer()).then(
-                        function (obj) {
-                            _injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer());
-                            return obj;
-                        }
-                    );
-                }
 
-            };
-            fnMap.previous = function () {
-
-                var dialogueFragments = dialogueCtrl.getFragments();
-                if (index > 0 && index <= _.size(dialogueFragments)) {
-                    return _injectors.dialogue.prevFragment({fragments: dialogueFragments, index: --index}, _injectors.$q.defer());
-                }
-                else {
-                    return _injectors.dialogue.showAllDialogues({dialogues: scope.presentations}, _injectors.$q.defer());
-                }
-
-            };
-
-            fnMap.zoom_in = function () {
-                index = 0;
-                return  _injectors.dialogue.zoom({dialogues: scope.presentations, page: scope.index}, _injectors.$q.defer());
-            };
-
-            fnMap.zoom_out = function () {
-                var dialogueFragments = dialogueCtrl.getFragments();
-                return _injectors.dialogue.resetFragments({fragments: dialogueFragments}, _injectors.$q.defer()).then(
-                    function (resp) {
-                        _injectors.anduril.recordAction(scope.presentationId, resp);
-                        return _injectors.dialogue.showAllDialogues({"dialogues": scope.presentations}, _injectors.$q.defer());
-                    }
-                );
-            };
-            var _recorderFn = function (prevValue) {
-                _injectors.$q.when(prevValue).then(
-                    function (resp) {
-                        _injectors.anduril.recordAction(scope.presentationId, resp);
-                    }
-                );
-
-            };
-
-            var wrappedFunctions = _.map(fnMap, function (value, key) {
-                return [key, _.compose(_recorderFn, value)];
-            });
-            _.extend(scope, _.object(wrappedFunctions));
         },
         "play": function (scope) {
-
             //noinspection JSUnresolvedVariable
-            scope.addFragment({fragment: scope.dialogueCtrl.getFragments });
+            (scope.addFragment || ng.noop)({fragment: scope.dialogueCtrl.getFragments });
 
         }
 
@@ -219,7 +150,8 @@
                     "model": "="
                 },
                 compile: function (tElement, tAttrs) {
-                    return _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || "text")];
+                    return {pre: _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || "text")]};
+
                 }
 
             };
@@ -230,6 +162,7 @@
             _injectors.$q = $q;
             _injectors.dialogue = dialogue;
             _injectors.anduril = anduril;
+            _injectors.$state = $state;
             return {
                 restrict: "E",
                 templateUrl: function () {
@@ -237,7 +170,6 @@
                 },
                 scope: {
                     presentation: "=",
-                    presentations: "=",
                     index: "@",
                     presentationId: "@",
                     addFragment: "&?",
@@ -262,7 +194,7 @@
                         ($scope.presentation.keyVals || {})[propertyKey] = value;
                     };
                     this.getFragments = function () {
-                        return _.clone(dialogueFragments);//returns a shallow copy
+                        return dialogueFragments;//returns a shallow copy
                     };
                 }],
                 controllerAs: "dialogueCtrl",

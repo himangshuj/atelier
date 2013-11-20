@@ -7,12 +7,11 @@
 
         .config(["$stateProvider",function config($stateProvider) {
             $stateProvider.state('start', {
-                url: '/start',
-                views: {
-                    "main": {
-                        controller: 'StartCtrl'
-                    }
-                }
+                url: '/start'
+               /* onEnter:["$rootScope",function($rootScope){
+                    $rootScope.loading = false;
+                }]*/
+
             });
         }])
         .controller('StartCtrl',["$state","titleService", function ($state, titleService) {

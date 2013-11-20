@@ -6,10 +6,7 @@
   ]).config([
     '$stateProvider',
     function config($stateProvider) {
-      $stateProvider.state('start', {
-        url: '/start',
-        views: { 'main': { controller: 'StartCtrl' } }
-      });
+      $stateProvider.state('start', { url: '/start' });
     }
   ]).controller('StartCtrl', [
     '$state',

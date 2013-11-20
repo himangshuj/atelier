@@ -4,6 +4,7 @@
   var MediaStream = window.MediaStream || window.webkitMediaStream;
   var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
   var volume = context.createGain ? context.createGain() : {};
+  var _streams = {};
   var acoustics = function () {
     this.$get = [
       '$log',
@@ -12,6 +13,9 @@
       function ($log, $location, $q) {
         return {
           stream: function (answerId) {
+            if (_streams[answerId]) {
+              return _streams[answerId];
+            }
             var client = new BinaryClient('ws://' + $location.host() + ':' + $location.port() + '/writer');
             var deferred = $q.defer();
             client.on('open', function () {
@@ -19,6 +23,8 @@
                   answerId: answerId,
                   sampleRate: context.sampleRate
                 });
+              _streams[answerId] = stream;
+              deferred.resolve(stream);
               recorder.onaudioprocess = function (e) {
                 var left = e.inputBuffer.getChannelData(0);
                 var right = e.inputBuffer.getChannelData(1);
@@ -30,11 +36,9 @@
                   view.setInt16(index + 2, right[i] * 32767, true);
                   index += 4;
                 }
-                console.log('posting');
                 stream.write(buffer);
               };
               stream.pause();
-              deferred.resolve(stream);
             });
             return deferred.promise;
           },
@@ -60,10 +64,11 @@
             volume.connect(recorder);
             recorder.connect(context.destination);
           },
-          stopRecording: function (audioInput, stream) {
+          stopRecording: function (audioInput, stream, answerId) {
             audioInput.disconnect();
             recorder.disconnect();
             volume.disconnect();
+            _streams[answerId] = null;
             stream.destroy();
           }
         };
