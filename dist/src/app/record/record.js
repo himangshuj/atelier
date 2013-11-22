@@ -151,6 +151,21 @@
                 $scope.nextSlide = function () {
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 };
+                var stepsRecordedTillThisSlide = _.size(answer.script) - 1;//we exclude the pause
+
+                $scope.redoSlide = function () {
+                    "use strict";
+                    var scriptToPreserve = _.first(answer.script, stepsRecordedTillThisSlide);
+                    console.log("[Redo] Before scripts size" + _.size(answer.script) + " After scripts " + stepsRecordedTillThisSlide);
+                    scriptToPreserve[stepsRecordedTillThisSlide - 1].actionInitiated = new Date().getTime();
+                    anduril.insertScript(answer._id, scriptToPreserve);
+                    answer.script = scriptToPreserve;
+                    $scope.pause();
+                    dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(function(){
+                        console.log("ready");
+                    });
+                    index = 0;
+                };
             }
         ])
         .controller('RecordComplete', ["$scope", "$stateParams", function ($scope, $stateParams) {

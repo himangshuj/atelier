@@ -39,6 +39,10 @@
         var _recordScript = function (presentationId, tuple) {
             fragments[presentationId].script.push(tuple);
         };
+
+        var _insertScript = function (presentationId, script) {
+            fragments[presentationId].script = script;
+        };
         var _postScript = function (presentationId) {
             //noinspection JSUnresolvedFunction
             return fragments[presentationId].$update();
@@ -85,7 +89,8 @@
 
                 },
                 recordAction: _recordScript,
-                completeRecord: _postScript
+                completeRecord: _postScript,
+                insertScript: _insertScript
 
             };
         }

@@ -213,8 +213,7 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "    <button class=\"btn btn-primary\" ng-click=\"next()\">Next Fragment</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"previous()\">Previous Fragment</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"nextSlide()\">Next Slide</button>\n" +
-    "\n" +
-    "\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"redoSlide()\">Redo Slide</button>\n" +
     "</div>\n" +
     "");
 }]);
