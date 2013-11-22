@@ -101,7 +101,9 @@
                         $state.go($state.current.data.mode + context.subState, context.params);
                     });
                     return  result;
-                }
+                },
+                pause: ng.noop,
+                resume: ng.noop
             };
 
         }];
