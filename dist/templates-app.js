@@ -15,7 +15,7 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
     "<div>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"resume()\">Resume</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"add()\">Insert Another Slide</button>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page+1)\" ng-show=\"page < totalPages\">Next Slide</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page+1)\" ng-show=\"page < (totalPages-1)\">Next Slide</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \">Previous Slide</button>\n" +
     "\n" +
     "\n" +
@@ -39,22 +39,17 @@ angular.module("edit/image.modal.tpl.html", []).run(["$templateCache", function(
     "<div class=\"modal-dialog\">\n" +
     "    <div class=\"modal-content\">\n" +
     "        <div class=\"modal-header\">\n" +
-    "\n" +
-    "            Select the image\n" +
+    "            <input type=\"text\" ng-model=\"selected.image\">\n" +
     "        </div>\n" +
     "        <div class=\"modal-body\">\n" +
-    "            <table>\n" +
-    "                <tr ng-repeat=\"imageGroup in imageGroups\">\n" +
-    "                    <td ng-repeat=\"image in imageGroup\">\n" +
-    "                        <img ng-src=\"{{image.thumbnail}}\" ng-click=\"selected.image = image.url\"/>\n" +
-    "                    </td>\n" +
-    "                </tr>\n" +
-    "            </table>\n" +
-    "\n" +
-    "\n" +
-    "            Selected: <b><img ng-src=\"{{selected.image}}\"/></b>\n" +
-    "\n" +
-    "\n" +
+    "            <div class=\"row-fluid image-container\">\n" +
+    "                <div class=\"row-fluid image-group\" ng-repeat=\"imageGroup in imageGroups\">\n" +
+    "                    <div class=\"col-xs-12 col-sm-6 col-md-4\" style=\"height: inherit\" ng-repeat=\"image in imageGroup\">\n" +
+    "                        <div class=\"image-holder\" ng-class=\"{selected : selected.image == image.url}\" style=\"background-image: url('{{image.thumbnail}}')\" ng-click=\"selected.image = image.url\">\n" +
+    "                       </div>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
     "        </div>\n" +
     "        <div class=\"modal-footer\">\n" +
     "            <button class=\"btn btn-warning\" ng-click=\"cancel()\">Close</button>\n" +
