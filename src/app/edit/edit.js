@@ -73,9 +73,10 @@
                     var presentationId = $stateParams.presentationId;
                     $scope.presentationId = presentationId;
                     $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
+                    $scope.totalPages = _.size(answer.presentationData[page]);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(presentationId, page, $scope.presentation);
-                    $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
+                    $scope.presentation.templateName = $stateParams.templateName || $scope.presentation.templateName  ;
                     $scope.presentation.css = [""];
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
 
@@ -85,6 +86,11 @@
                         anduril.post(presentationId);
                         $state.go("record.master");
 
+                    };
+
+                    $scope.goToPage = function(page){
+                        "use strict";
+                        $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
                     $scope.templates = templates;
                     $scope.add = function () {
@@ -100,7 +106,8 @@
 
                         modalInstance.result.then(function (selectedTemplate) {
                             $scope.selected = selectedTemplate;
-                            anduril.put(presentationId, page, $scope.presentation);
+                            anduril.insert(presentationId, page+1, {templateName:selectedTemplate});
+
                             anduril.post(presentationId);
                             $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });
                         }, function () {
@@ -112,7 +119,6 @@
 
                 }])
         .controller('TemplateCtrl', function TemplateController() {
-
         });
 })(angular, "sokratik.atelier.edit");
 

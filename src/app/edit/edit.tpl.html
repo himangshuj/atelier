@@ -1,10 +1,12 @@
 <div class="edit" ui-view="template"></div>
 
 
-
 <div>
     <button class="btn btn-primary" ng-click="resume()">Resume</button>
-    <button class="btn btn-primary" ng-click="add()">Add Another Slide</button>
+    <button class="btn btn-primary" ng-click="add()">Insert Another Slide</button>
+    <button class="btn btn-primary" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">Next Slide</button>
+    <button class="btn btn-primary" ng-click="goToPage(page-1)" ng-show="page > 0 ">Previous Slide</button>
+
 
 </div>
 

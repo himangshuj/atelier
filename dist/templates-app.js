@@ -12,10 +12,12 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
     "<div class=\"edit\" ui-view=\"template\"></div>\n" +
     "\n" +
     "\n" +
-    "\n" +
     "<div>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"resume()\">Resume</button>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"add()\">Add Another Slide</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"add()\">Insert Another Slide</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page+1)\" ng-show=\"page < totalPages\">Next Slide</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \">Previous Slide</button>\n" +
+    "\n" +
     "\n" +
     "</div>\n" +
     "\n" +
