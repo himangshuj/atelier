@@ -68,8 +68,8 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer",
-            function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer", "recordAction",
+            function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction) {
                 answer.script = [];//reseting the script
                 var recordingStart = new Date().getTime();
                 $scope.presentationId = answer._id;
@@ -77,6 +77,8 @@
                 answer.recordingStarted = recordingStart;
                 $scope.record = function () {
                     $scope.recording = true;
+                    recordAction({"fnName": "resume", "args": {},
+                        actionInitiated: new Date().getTime() });
                     acoustics.resume(audioNode, stream);
                 };
                 var answerId = answer._id;//this is a HACK replace with restangular why this is hack log the answer in
@@ -90,28 +92,21 @@
                         });
 
                 };
-                $scope.pause = function () {
+                var pause = $scope.pause = function () {
                     acoustics.pause(audioNode, stream);
+                    recordAction({"fnName": "pause", "args": {},
+                        actionInitiated: new Date().getTime() });
                     $scope.recording = false;
                 };
-                $scope.$on('$stateChangeStart',
-                    function () {
-                        "use strict";
-                        /* console.log(stream);
-                         acoustics.pause(audioNode, stream);*/
-                        $scope.recording = false;
 
-                    });
                 $scope.$on('$stateChangeSuccess',
                     function () {
                         "use strict";
-                        /*
-                         acoustics.resume(audioNode, stream);
-                         */
-                        $scope.recording = true;
-
+                        pause(audioNode, stream);
+                        $scope.recording = false;
+                        console.log("buhaha");
                     });
-                $scope.recording = true;
+                pause(audioNode, stream);
             }])
         .controller('RecordMaster', ["$scope", "answer", "acoustics", "audioNode", "stream", "dialogue", "anduril", "recordAction",
             function ($scope, answer, acoustics, audioNode, stream, dialogue, anduril, recordAction) {
@@ -124,7 +119,6 @@
                     anduril.recordAction(answer._id, resp);
                 };
                 $scope.presentationId = answer._id;
-                acoustics.resume(audioNode, stream);
 
             }])
         .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction", "$q",
@@ -156,6 +150,21 @@
                 };
                 $scope.nextSlide = function () {
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
+                };
+                var stepsRecordedTillThisSlide = _.size(answer.script) - 1;//we exclude the pause
+
+                $scope.redoSlide = function () {
+                    "use strict";
+                    var scriptToPreserve = _.first(answer.script, stepsRecordedTillThisSlide);
+                    console.log("[Redo] Before scripts size" + _.size(answer.script) + " After scripts " + stepsRecordedTillThisSlide);
+                    scriptToPreserve[stepsRecordedTillThisSlide - 1].actionInitiated = new Date().getTime();
+                    anduril.insertScript(answer._id, scriptToPreserve);
+                    answer.script = scriptToPreserve;
+                    $scope.pause();
+                    dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(function(){
+                        console.log("ready");
+                    });
+                    index = 0;
                 };
             }
         ])

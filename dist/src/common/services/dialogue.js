@@ -74,7 +74,6 @@
                 makeVisible: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
                     _.delay(function () {
-                        console.log(context);
                         _changeFragmentClass(context.fragments[context.index], "visible", "");
                         deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
                             actionInitiated: actionInitiated });
@@ -86,7 +85,7 @@
                     _.delay(function () {
 
                         _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
-                        deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
+                        deferred.resolve({"fnName": "hide", "args": {index: context.index},
                             actionInitiated: actionInitiated });
                     });
                     return deferred.promise;
@@ -101,7 +100,9 @@
                         $state.go($state.current.data.mode + context.subState, context.params);
                     });
                     return  result;
-                }
+                },
+                pause: ng.noop,
+                resume: ng.noop
             };
 
         }];

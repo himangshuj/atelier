@@ -15,7 +15,7 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
     "<div>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"resume()\">Resume</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"add()\">Insert Another Slide</button>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page+1)\" ng-show=\"page < totalPages\">Next Slide</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page+1)\" ng-show=\"page < (totalPages-1)\">Next Slide</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \">Previous Slide</button>\n" +
     "\n" +
     "\n" +
@@ -213,8 +213,7 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "    <button class=\"btn btn-primary\" ng-click=\"next()\">Next Fragment</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"previous()\">Previous Fragment</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"nextSlide()\">Next Slide</button>\n" +
-    "\n" +
-    "\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"redoSlide()\">Redo Slide</button>\n" +
     "</div>\n" +
     "");
 }]);

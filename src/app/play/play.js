@@ -1,5 +1,6 @@
 var atelierPlayer = function (ng, app, answer) {
     console.log(answer._id);
+    console.log(_.pluck(answer.script, "fnName"));
     var _injectors = {};
     var fragmentFn = ng.noop;//global variable is this really bad
     var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q) {
@@ -7,7 +8,8 @@ var atelierPlayer = function (ng, app, answer) {
         if (scriptIndex < _.size(instructions)) {
             var index = scriptIndex || 0;
             var instruction = instructions[index];
-            var delay = instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
+            var delay = _.isEqual(instruction.fnName,"resume") ?
+                0 : instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
             var intraState = function () {
                 _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q);
             };
@@ -22,7 +24,7 @@ var atelierPlayer = function (ng, app, answer) {
     ng.module(app, [
             'ui.router',
             'ui.route',
-            'sokratik.atelier.services.istari',            ,
+            'sokratik.atelier.services.istari', ,
             'sokratik.atelier.services.dialogue',
             'sokratik.atelier.directives.minerva',
             'ui.bootstrap',
