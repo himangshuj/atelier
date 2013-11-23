@@ -1,24 +1,28 @@
 var atelierPlayer = function (ng, app, answer) {
-  console.log(answer._id);
-  console.log(_.pluck(answer.script, 'fnName'));
   var _injectors = {};
   var fragmentFn = ng.noop;
-  var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q) {
+  var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q, pausedInterval) {
     'use strict';
     if (scriptIndex < _.size(instructions)) {
       var index = scriptIndex || 0;
       var instruction = instructions[index];
-      var delay = _.isEqual(instruction.fnName, 'resume') ? 0 : instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
+      var delay = 0;
+      pausedInterval = parseInt(pausedInterval, 10);
+      var recordingDelay = instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
+      if (_.isEqual(instruction.fnName, 'resume')) {
+        pausedInterval += recordingDelay;
+      } else {
+        delay = recordingDelay;
+      }
       var intraState = function () {
-        _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q);
+        _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval);
       };
       _.delay(function () {
         var params = _.extend({
             scriptIndex: ++scriptIndex,
             timeStamp: instruction.actionInitiated
-          }, (instruction.args || {}).params);
+          }, (instruction.args || {}).params, { pausedInterval: pausedInterval });
         var postExecute = ng.equals(instruction.fnName, 'changeState') ? ng.noop : intraState;
-        console.log(instruction);
         $q.when(dialogue[instruction.fnName](_.extend(instruction.args || {}, {
           'params': params,
           fragments: fragmentFn()
@@ -40,7 +44,7 @@ var atelierPlayer = function (ng, app, answer) {
     '$stateProvider',
     function config($stateProvider) {
       $stateProvider.state('play', {
-        url: '/play/:scriptIndex/:timeStamp',
+        url: '/play/:scriptIndex/:timeStamp/:pausedInterval',
         abstract: true,
         resolve: {
           instructionDetails: [
@@ -94,7 +98,6 @@ var atelierPlayer = function (ng, app, answer) {
       $scope.presentations = answer.presentationData;
       $scope.presentationId = answer._id;
       _injectors.dialogue = dialogue;
-      console.log('parent');
     }
   ]).controller('PlayMaster', [
     '$scope',
@@ -104,8 +107,7 @@ var atelierPlayer = function (ng, app, answer) {
     '$q',
     function ($scope, $state, dialogue, $stateParams, $q) {
       'use strict';
-      console.log('master');
-      _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q);
+      _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
     }
   ]).controller('PlayAudio', [
     '$scope',
@@ -118,7 +120,7 @@ var atelierPlayer = function (ng, app, answer) {
       console.log('init');
       var timeToSkip = answer.script[$stateParams.scriptIndex].actionInitiated - $stateParams.timeStamp;
       console.log(timeToSkip);
-      _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q);
+      _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
     }
   ]).controller('PlayActive', [
     '$scope',
@@ -136,7 +138,7 @@ var atelierPlayer = function (ng, app, answer) {
         fragmentFn = fragment;
         function resetFragments() {
           dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer());
-          _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q);
+          _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
         }
         if (_.size(fragment()) > 0) {
           resetFragments();

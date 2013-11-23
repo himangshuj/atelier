@@ -41,7 +41,7 @@
      */
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
-        scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
+        scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
         scope.model.css = ["fragment"];
         sokratikDialogueCtrl.addFragment(scope.model);
 
@@ -49,15 +49,18 @@
 
 
     var _fragmentLink = {
-        "edit": {
+        editCommonLink: function (scope, attrs, sokratikDialogueCtrl) {
+            scope.model.value = scope.model.value || attrs.default;
+
+            sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
+        }, "edit": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 // Listen for change events to enable binding
                 element.on('blur keyup change', function () {
                     scope.$apply(read);
                 });
-                //registers the current value in the parent dialogue which is aware of the entire presentation
-                sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, "default"));
+                this.editCommonLink(scope, attrs, sokratikDialogueCtrl);
 
                 // Write data to the model
                 function read() {
@@ -69,7 +72,7 @@
             "image": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 //registers the current value in the parent dialogue which is aware of the entire presentation
-                sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, "default"));
+                this.editCommonLink(scope, attrs, sokratikDialogueCtrl);
                 scope.addImage = function () {
                     var modalInstance = _injectors.$modal.open({
                         templateUrl: 'edit/image.modal.tpl.html',

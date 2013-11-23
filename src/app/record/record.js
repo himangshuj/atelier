@@ -104,7 +104,6 @@
                         "use strict";
                         pause(audioNode, stream);
                         $scope.recording = false;
-                        console.log("buhaha");
                     });
                 pause(audioNode, stream);
             }])
@@ -162,7 +161,6 @@
                     answer.script = scriptToPreserve;
                     $scope.pause();
                     dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(function(){
-                        console.log("ready");
                     });
                     index = 0;
                 };

@@ -203,7 +203,7 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "    <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\" presentation-id=\"{{presentationId}}\" class=\"zoom-in\"\n" +
     "                       add-fragment=\"addFragment(fragment)\"/>\n" +
     "</div>\n" +
-    "<div>\n" +
+    "<div ng-show=\"recording\">\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"masterView()\">MasterView</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"next()\">Next Fragment</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"previous()\">Previous Fragment</button>\n" +
@@ -255,7 +255,7 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "    <div ui-view=\"workspace\" class=\"workspace\"/>\n" +
     "</div>\n" +
     "<div>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"complete()\">Complete</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"complete()\" ng-show=\"recording\">Complete</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"record()\" ng-hide=\"recording\">Record Audio</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"pause()\" ng-show=\"recording\">Pause Recording</button>\n" +
     "</div>");

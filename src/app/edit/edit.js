@@ -1,5 +1,4 @@
 (function (ng, app) {
-
     var _newSlideModalCtrl = ["$scope", "$modalInstance", "templates", function ($scope, $modalInstance, templates) {
         $scope.templates = templates;
         $scope.selected = {
