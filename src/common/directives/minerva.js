@@ -47,20 +47,21 @@
 
     };
 
+    var editCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
+        scope.model.value = scope.model.value || attrs.default;
+
+        sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
+    };
 
     var _fragmentLink = {
-        editCommonLink: function (scope, attrs, sokratikDialogueCtrl) {
-            scope.model.value = scope.model.value || attrs.default;
-
-            sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
-        }, "edit": {
+        "edit": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 // Listen for change events to enable binding
                 element.on('blur keyup change', function () {
                     scope.$apply(read);
                 });
-                this.editCommonLink(scope, attrs, sokratikDialogueCtrl);
+                editCommonLink(scope, attrs, sokratikDialogueCtrl);
 
                 // Write data to the model
                 function read() {
@@ -72,7 +73,7 @@
             "image": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 //registers the current value in the parent dialogue which is aware of the entire presentation
-                this.editCommonLink(scope, attrs, sokratikDialogueCtrl);
+                editCommonLink(scope, attrs, sokratikDialogueCtrl);
                 scope.addImage = function () {
                     var modalInstance = _injectors.$modal.open({
                         templateUrl: 'edit/image.modal.tpl.html',
