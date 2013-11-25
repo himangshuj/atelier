@@ -14,7 +14,8 @@ var atelierPlayer = function (ng, app, answer) {
       } else {
         delay = recordingDelay;
       }
-      var intraState = function () {
+      var intraState = function (resp) {
+        console.log('[scriptIndex' + scriptIndex + ']reponse' + ng.toJson(resp));
         _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval);
       };
       _.delay(function () {
@@ -117,9 +118,6 @@ var atelierPlayer = function (ng, app, answer) {
     '$q',
     function ($scope, $state, dialogue, $stateParams, $q) {
       'use strict';
-      console.log('init');
-      var timeToSkip = answer.script[$stateParams.scriptIndex].actionInitiated - $stateParams.timeStamp;
-      console.log(timeToSkip);
       _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
     }
   ]).controller('PlayActive', [
@@ -131,7 +129,6 @@ var atelierPlayer = function (ng, app, answer) {
     function ($scope, $state, $stateParams, dialogue, $q) {
       'use strict';
       var page = parseInt($stateParams.page, 10);
-      console.log('activate');
       $scope.presentation = answer.presentationData[page];
       $scope.presentationId = answer._id;
       $scope.addFragment = function (fragment) {

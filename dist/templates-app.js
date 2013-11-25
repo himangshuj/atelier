@@ -15,6 +15,7 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
     "<div>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"resume()\">Resume</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"add()\">Insert Another Slide</button>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"remove()\">Remove Current Slide</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page+1)\" ng-show=\"page < (totalPages-1)\">Next Slide</button>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \">Previous Slide</button>\n" +
     "\n" +

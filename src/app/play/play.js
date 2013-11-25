@@ -7,14 +7,15 @@ var atelierPlayer = function (ng, app, answer) {
             var index = scriptIndex || 0;
             var instruction = instructions[index];
             var delay = 0;
-            pausedInterval = parseInt(pausedInterval,10);
+            pausedInterval = parseInt(pausedInterval, 10);
             var recordingDelay = instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
             if (_.isEqual(instruction.fnName, "resume")) {
                 pausedInterval += recordingDelay;
             } else {
                 delay = recordingDelay;
             }
-            var intraState = function () {
+            var intraState = function (resp) {
+                console.log("[scriptIndex" + scriptIndex + "]reponse" + ng.toJson(resp));
                 _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval);
             };
             _.delay(function () {
@@ -105,10 +106,7 @@ var atelierPlayer = function (ng, app, answer) {
         .controller("PlayAudio", ["$scope", "$state", "dialogue", "$stateParams", "$q",
             function ($scope, $state, dialogue, $stateParams, $q) {
                 "use strict";
-                console.log("init");
                 //TODO skip audio if time Stamp does not match
-                var timeToSkip = answer.script[$stateParams.scriptIndex].actionInitiated - $stateParams.timeStamp;
-                console.log(timeToSkip);
                 _executeInstruction(answer.script,
                     dialogue, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
@@ -120,7 +118,6 @@ var atelierPlayer = function (ng, app, answer) {
             function ($scope, $state, $stateParams, dialogue, $q) {
                 "use strict";
                 var page = parseInt($stateParams.page, 10);
-                console.log("activate");
                 //noinspection JSUnresolvedVariable
                 $scope.presentation = answer.presentationData[page];
                 $scope.presentationId = answer._id;

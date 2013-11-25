@@ -22,11 +22,12 @@
     scope.model = {};
     scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
     scope.model.css = ['fragment'];
-    sokratikDialogueCtrl.addFragment(scope.model);
+    if (!_.str.isBlank(scope.model.value)) {
+      sokratikDialogueCtrl.addFragment(scope.model);
+    }
   };
-  var editCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
+  var editCommonLink = function (scope, attrs) {
     scope.model.value = scope.model.value || attrs.default;
-    sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
   };
   var _fragmentLink = {
       'edit': {
@@ -35,7 +36,7 @@
           element.on('blur keyup change', function () {
             scope.$apply(read);
           });
-          editCommonLink(scope, attrs, sokratikDialogueCtrl);
+          editCommonLink(scope, attrs);
           function read() {
             var html = angular.element(element).children().html();
             scope.model.value = _injectors.$sce.trustAsHtml(html);
@@ -44,7 +45,7 @@
         },
         'image': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-          editCommonLink(scope, attrs, sokratikDialogueCtrl);
+          editCommonLink(scope, attrs);
           scope.addImage = function () {
             var modalInstance = _injectors.$modal.open({
                 templateUrl: 'edit/image.modal.tpl.html',

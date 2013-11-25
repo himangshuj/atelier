@@ -105,7 +105,6 @@
                 resume: function(context){
                     "use strict";
                     _.defer(function () {
-                        console.log("buhahaha");
                         $state.go($state.current.name, context.params);
                     });
                 }
