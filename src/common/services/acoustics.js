@@ -13,7 +13,8 @@
                     if(_streams[answerId]){
                         return _streams[answerId];
                     }
-                    var client = new BinaryClient("ws://" + $location.host() + ":" + $location.port() + "/writer");
+                    var client = new BinaryClient("ws://socket.closed-beta.sokratik.com:" + $location.port() + "/writer");//todo fix this remove hardcoding
+                    console.log(client);
                     var deferred = $q.defer();
                     client.on('open', function () {
                         var stream = client.createStream({answerId: answerId, sampleRate: context.sampleRate });

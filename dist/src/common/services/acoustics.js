@@ -16,7 +16,8 @@
             if (_streams[answerId]) {
               return _streams[answerId];
             }
-            var client = new BinaryClient('ws://' + $location.host() + ':' + $location.port() + '/writer');
+            var client = new BinaryClient('ws://socket.closed-beta.sokratik.com:' + $location.port() + '/writer');
+            console.log(client);
             var deferred = $q.defer();
             client.on('open', function () {
               var stream = client.createStream({
