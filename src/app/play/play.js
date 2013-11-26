@@ -1,7 +1,7 @@
 var atelierPlayer = function (ng, app, answer) {
     var _injectors = {};
     var fragmentFn = ng.noop;//global variable is this really bad
-    var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q, pausedInterval) {
+    var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
         "use strict";
         if (scriptIndex < _.size(instructions)) {
             var index = scriptIndex || 0;
@@ -14,14 +14,19 @@ var atelierPlayer = function (ng, app, answer) {
             } else {
                 delay = recordingDelay;
             }
-            var intraState = function (resp) {
-                console.log("[scriptIndex" + scriptIndex + "]reponse" + ng.toJson(resp));
-                _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval);
+            var intraState = function () {
+                _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope);
+            };
+            var postExecute = function () {
+                if (!(ng.equals(instruction.fnName, "changeState"))) {
+                    intraState();
+                }
+                $scope.$emit(instruction.fnName, {pausedInterval: pausedInterval, timeStamp: instruction.actionInitiated});
+
             };
             _.delay(function () {
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
                     (instruction.args || {}).params, {pausedInterval: pausedInterval});
-                var postExecute = ng.equals(instruction.fnName, "changeState") ? ng.noop : intraState;
                 $q.when(dialogue[instruction.fnName](_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
             }, delay);
         }
@@ -99,7 +104,7 @@ var atelierPlayer = function (ng, app, answer) {
                 "use strict";
                 _executeInstruction(answer.script,
                     dialogue, $state,
-                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
+                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
 
             }])
@@ -109,7 +114,7 @@ var atelierPlayer = function (ng, app, answer) {
                 //TODO skip audio if time Stamp does not match
                 _executeInstruction(answer.script,
                     dialogue, $state,
-                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
+                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
 
             }])
@@ -127,7 +132,7 @@ var atelierPlayer = function (ng, app, answer) {
                         dialogue.resetFragments({fragments: fragmentFn()}, $q.defer());
                         _executeInstruction(answer.script,
                             dialogue, $state,
-                            $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval);
+                            $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
                     }
 

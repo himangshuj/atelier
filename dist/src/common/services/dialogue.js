@@ -71,12 +71,13 @@
             });
             return result;
           },
-          pause: ng.noop,
+          pause: function (context) {
+            'use strict';
+            return context;
+          },
           resume: function (context) {
             'use strict';
-            _.defer(function () {
-              $state.go($state.current.name, context.params);
-            });
+            return context;
           }
         };
       }
