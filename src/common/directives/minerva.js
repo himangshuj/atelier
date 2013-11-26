@@ -41,15 +41,15 @@
      */
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
-        scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
+        scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) ;
         scope.model.css = ["fragment"];
         if (!_.str.isBlank(scope.model.value)) {
             sokratikDialogueCtrl.addFragment(scope.model);
         }
     };
 
-    var editCommonLink = function (scope, attrs) {
-        scope.model.value = scope.model.value || attrs.default;
+    var editCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
+        scope.model.value =  sokratikDialogueCtrl.getProperty(attrs.model)  || attrs.default;
     };
 
     var _fragmentLink = {
@@ -60,7 +60,7 @@
                 element.on('blur keyup change', function () {
                     scope.$apply(read);
                 });
-                editCommonLink(scope, attrs);
+                editCommonLink(scope, attrs,sokratikDialogueCtrl);
 
                 // Write data to the model
                 function read() {
@@ -98,6 +98,7 @@
         },
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
+                scope.model.value =  sokratikDialogueCtrl.getProperty(attrs.model)  || "<br/>";
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             },
@@ -108,6 +109,7 @@
         },
         "play": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
+                scope.model.value =  sokratikDialogueCtrl.getProperty(attrs.model)  || "<br/>";
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             },
