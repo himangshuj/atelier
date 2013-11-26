@@ -23,7 +23,10 @@
           resetFragments: function (context, deferred) {
             var actionInitiated = new Date().getTime();
             _.delay(function () {
-              _changeAllDialogues(context.fragments, 'fragment', 'visible');
+              _changeAllDialogues(context.fragments, 'fragment', [
+                'animated',
+                'fadeIn'
+              ]);
               deferred.resolve({
                 'fnName': 'resetFragments',
                 'args': {},
@@ -35,7 +38,10 @@
           makeVisible: function (context, deferred) {
             var actionInitiated = new Date().getTime();
             _.delay(function () {
-              _changeFragmentClass(context.fragments[context.index], 'visible', '');
+              _changeFragmentClass(context.fragments[context.index], [
+                'animated',
+                'fadeIn'
+              ], 'fragment');
               deferred.resolve({
                 'fnName': 'makeVisible',
                 'args': { index: context.index },
@@ -47,7 +53,10 @@
           hide: function (context, deferred) {
             var actionInitiated = new Date().getTime();
             _.delay(function () {
-              _changeFragmentClass(context.fragments[context.index], 'fragment', 'visible');
+              _changeFragmentClass(context.fragments[context.index], 'fragment', [
+                'animated',
+                'fadeIn'
+              ]);
               deferred.resolve({
                 'fnName': 'hide',
                 'args': { index: context.index },
