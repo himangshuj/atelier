@@ -3,7 +3,7 @@ angular.module('templates-app', ['edit/dialogue.tpl.html', 'edit/edit.tpl.html',
 angular.module("edit/dialogue.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/dialogue.tpl.html",
     "<div class=\"full-height\" ng-class=\"presentation.css\">\n" +
-    "    <div ng-include=\"templateName\" class=\"full-height\"/>\n" +
+    "    <div ng-include=\"templateName\" class=\"full-height\"></div>\n" +
     "</div>");
 }]);
 
@@ -149,7 +149,7 @@ angular.module("play/dialogue.tpl.html", []).run(["$templateCache", function($te
     "<div ng-class=\"presentation.css\" class=\"full-height\">\n" +
     "\n" +
     "    <div class=\"full-height\">\n" +
-    "        <div ng-include=\"templateName\" class=\"full-height\"/>\n" +
+    "        <div ng-include=\"templateName\" class=\"full-height\"></div>\n" +
     "    </div>\n" +
     "</div>");
 }]);
@@ -181,7 +181,7 @@ angular.module("play/play.tpl.html", []).run(["$templateCache", function($templa
     "    <div ui-view=\"screen\" class=\"playback full-height\"></div>\n" +
     "</div>\n" +
     "<div>\n" +
-    "    <div ui-view=\"audio\"/>\n" +
+    "    <div ui-view=\"audio\"></div>\n" +
     "</div>\n" +
     "\n" +
     "");
@@ -217,7 +217,7 @@ angular.module("record/complete.tpl.html", []).run(["$templateCache", function($
 angular.module("record/dialogue.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("record/dialogue.tpl.html",
     "   <div class=\"full-height\">\n" +
-    "       <div ng-include=\"templateName\" class=\"full-height\"/>\n" +
+    "       <div ng-include=\"templateName\" class=\"full-height\"></div>\n" +
     "   </div>\n" +
     "");
 }]);
@@ -248,7 +248,7 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "this is the place holder for all the templates which are being played\n" +
     "-->\n" +
     "<div class=\"full-height\">\n" +
-    "    <div ui-view=\"workspace\" class=\"workspace full-height\"/>\n" +
+    "    <div ui-view=\"workspace\" class=\"workspace full-height\"></div>\n" +
     "</div>\n" +
     "<div class=\"control-bar\">\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"complete()\" ng-show=\"recording\">Complete</button><br/>\n" +

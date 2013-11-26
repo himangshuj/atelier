@@ -1,7 +1,6 @@
 var atelierPlayer = function (ng, app, answer) {
   var _injectors = {};
   var fragmentFn = ng.noop;
-  console.log();
   var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
     'use strict';
     if (scriptIndex < _.size(instructions)) {
@@ -22,7 +21,6 @@ var atelierPlayer = function (ng, app, answer) {
         if (!ng.equals(instruction.fnName, 'changeState')) {
           intraState();
         }
-        console.log('Emitting' + instruction.fnName);
         $scope.$emit(instruction.fnName, {
           pausedInterval: pausedInterval,
           timeStamp: instruction.actionInitiated

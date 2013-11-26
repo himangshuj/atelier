@@ -1,12 +1,5 @@
 (function (ng, app) {
   var dialogueService = function () {
-    var _changeSingleDialogue = function (presentationDialogues, index, classToAdd, classToRemove) {
-      _.each(presentationDialogues, function (presentationDialog) {
-        presentationDialog.css = _.without(presentationDialog.css, classToAdd);
-      });
-      presentationDialogues[index].css = _.chain(presentationDialogues[index].css).union([classToAdd]).without(classToRemove).value();
-      return presentationDialogues;
-    };
     var _changeAllDialogues = function (presentationDialogues, classToAdd, classToRemove) {
       return _.map(presentationDialogues, function (presentationDialog) {
         presentationDialog.css = _.chain(presentationDialog.css).without(classToRemove).union([classToAdd]).value();
