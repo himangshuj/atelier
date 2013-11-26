@@ -14,7 +14,7 @@
         "angular-ui-utils": "~0.0.4",
         "angular-ui-utils": "~0.0.4",
         "underscore": "~1.5.2",
-        "animate.css":"git@github.com:daneden/animate.css.git#master"
+        "animate.css":"https://github.com/daneden/animate.css.git#master"
     },
     "dependencies": {}
 }

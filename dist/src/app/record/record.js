@@ -93,10 +93,10 @@
     'recordAction',
     function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction) {
       answer.script = [];
-      var recordingStart = new Date().getTime();
       $scope.presentationId = answer._id;
-      answer.recordingStarted = recordingStart;
       $scope.record = function () {
+        var recordingStart = new Date().getTime();
+        answer.recordingStarted = answer.recordingStarted || recordingStart;
         $scope.recording = true;
         recordAction({
           'fnName': 'resume',
@@ -208,8 +208,8 @@
         scriptToPreserve[stepsRecordedTillThisSlide - 1].actionInitiated = new Date().getTime();
         anduril.insertScript(answer._id, scriptToPreserve);
         answer.script = scriptToPreserve;
-        $scope.pause();
         dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer()).then(function () {
+          $scope.pause();
         });
         index = 0;
       };
