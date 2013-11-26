@@ -1,11 +1,11 @@
 <!--
 this is the place holder for all the templates which are being played
 -->
-<div>
-    <div ui-view="workspace" class="workspace"/>
+<div class="full-height">
+    <div ui-view="workspace" class="workspace full-height"/>
 </div>
-<div>
-    <button class="btn btn-primary" ng-click="complete()" ng-show="recording">Complete</button>
-    <button class="btn btn-primary" ng-click="record()" ng-hide="recording">Record Audio</button>
-    <button class="btn btn-primary" ng-click="pause()" ng-show="recording">Pause Recording</button>
+<div class="control-bar">
+    <button class="btn btn-primary" ng-click="complete()" ng-show="recording">Complete</button><br/>
+    <button class="btn btn-primary" ng-click="record()" ng-hide="recording">Record Audio</button><br/>
+    <button class="btn btn-primary" ng-click="pause()" ng-show="recording">Pause Recording</button><br/>
 </div>
