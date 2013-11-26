@@ -72,7 +72,7 @@
             "image": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 //registers the current value in the parent dialogue which is aware of the entire presentation
-                editCommonLink(scope, attrs);
+                editCommonLink(scope, attrs,sokratikDialogueCtrl);
                 scope.addImage = function () {
                     var modalInstance = _injectors.$modal.open({
                         templateUrl: 'edit/image.modal.tpl.html',
