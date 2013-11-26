@@ -72,10 +72,8 @@
             function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction) {
                 answer.script = [];//reseting the script
                 $scope.presentationId = answer._id;
-
+                answer.recordingStarted = new Date().getTime();
                 $scope.record = function () {
-                    var recordingStart = new Date().getTime();
-                    answer.recordingStarted = answer.recordingStarted || recordingStart;
                     $scope.recording = true;
                     recordAction({"fnName": "resume", "args": {},
                         actionInitiated: new Date().getTime() });
