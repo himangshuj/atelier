@@ -16,7 +16,7 @@ body{
   color: #333333;
   font-weight:lighter;
   font-size:200%;
-  overflow-x: hidden;
+  overflow: hidden;
   font-size:36px;
   }
 
@@ -96,6 +96,7 @@ body{
 
 .part-image{
   margin-top:0.5em;
+  display: inline-block;
   img{
     max-width: 97.5%;  //Repalce with calc
     margin-left: auto;
@@ -129,3 +130,126 @@ body{
   top: 30%;
   text-align: left;
 }
+
+.image-buttons{
+  visibility: none;
+}
+
+.edit .image-buttons{
+  visibility: visible;
+}
+
+.image-button-left{
+  position: absolute;
+  right: 0px;
+  top: 20%;
+  margin-right: -20px;   //TODO check this
+  border:none;
+  &:active{
+    top:20% !important;
+    right: 1px;
+    left:inherit !important;
+  }
+}
+
+.image-button-right{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  margin-right: -20px;  //TODO check this
+  border:none;
+  &:active{
+    top:0px;
+    right: 1px;
+    left:inherit !important;
+  }
+}
+
+.nav-button{
+  margin-top:4px;
+  position:absolute;
+  top:0px;
+  opacity:0.5;
+  &:active{
+    opaciy:1;
+  }
+}
+
+.nav-button-left{
+  left:0px;
+}
+
+.nav-button-right{
+  right:0px;
+  &:active{
+    left:inherit !important;
+    right:1px;
+  }
+}
+
+.button-lower-right{
+  position:absolute;
+  top: 4px;
+  right:223px;         //TODO
+  border:none;
+  *{
+    vertical-align:baseline;
+  }
+/*
+  &:hover{
+    &:after{
+      content:'Delete slide';
+    }
+  }
+*/
+  &:active{
+    left:inherit !important;
+    top: 5px !important;
+    right:224px !important;
+  }
+}
+
+.button-top-right{
+  position:absolute;
+  top: 4px;
+  right:50px;           //TODO
+  border:none;
+  *{
+    vertical-align:baseline;
+  }
+/*
+  &:hover{
+    &:after{
+      content:"Go to record mode";
+    }
+  }
+*/
+  &:active{
+    left:inherit !important;
+    top: 5px !important;
+    right: 51px !important;
+  }
+}
+
+div[contenteditable=true], span[contenteditable=true] {
+//  padding: 6px 12px;
+//  font-size: 14px;
+//  line-height: 1.428571429;
+//  color: #555555;
+//  vertical-align: middle;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #cccccc;
+//  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  &:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  }
+}
+

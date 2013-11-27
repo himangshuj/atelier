@@ -99,7 +99,24 @@
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     $scope.templates = templates;
+                    console.log(templates);
+                    $scope.swap = function (nextTemplate) {
+                            anduril.swap(presentationId, page, {templateName: nextTemplate});
+                            anduril.post(presentationId);
+                            console.log(nextTemplate);
+                            $state.go("edit", {templateName: nextTemplate, "presentationId": presentationId, "page": page});
+                    };
+                    $scope.increaseImages = function(){
+                        console.log(templates);
+                        console.log(templates[_.indexOf(templates,$stateParams.templateName)+1]);
+                        $scope.swap(templates[_.indexOf(templates,$stateParams.templateName)+1]);
+                    };
+                    $scope.decreaseImages = function(){
+                        console.log($stateParams.templateName);
+                        $scope.swap(templates[_.indexOf(templates,$stateParams.templateName)-1]);
+                    };
                     $scope.add = function () {
+/*
                         var modalInstance = $modal.open({
                             templateUrl: 'edit/newslide.modal.tpl.html',
                             controller: _newSlideModalCtrl,
@@ -109,17 +126,23 @@
                                 }
                             }
                         });
+*/
 
+/*
                         modalInstance.result.then(function (selectedTemplate) {
+*/                          var selectedTemplate = 'imageText';
                             $scope.selected = selectedTemplate;
                             anduril.insert(presentationId, page + 1, {templateName: selectedTemplate});
 
                             anduril.post(presentationId);
+                            console.log(selectedTemplate);
                             $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });
+/*
                         }, function () {
                             //noinspection JSUnresolvedFunction
                             $log.info('Modal dismissed at: ' + new Date());
                         });
+*/
 
                     };
 

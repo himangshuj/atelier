@@ -58,6 +58,11 @@
             var templateFragment = fragments[presentationId].presentationData;
             templateFragment.splice(page, 0, presentationMap);
           },
+          swap: function (presentationId, page, presentationMap) {
+            'use strict';
+            var templateFragment = fragments[presentationId].presentationData;
+            templateFragment[page].templateName = presentationMap.templateName;
+          },
           remove: function (presentationId, page) {
             'use strict';
             var templateFragment = fragments[presentationId].presentationData;

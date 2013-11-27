@@ -12,13 +12,11 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
     "<div class=\"edit full-height\" ui-view=\"template\"></div>\n" +
     "\n" +
     "\n" +
-    "<div class=\"control-bar\">\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"resume()\">Resume</button><br/>\n" +
-    "    <button class=\"btn btn-info\" ng-click=\"add()\">Insert Another Slide</button><br/>\n" +
-    "    <button class=\"btn btn-danger\" ng-click=\"remove()\">Remove Current Slide</button><br/>\n" +
-    "    <button class=\"btn btn-warning\" ng-click=\"goToPage(page+1)\" ng-show=\"page < (totalPages-1)\">Next Slide</button><br/>\n" +
-    "    <button class=\"btn btn-success\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \">Previous Slide</button>\n" +
-    "</div>\n" +
+    "<button class=\"btn btn-light nav-button nav-button-right full-height\" ng-click=\"goToPage(page+1)\" ng-show=\"page < (totalPages-1)\"><i class=\"icon-chevron-right\"></i></button><br/>\n" +
+    "<button class=\"btn btn-light nav-button nav-button-right full-height\" ng-click=\"add()\" ng-show=\"page >= (totalPages-1)\"><i class=\"icon-chevron-right\"></i></button><br/>\n" +
+    "<button class=\"btn btn-light nav-button nav-button-left full-height\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \"><i class=\"icon-chevron-left\"></i></button>\n" +
+    "<button class=\"btn btn-light no-border button-lower-right\" ng-click=\"remove()\"><i class=\"icon-trash bigger-160\"></i></button>\n" +
+    "<button class=\"btn btn-light no-border button-top-right\" ng-click=\"resume()\"><i class=\"icon-circle bigger-160 red\"></i> Go to record mode</button>\n" +
     "\n" +
     "\n" +
     "\n" +
@@ -124,7 +122,7 @@ angular.module("edit/search.tpl.html", []).run(["$templateCache", function($temp
 
 angular.module("edit/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/template.tpl.html",
-    "<sokratik-dialogue presentation=\"presentation\"/>\n" +
+    "<sokratik-dialogue presentation=\"presentation\" increase-images=\"increaseImages\" decrease-images=\"decreaseImages\" swap=\"swap\"/>\n" +
     "\n" +
     "");
 }]);
