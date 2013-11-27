@@ -17,7 +17,6 @@ module.exports = function ( karma ) {
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/angular-ui-utils/modules/validate/validate.js',
-      'vendor/medium-editor/dist/js/medium.editor.min.js',
       'vendor/underscore/underscore-min.js',
       'vendor/angular-animate/angular-animate.min.js',
       'dist/templates-app.js',

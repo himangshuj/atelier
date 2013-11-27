@@ -1,16 +1,3 @@
-<div ng-class="presentation.css">
-    <div>
-        <div ng-include="templateName"/>
-    </div>
-    <div>
-        <button class="btn btn-primary" ng-click="next()">Next</button>
-
-        <button class="btn btn-primary" ng-click="previous()">Previous</button>
-
-        <button class="btn btn-primary" ng-click="zoom_in()">Zoom in</button>
-
-        <button class="btn btn-primary" ng-click="zoom_out()">Zoom out</button>
-    </div>
-
-
-</div>
+   <div class="full-height">
+       <div ng-include="templateName" class="full-height"></div>
+   </div>

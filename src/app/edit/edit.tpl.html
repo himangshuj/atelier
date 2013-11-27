@@ -1,6 +1,13 @@
-<div class="edit" ui-view="template"></div>
+<div class="edit full-height" ui-view="template"></div>
 
-<div ui-view="control" class="controlBar"></div>
+
+<div class="control-bar">
+    <button class="btn btn-primary" ng-click="resume()">Resume</button><br/>
+    <button class="btn btn-info" ng-click="add()">Insert Another Slide</button><br/>
+    <button class="btn btn-danger" ng-click="remove()">Remove Current Slide</button><br/>
+    <button class="btn btn-warning" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">Next Slide</button><br/>
+    <button class="btn btn-success" ng-click="goToPage(page-1)" ng-show="page > 0 ">Previous Slide</button>
+</div>
 
 
 

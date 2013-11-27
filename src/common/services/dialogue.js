@@ -7,27 +7,7 @@
 
 (function (ng, app) {
     var dialogueService = function () {
-        /**
-         * This function adds a class to a targeted presentationDialogue and removes the same from all other dialogues
-         * @param presentationDialogues the set of all presentation dialogues
-         * @param classToAdd the class to add
-         * @param classToRemove the class to remove from all other elements
-         * @private
-         * @return {Array} the modified presentation
-         * @param index the index of the dialogue to update
-         */
-        var _changeSingleDialogue = function (presentationDialogues, index, classToAdd, classToRemove) {
-            _.each(presentationDialogues, function (presentationDialog) {
-                presentationDialog.css = _.without(presentationDialog.css, classToAdd);
 
-            });
-            presentationDialogues[index].css = _.chain(presentationDialogues[index].css)
-                .union([classToAdd])
-                .without(classToRemove)
-                .value();
-            return presentationDialogues;
-
-        };
         /**
          * This function adds one class and removes one class from a set of presentationObjects
          * @param presentationDialogues
@@ -60,63 +40,58 @@
             return fragment;
         };
 
-        this.$get = function () {
+        this.$get = ["$state", function ($state) {
             return {
-                zoom: function (context, deferred) {
-                    var actionInitiated = new Date().getTime();
-                    _.delay(function () {
-                        _changeSingleDialogue(context.dialogues, context.page, "zoom-in", "zoom-out");
-                        deferred.resolve({"fnName": "zoom", "args": [
-                            {"page": context.page}
-                        ], delay: actionInitiated, presentationIndex: context.page });
-                    });
-                    return deferred.promise;
-
-                },
-                showAllDialogues: function (context, deferred) {
-                    var actionInitiated = new Date().getTime();
-
-                    _.delay(function () {
-                        _changeAllDialogues(context.dialogues, "zoom-out", "zoom-in");
-                        deferred.resolve({"fnName": "showAllDialogues", "args": [], delay: actionInitiated, presentationIndex: context.presentationIndex });
-
-                    });
-                    return deferred.promise;
-
-                },
-                nextFragment: function (context, deferred) {
-                    var actionInitiated = new Date().getTime();
-                    _changeFragmentClass(context.fragments[context.index], "visible", "");
-                    _.delay(function () {
-                        deferred.resolve({"fnName": "nextFragment", "args": [
-                            {"index": context.index}
-                        ], delay: actionInitiated, presentationIndex: context.presentationIndex});
-                    });
-                    return deferred.promise;
-                },
-                prevFragment: function (context, deferred) {
-                    var actionInitiated = new Date().getTime();
-                    _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
-                    _.delay(function () {
-                        deferred.resolve({"fnName": "prevFragment", "args": [
-                            {"index": context.index}
-                        ], delay: actionInitiated, presentationIndex: context.presentationIndex});
-                    });
-                    return deferred.promise;
-
-                },
                 resetFragments: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
-                    _changeAllDialogues(context.fragments, "fragment", "visible");
                     _.delay(function () {
-                        deferred.resolve({"fnName": "resetFragments", "args": [], delay: actionInitiated, presentationIndex: context.presentationIndex });
+                        _changeAllDialogues(context.fragments, "fragment", ["animated", "fadeIn"]);
+                        deferred.resolve({"fnName": "resetFragments", "args": {}, actionInitiated: actionInitiated });
+                    });
+
+                    return deferred.promise;
+                },
+                makeVisible: function (context, deferred) {
+                    var actionInitiated = new Date().getTime();
+                    _.delay(function () {
+                        _changeFragmentClass(context.fragments[context.index], ["animated", "fadeIn"], "fragment");
+                        deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
+                            actionInitiated: actionInitiated });
                     });
                     return deferred.promise;
+                },
+                hide: function (context, deferred) {
+                    var actionInitiated = new Date().getTime();
+                    _.delay(function () {
 
+                        _changeFragmentClass(context.fragments[context.index], "fragment", ["animated" ,"fadeIn"]);
+                        deferred.resolve({"fnName": "hide", "args": {index: context.index},
+                            actionInitiated: actionInitiated });
+                    });
+                    return deferred.promise;
+                },
+                changeState: function (context) {
+                    "use strict";
+
+                    var result = {fnName: "changeState",
+                        args: {subState: context.subState, params: context.params},
+                        actionInitiated: new Date().getTime()};
+                    _.defer(function () {
+                        $state.go($state.current.data.mode + context.subState, context.params);
+                    });
+                    return  result;
+                },
+                pause: function (context) {
+                    "use strict";
+                    return context;
+                },
+                resume: function (context) {
+                    "use strict";
+                    return context;
                 }
             };
 
-        };
+        }];
 
     };
 

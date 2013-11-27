@@ -27,12 +27,6 @@
       $stateProvider.state('edit', {
         url: '/edit/:questionId/:templateName/:presentationId/:page',
         resolve: {
-          presentationId: [
-            '$stateParams',
-            function ($stateParams) {
-              return $stateParams.presentationId ? $stateParams.presentationId : 'default';
-            }
-          ],
           page: [
             '$stateParams',
             function ($stateParams) {
@@ -41,9 +35,9 @@
           ],
           answer: [
             'anduril',
-            'presentationId',
-            function (anduril, presentationId) {
-              return anduril.fetchAnswer(presentationId);
+            '$stateParams',
+            function (anduril, $stateParams) {
+              return anduril.fetchAnswer($stateParams.presentationId);
             }
           ],
           images: [
@@ -51,6 +45,12 @@
             'anduril',
             function ($stateParams, anduril) {
               return anduril.fetchImages($stateParams.questionId);
+            }
+          ],
+          templates: [
+            'anduril',
+            function (anduril) {
+              return anduril.getAllTemplates();
             }
           ]
         },
@@ -63,40 +63,30 @@
         }
       }).state('edit.template', {
         url: '/',
-        resolve: {
-          templates: [
-            'anduril',
-            function (anduril) {
-              return anduril.getAllTemplates();
-            }
-          ]
-        },
         views: {
           'template': {
             templateUrl: 'edit/template.tpl.html',
             controller: 'TemplateCtrl'
-          },
-          'control': {
-            templateUrl: 'edit/controller.tpl.html',
-            controller: 'FlowCtrl'
           }
         }
       });
     }
   ]).controller('EditCtrl', [
-    'titleService',
-    '$stateParams',
     '$scope',
-    '$state',
-    'anduril',
-    'presentationId',
     'page',
+    '$stateParams',
     'answer',
-    function (titleService, $stateParams, $scope, $state, anduril, presentationId, page, answer) {
-      titleService.setTitle('Edit the knowledge');
+    'anduril',
+    '$state',
+    'templates',
+    '$modal',
+    '$log',
+    function ($scope, page, $stateParams, answer, anduril, $state, templates, $modal, $log) {
       $scope.page = page = parseInt(page, 10);
+      var presentationId = $stateParams.presentationId;
       $scope.presentationId = presentationId;
       $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
+      $scope.totalPages = _.size(answer.presentationData);
       $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
       anduril.put(presentationId, page, $scope.presentation);
       $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
@@ -106,22 +96,30 @@
         presentationId: presentationId,
         page: page
       });
-    }
-  ]).controller('FlowCtrl', [
-    '$scope',
-    '$state',
-    'anduril',
-    'presentationId',
-    '$modal',
-    '$log',
-    'page',
-    'templates',
-    function ($scope, $state, anduril, presentationId, $modal, $log, page, templates) {
       page = parseInt(page, 10);
       $scope.resume = function () {
         anduril.put(presentationId, page, $scope.presentation);
         anduril.post(presentationId);
-        $state.go('record');
+        $state.go('record.master');
+      };
+      $scope.goToPage = function (page) {
+        'use strict';
+        anduril.post(presentationId);
+        $state.go('edit.template', {
+          templateName: $stateParams.templateName,
+          presentationId: presentationId,
+          page: page
+        });
+      };
+      $scope.remove = function () {
+        'use strict';
+        anduril.remove(presentationId, page);
+        anduril.post(presentationId);
+        $state.go('edit.template', {
+          templateName: $stateParams.templateName,
+          presentationId: presentationId,
+          page: page - 1
+        });
       };
       $scope.templates = templates;
       $scope.add = function () {
@@ -136,7 +134,7 @@
           });
         modalInstance.result.then(function (selectedTemplate) {
           $scope.selected = selectedTemplate;
-          anduril.put(presentationId, page, $scope.presentation);
+          anduril.insert(presentationId, page + 1, { templateName: selectedTemplate });
           anduril.post(presentationId);
           $state.go('edit', {
             templateName: selectedTemplate,

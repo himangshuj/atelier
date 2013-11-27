@@ -20,9 +20,14 @@
     ];
   var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
     scope.model = {};
-    scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
+    scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
     scope.model.css = ['fragment'];
-    sokratikDialogueCtrl.addFragment(scope.model);
+    if (!_.str.isBlank(scope.model.value)) {
+      sokratikDialogueCtrl.addFragment(scope.model);
+    }
+  };
+  var editCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
+    scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
   };
   var _fragmentLink = {
       'edit': {
@@ -31,7 +36,7 @@
           element.on('blur keyup change', function () {
             scope.$apply(read);
           });
-          sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, 'default'));
+          editCommonLink(scope, attrs, sokratikDialogueCtrl);
           function read() {
             var html = angular.element(element).children().html();
             scope.model.value = _injectors.$sce.trustAsHtml(html);
@@ -40,7 +45,7 @@
         },
         'image': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-          sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, 'default'));
+          editCommonLink(scope, attrs, sokratikDialogueCtrl);
           scope.addImage = function () {
             var modalInstance = _injectors.$modal.open({
                 templateUrl: 'edit/image.modal.tpl.html',
@@ -63,6 +68,7 @@
       'record': {
         'text': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+          scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || '<br/>';
         },
         image: function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
@@ -71,6 +77,7 @@
       'play': {
         'text': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+          scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || '<br/>';
         },
         image: function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
@@ -81,74 +88,10 @@
       'edit': function (scope) {
       },
       'record': function (scope) {
-        var index = 0;
-        var dialogueCtrl = scope.dialogueCtrl;
-        var fnMap = {};
-        scope.$watch(index, function () {
-          var dialogueFragments = dialogueCtrl.getFragments();
-          if (index > _.size(dialogueCtrl.getFragments())) {
-            _injectors.dialogue.resetFragments(dialogueFragments, _injectors.$q.defer()).then(function (obj) {
-              _injectors.anduril.recordAction(scope.presentationId, obj);
-              _injectors.$q.when(_injectors.dialogue.showAllDialogues({ 'dialogues': scope.presentations }, _injectors.$q.defer())).then(function (resp) {
-                _injectors.anduril.recordAction(scope.presentationId, resp);
-              });
-            });
-          }
-        });
-        fnMap.next = function () {
-          var dialogueFragments = dialogueCtrl.getFragments();
-          if (index < _.size(dialogueFragments)) {
-            return _injectors.dialogue.nextFragment({
-              fragments: dialogueFragments,
-              index: index++
-            }, _injectors.$q.defer());
-          } else {
-            return _injectors.dialogue.resetFragments({ fragments: dialogueFragments }, _injectors.$q.defer()).then(function (obj) {
-              _injectors.dialogue.showAllDialogues({ 'dialogues': scope.presentations }, _injectors.$q.defer());
-              return obj;
-            });
-          }
-        };
-        fnMap.previous = function () {
-          var dialogueFragments = dialogueCtrl.getFragments();
-          if (index > 0 && index <= _.size(dialogueFragments)) {
-            return _injectors.dialogue.prevFragment({
-              fragments: dialogueFragments,
-              index: --index
-            }, _injectors.$q.defer());
-          } else {
-            return _injectors.dialogue.showAllDialogues({ dialogues: scope.presentations }, _injectors.$q.defer());
-          }
-        };
-        fnMap.zoom_in = function () {
-          index = 0;
-          return _injectors.dialogue.zoom({
-            dialogues: scope.presentations,
-            page: scope.index
-          }, _injectors.$q.defer());
-        };
-        fnMap.zoom_out = function () {
-          var dialogueFragments = dialogueCtrl.getFragments();
-          return _injectors.dialogue.resetFragments({ fragments: dialogueFragments }, _injectors.$q.defer()).then(function (resp) {
-            _injectors.anduril.recordAction(scope.presentationId, resp);
-            return _injectors.dialogue.showAllDialogues({ 'dialogues': scope.presentations }, _injectors.$q.defer());
-          });
-        };
-        var _recorderFn = function (prevValue) {
-          _injectors.$q.when(prevValue).then(function (resp) {
-            _injectors.anduril.recordAction(scope.presentationId, resp);
-          });
-        };
-        var wrappedFunctions = _.map(fnMap, function (value, key) {
-            return [
-              key,
-              _.compose(_recorderFn, value)
-            ];
-          });
-        _.extend(scope, _.object(wrappedFunctions));
+        (scope.addFragment || ng.noop)({ fragment: scope.dialogueCtrl.getFragments });
       },
       'play': function (scope) {
-        scope.addFragment({ fragment: scope.dialogueCtrl.getFragments });
+        (scope.addFragment || ng.noop)({ fragment: scope.dialogueCtrl.getFragments });
       }
     };
   var _sokratikFragmentDirective = [
@@ -171,7 +114,7 @@
           require: '?^sokratikDialogue',
           'scope': { 'model': '=' },
           compile: function (tElement, tAttrs) {
-            return _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || 'text')];
+            return { pre: _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || 'text')] };
           }
         };
       }
@@ -185,6 +128,7 @@
         _injectors.$q = $q;
         _injectors.dialogue = dialogue;
         _injectors.anduril = anduril;
+        _injectors.$state = $state;
         return {
           restrict: 'E',
           templateUrl: function () {
@@ -192,7 +136,6 @@
           },
           scope: {
             presentation: '=',
-            presentations: '=',
             index: '@',
             presentationId: '@',
             addFragment: '&?',
@@ -214,7 +157,7 @@
                 ($scope.presentation.keyVals || {})[propertyKey] = value;
               };
               this.getFragments = function () {
-                return _.clone(dialogueFragments);
+                return dialogueFragments;
               };
             }
           ],

@@ -39,17 +39,11 @@
         var _recordScript = function (presentationId, tuple) {
             fragments[presentationId].script.push(tuple);
         };
-        var _postScript = function (presentationId) {
-            var script = _.sortBy(fragments[presentationId].script, function (tuple) {
-                return tuple.delay;
-            });
-            var offset = script[0].delay;
-            _.each(script, function (tuple) {
-                tuple.delay = tuple.delay - offset;
-                offset = tuple.delay + offset; //I need only time intervals
-                console.log("original :" + offset + "delay :" + tuple.delay);
-            });
+
+        var _insertScript = function (presentationId, script) {
             fragments[presentationId].script = script;
+        };
+        var _postScript = function (presentationId) {
             //noinspection JSUnresolvedFunction
             return fragments[presentationId].$update();
         };
@@ -73,6 +67,16 @@
                     var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
                     templateFragment[page] = presentationMap;
                 },
+                insert: function (presentationId, page, presentationMap) {
+                    "use strict";
+                    var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
+                    templateFragment.splice(page,0,presentationMap);
+                },
+                remove: function (presentationId, page) {
+                    "use strict";
+                    var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
+                    templateFragment.splice(page,1);
+                },
                 post: function (presentationId) {
                     //noinspection JSUnresolvedFunction
                     return fragments[presentationId].$update();
@@ -90,7 +94,8 @@
 
                 },
                 recordAction: _recordScript,
-                completeRecord: _postScript
+                completeRecord: _postScript,
+                insertScript: _insertScript
 
             };
         }

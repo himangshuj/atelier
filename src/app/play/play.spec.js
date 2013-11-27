@@ -1,3 +1,4 @@
+atelierPlayer(angular,"sokratik.atelier.player",{});
 describe( 'Player section', function() {
     beforeEach( module( 'sokratik.atelier.player' ) );
 

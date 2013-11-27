@@ -1,6 +1,7 @@
-<div ng-repeat="presentation in presentations">
-    <div>
-        <sokratik-dialogue presentation="presentation" presentations="presentations" index="{{$index}}"
-                           presentation-id="{{presentationId}}" add-fragment="addFragment(fragment)"/>
-    </div>
+<div class="full-height">
+    <div ui-view="screen" class="playback full-height"></div>
 </div>
+<div>
+    <div ui-view="audio"></div>
+</div>
+
