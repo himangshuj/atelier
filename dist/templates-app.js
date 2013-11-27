@@ -164,14 +164,13 @@ angular.module("play/image.fragment.tpl.html", []).run(["$templateCache", functi
 
 angular.module("play/master.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("play/master.tpl.html",
-    "<div ng-repeat=\"presentation in presentations\">\n" +
+    "<div ng-repeat=\"presentation in presentations\" class=\"master-view\">\n" +
     "    <div>\n" +
+    "\n" +
     "        <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\"\n" +
     "                           presentation-id=\"{{presentationId}}\" ng-click=\"activate($index)\"/>\n" +
     "    </div>\n" +
     "</div>\n" +
-    "\n" +
-    "\n" +
     "");
 }]);
 
