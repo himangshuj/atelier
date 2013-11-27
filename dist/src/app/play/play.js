@@ -3,6 +3,7 @@ var atelierPlayer = function (ng, app, answer) {
   var fragmentFn = ng.noop;
   var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
     'use strict';
+    console.log(instructions + '  : ' + dialogue + '  : ' + $state.current.name + '  : ' + scriptIndex + '  : ' + timeStamp);
     if (scriptIndex < _.size(instructions)) {
       var index = scriptIndex || 0;
       var instruction = instructions[index];

@@ -45,7 +45,7 @@
         },
         'image': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-          editCommonLink(scope, attrs);
+          editCommonLink(scope, attrs, sokratikDialogueCtrl);
           scope.addImage = function () {
             var modalInstance = _injectors.$modal.open({
                 templateUrl: 'edit/image.modal.tpl.html',

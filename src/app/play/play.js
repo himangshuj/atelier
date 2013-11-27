@@ -3,12 +3,14 @@ var atelierPlayer = function (ng, app, answer) {
     var fragmentFn = ng.noop;//global variable is this really bad
     var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
         "use strict";
+        console.log(instructions+"  : "+ dialogue+"  : "+ $state.current.name+"  : "+ scriptIndex+"  : "+ timeStamp);
         if (scriptIndex < _.size(instructions)) {
             var index = scriptIndex || 0;
             var instruction = instructions[index];
             var delay = 0;
             pausedInterval = parseInt(pausedInterval, 10);
             var recordingDelay = instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
+
             if (_.isEqual(instruction.fnName, "resume")) {
                 pausedInterval += recordingDelay;
             } else {
