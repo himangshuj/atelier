@@ -72,6 +72,11 @@
                     var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
                     templateFragment.splice(page,0,presentationMap);
                 },
+                remove: function (presentationId, page) {
+                    "use strict";
+                    var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
+                    templateFragment.splice(page,1);
+                },
                 post: function (presentationId) {
                     //noinspection JSUnresolvedFunction
                     return fragments[presentationId].$update();

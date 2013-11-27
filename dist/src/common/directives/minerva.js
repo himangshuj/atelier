@@ -20,9 +20,14 @@
     ];
   var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
     scope.model = {};
-    scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
+    scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
     scope.model.css = ['fragment'];
-    sokratikDialogueCtrl.addFragment(scope.model);
+    if (!_.str.isBlank(scope.model.value)) {
+      sokratikDialogueCtrl.addFragment(scope.model);
+    }
+  };
+  var editCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
+    scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
   };
   var _fragmentLink = {
       'edit': {
@@ -31,7 +36,7 @@
           element.on('blur keyup change', function () {
             scope.$apply(read);
           });
-          sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, 'default'));
+          editCommonLink(scope, attrs, sokratikDialogueCtrl);
           function read() {
             var html = angular.element(element).children().html();
             scope.model.value = _injectors.$sce.trustAsHtml(html);
@@ -40,7 +45,7 @@
         },
         'image': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-          sokratikDialogueCtrl.setProperty(attrs.model, sokratikDialogueCtrl.getProperty(attrs.model, 'default'));
+          editCommonLink(scope, attrs, sokratikDialogueCtrl);
           scope.addImage = function () {
             var modalInstance = _injectors.$modal.open({
                 templateUrl: 'edit/image.modal.tpl.html',
@@ -63,6 +68,7 @@
       'record': {
         'text': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+          scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || '<br/>';
         },
         image: function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
@@ -71,6 +77,7 @@
       'play': {
         'text': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
+          scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || '<br/>';
         },
         image: function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);

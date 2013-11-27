@@ -86,10 +86,10 @@
       var presentationId = $stateParams.presentationId;
       $scope.presentationId = presentationId;
       $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
-      $scope.totalPages = _.size(answer.presentationData[page]);
+      $scope.totalPages = _.size(answer.presentationData);
       $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
       anduril.put(presentationId, page, $scope.presentation);
-      $scope.presentation.templateName = $stateParams.templateName || $scope.presentation.templateName;
+      $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
       $scope.presentation.css = [''];
       $state.go('edit.template', {
         templateName: $stateParams.templateName,
@@ -104,10 +104,21 @@
       };
       $scope.goToPage = function (page) {
         'use strict';
+        anduril.post(presentationId);
         $state.go('edit.template', {
           templateName: $stateParams.templateName,
           presentationId: presentationId,
           page: page
+        });
+      };
+      $scope.remove = function () {
+        'use strict';
+        anduril.remove(presentationId, page);
+        anduril.post(presentationId);
+        $state.go('edit.template', {
+          templateName: $stateParams.templateName,
+          presentationId: presentationId,
+          page: page - 1
         });
       };
       $scope.templates = templates;

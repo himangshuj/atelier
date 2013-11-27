@@ -1,4 +1,25 @@
-@import 'source/stock-mixins';
-@import 'hacks/ui-bootstrap';
-@import 'canvas';
+/*Building-block less files*/
+
+@import '../../vendor/bootstrap/less/variables';
+@import '../../vendor/bootstrap/less/mixins';
+@import '../../vendor/bootstrap/less/utilities';
+
+// Reset
+@import "../../vendor/bootstrap/less/normalize";
+@import "../../vendor/bootstrap/less/print";
+
+// Core CSS
+@import "../../vendor/bootstrap/less/scaffolding";
+@import "../../vendor/bootstrap/less/grid";
+@import "../../vendor/bootstrap/less/modals";
+
+@import 'variables';
+@import 'mixins';
+
+@import 'modal';
 @import 'edit';
+@import 'animate';
+
+//Hacks
+@import 'hacks/ui-bootstrap';
+@import "/css/hacks/modal.css";

@@ -1,5 +1,4 @@
 (function (ng, app) {
-
     var _newSlideModalCtrl = ["$scope", "$modalInstance", "templates", function ($scope, $modalInstance, templates) {
         $scope.templates = templates;
         $scope.selected = {
@@ -32,7 +31,7 @@
                         //noinspection JSUnresolvedFunction
                         return parseInt($stateParams.page ? $stateParams.page : 0, 10);
                     }],
-                    answer: ["anduril","$stateParams", function (anduril,$stateParams) {
+                    answer: ["anduril", "$stateParams", function (anduril, $stateParams) {
                         return anduril.fetchAnswer($stateParams.presentationId);
                     }],
                     images: ["$stateParams", "anduril", function ($stateParams, anduril) {
@@ -73,10 +72,10 @@
                     var presentationId = $stateParams.presentationId;
                     $scope.presentationId = presentationId;
                     $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
-                    $scope.totalPages = _.size(answer.presentationData[page]);
+                    $scope.totalPages = _.size(answer.presentationData);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(presentationId, page, $scope.presentation);
-                    $scope.presentation.templateName = $stateParams.templateName || $scope.presentation.templateName  ;
+                    $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
                     $scope.presentation.css = [""];
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
 
@@ -88,9 +87,16 @@
 
                     };
 
-                    $scope.goToPage = function(page){
+                    $scope.goToPage = function (page) {
                         "use strict";
+                        anduril.post(presentationId);
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
+                    };
+                    $scope.remove = function () {
+                        "use strict";
+                        anduril.remove(presentationId, page);
+                        anduril.post(presentationId);
+                        $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     $scope.templates = templates;
                     $scope.add = function () {
@@ -106,7 +112,7 @@
 
                         modalInstance.result.then(function (selectedTemplate) {
                             $scope.selected = selectedTemplate;
-                            anduril.insert(presentationId, page+1, {templateName:selectedTemplate});
+                            anduril.insert(presentationId, page + 1, {templateName: selectedTemplate});
 
                             anduril.post(presentationId);
                             $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });

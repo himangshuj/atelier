@@ -7,27 +7,7 @@
 
 (function (ng, app) {
     var dialogueService = function () {
-        /**
-         * This function adds a class to a targeted presentationDialogue and removes the same from all other dialogues
-         * @param presentationDialogues the set of all presentation dialogues
-         * @param classToAdd the class to add
-         * @param classToRemove the class to remove from all other elements
-         * @private
-         * @return {Array} the modified presentation
-         * @param index the index of the dialogue to update
-         */
-        var _changeSingleDialogue = function (presentationDialogues, index, classToAdd, classToRemove) {
-            _.each(presentationDialogues, function (presentationDialog) {
-                presentationDialog.css = _.without(presentationDialog.css, classToAdd);
 
-            });
-            presentationDialogues[index].css = _.chain(presentationDialogues[index].css)
-                .union([classToAdd])
-                .without(classToRemove)
-                .value();
-            return presentationDialogues;
-
-        };
         /**
          * This function adds one class and removes one class from a set of presentationObjects
          * @param presentationDialogues
@@ -65,7 +45,7 @@
                 resetFragments: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
                     _.delay(function () {
-                        _changeAllDialogues(context.fragments, "fragment", "visible");
+                        _changeAllDialogues(context.fragments, "fragment", ["animated", "fadeIn"]);
                         deferred.resolve({"fnName": "resetFragments", "args": {}, actionInitiated: actionInitiated });
                     });
 
@@ -74,7 +54,7 @@
                 makeVisible: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
                     _.delay(function () {
-                        _changeFragmentClass(context.fragments[context.index], "visible", "");
+                        _changeFragmentClass(context.fragments[context.index], ["animated", "fadeIn"], "fragment");
                         deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
                             actionInitiated: actionInitiated });
                     });
@@ -84,7 +64,7 @@
                     var actionInitiated = new Date().getTime();
                     _.delay(function () {
 
-                        _changeFragmentClass(context.fragments[context.index], "fragment", "visible");
+                        _changeFragmentClass(context.fragments[context.index], "fragment", ["animated" ,"fadeIn"]);
                         deferred.resolve({"fnName": "hide", "args": {index: context.index},
                             actionInitiated: actionInitiated });
                     });
@@ -101,8 +81,14 @@
                     });
                     return  result;
                 },
-                pause: ng.noop,
-                resume: ng.noop
+                pause: function (context) {
+                    "use strict";
+                    return context;
+                },
+                resume: function (context) {
+                    "use strict";
+                    return context;
+                }
             };
 
         }];

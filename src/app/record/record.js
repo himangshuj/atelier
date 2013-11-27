@@ -71,10 +71,8 @@
         .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer", "recordAction",
             function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction) {
                 answer.script = [];//reseting the script
-                var recordingStart = new Date().getTime();
                 $scope.presentationId = answer._id;
-
-                answer.recordingStarted = recordingStart;
+                answer.recordingStarted = new Date().getTime();
                 $scope.record = function () {
                     $scope.recording = true;
                     recordAction({"fnName": "resume", "args": {},
@@ -104,7 +102,6 @@
                         "use strict";
                         pause(audioNode, stream);
                         $scope.recording = false;
-                        console.log("buhaha");
                     });
                 pause(audioNode, stream);
             }])
@@ -160,9 +157,8 @@
                     scriptToPreserve[stepsRecordedTillThisSlide - 1].actionInitiated = new Date().getTime();
                     anduril.insertScript(answer._id, scriptToPreserve);
                     answer.script = scriptToPreserve;
-                    $scope.pause();
-                    dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(function(){
-                        console.log("ready");
+                    dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(function () {
+                        $scope.pause();
                     });
                     index = 0;
                 };
