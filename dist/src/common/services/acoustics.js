@@ -5,6 +5,19 @@
   var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
   var volume = context.createGain ? context.createGain() : {};
   var _streams = {};
+  var _sentPackets = 0;
+  var _receivedPackets = 0;
+  var _closeStream = function (stream, iteration) {
+    'use strict';
+    if (iteration > 100 || _sentPackets == _receivedPackets) {
+      stream.destroy();
+    } else {
+      _.delay(_closeStream, 10000, [
+        stream,
+        ++iteration
+      ]);
+    }
+  };
   var acoustics = function () {
     this.$get = [
       '$log',
@@ -25,6 +38,8 @@
                 });
               _streams[answerId] = stream;
               deferred.resolve(stream);
+              _sentPackets = 0;
+              _receivedPackets = 0;
               recorder.onaudioprocess = function (e) {
                 var left = e.inputBuffer.getChannelData(0);
                 var right = e.inputBuffer.getChannelData(1);
@@ -37,8 +52,14 @@
                   index += 4;
                 }
                 stream.write(buffer);
+                _sentPackets++;
               };
               stream.pause();
+              stream.on('data', function (data) {
+                'use strict';
+                _receivedPackets++;
+                console.log('Recieved' + data);
+              });
             });
             return deferred.promise;
           },
@@ -69,7 +90,7 @@
             recorder.disconnect();
             volume.disconnect();
             _streams[answerId] = null;
-            stream.destroy();
+            _closeStream(stream, 0);
           }
         };
       }

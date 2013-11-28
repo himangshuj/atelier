@@ -12,8 +12,8 @@
      * @type {Array} the list of angular dependencies and the modal controller
      * @private
      */
-    var _imageSelectionModal = ["$scope", "$modalInstance", "images", "$http", "$sce",
-        function ($scope, $modalInstance, images, $http, $sce) {
+    var _imageSelectionModal = ["$scope", "$modalInstance", "images",
+        function ($scope, $modalInstance, images) {
             $scope.selected = {
                 image: images[0].url
             };

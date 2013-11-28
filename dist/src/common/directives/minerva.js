@@ -5,9 +5,7 @@
       '$scope',
       '$modalInstance',
       'images',
-      '$http',
-      '$sce',
-      function ($scope, $modalInstance, images, $http, $sce) {
+      function ($scope, $modalInstance, images) {
         $scope.selected = { image: images[0].url };
         $scope.imageGroups = _.chain(images).groupBy(function (image, index) {
           return Math.floor(index / 5);
