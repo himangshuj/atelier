@@ -31,6 +31,7 @@ var atelierPlayer = function (ng, app, answer) {
             scriptIndex: ++scriptIndex,
             timeStamp: instruction.actionInitiated
           }, (instruction.args || {}).params, { pausedInterval: pausedInterval });
+        console.log(instruction);
         $q.when(dialogue[instruction.fnName](_.extend(instruction.args || {}, {
           'params': params,
           fragments: fragmentFn()
@@ -125,6 +126,7 @@ var atelierPlayer = function (ng, app, answer) {
     '$q',
     function ($scope, $state, dialogue, $stateParams, $q) {
       'use strict';
+      console.log('hello');
       _executeInstruction(answer.script, dialogue, $state, $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
     }
   ]).controller('PlayActive', [
@@ -139,6 +141,7 @@ var atelierPlayer = function (ng, app, answer) {
       $scope.presentation = answer.presentationData[page];
       $scope.presentationId = answer._id;
       $scope.addFragment = function (fragment) {
+        console.log('here i am');
         fragmentFn = fragment;
         function resetFragments() {
           dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer());

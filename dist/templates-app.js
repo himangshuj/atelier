@@ -200,9 +200,9 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "</div>\n" +
     "<div ng-show=\"recording\" class=\"control-bar-left\">\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"masterView()\">MasterView</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"next()\">Next Fragment</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"previous()\">Previous Fragment</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"nextSlide()\">Next Slide</button><br/>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"next()\" ng-show=\"index < totalFragments  \">Next Fragment</button><br/>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"previous()\"ng-show=\"index > 0 \">Previous Fragment</button><br/>\n" +
+    "    <button class=\"btn btn-primary\" ng-click=\"nextSlide()\" ng-show=\"page < totalPages -1\">Next Slide</button><br/>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"redoSlide()\">Redo Slide</button><br/>\n" +
     "</div>\n" +
     "");
