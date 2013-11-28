@@ -168,12 +168,10 @@
       $scope.totalPages = _.size(answer.presentationData);
       $scope.addFragment = function (fragment) {
         fragmentFn = fragment;
-        console.log('hello123');
         function resetFragments() {
           if (_.size(fragment()) > 0) {
             dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer()).then(ng.noop);
             $scope.totalFragments = _.size(fragment());
-            console.log('here');
           } else {
             _.delay(resetFragments, 1000);
           }

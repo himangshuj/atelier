@@ -141,8 +141,7 @@
             addFragment: '&?',
             questionId: '@?',
             increaseImages: '=',
-            decreaseImages: '=',
-            swap: '='
+            decreaseImages: '='
           },
           controller: [
             '$scope',

@@ -69,26 +69,27 @@
                 insert: function (answer, page, presentationMap) {
                     "use strict";
                     var templateFragment = answer.presentationData;
-                    templateFragment.splice(page,0,presentationMap);
+                    templateFragment.splice(page, 0, presentationMap);
                     return answer;
 
                 },
                 changeTemplate: function (answer, page, templateName) {
                     "use strict";
-                    var templateFragment = answer.presentationData;   
-                    templateFragment[page].templateName=templateName;
+                    var templateFragment = answer.presentationData;
+                    console.log("[Old:" + templateFragment[page].templateName + "] [New" + templateName + "]");
+                    templateFragment[page].templateName = templateName;
                 },
                 remove: function (presentationId, page) {
                     "use strict";
                     var templateFragment = answer.presentationData;
-                    templateFragment.splice(page,1);
+                    templateFragment.splice(page, 1);
                     return answer;
                 },
                 post: function (answer) {
                     //noinspection JSUnresolvedFunction
-                    return answer.$update(function(resp){
+                    return answer.$update(function (resp) {
                         "use strict";
-                        console.log("I have updated"+ng.toJson(resp));
+                        console.log("I have updated" + ng.toJson(resp));
                     });
                 },
                 getAllTemplates: _getAllTemplates,

@@ -25,7 +25,7 @@
     '$stateProvider',
     function config($stateProvider) {
       $stateProvider.state('edit', {
-        url: '/edit/:questionId/:templateName/:presentationId/:page',
+        url: '/edit/:questionId/:templateName/:presentationId/:page/:images',
         resolve: {
           page: [
             '$stateParams',
@@ -79,9 +79,7 @@
     'anduril',
     '$state',
     'templates',
-    '$modal',
-    '$log',
-    function ($scope, page, $stateParams, answer, anduril, $state, templates, $modal, $log) {
+    function ($scope, page, $stateParams, answer, anduril, $state, templates) {
       $scope.page = page = parseInt(page, 10);
       var presentationId = $stateParams.presentationId;
       $scope.presentationId = presentationId;
@@ -89,7 +87,9 @@
       $scope.totalPages = _.size(answer.presentationData);
       $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
       anduril.put(answer, page, $scope.presentation);
-      $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
+      var images = $stateParams.images || 1;
+      $scope.images = images;
+      $scope.presentation.templateName = $scope.presentation.templateName || images + $stateParams.templateName;
       $scope.presentation.css = [''];
       $state.go('edit.template', {
         templateName: $stateParams.templateName,
@@ -119,60 +119,25 @@
           page: page - 1
         });
       };
-      $scope.templates = templates;
-      console.log(templates);
-      $scope.swap = function (nextTemplate) {
-        anduril.swap(presentationId, page, { templateName: nextTemplate });
-        anduril.post(presentationId);
-        console.log(nextTemplate);
-        $state.go('edit', {
-          templateName: nextTemplate,
-          'presentationId': presentationId,
-          'page': page
-        });
+      var changeTemplates = function (images) {
+        anduril.changeTemplate(answer, page, images + $stateParams.templateName);
+        anduril.post(answer);
+        $state.go('edit', { images: images });
       };
       $scope.increaseImages = function () {
-        console.log(templates);
-        console.log(templates[_.indexOf(templates, $stateParams.templateName) + 1]);
-        $scope.swap(templates[_.indexOf(templates, $stateParams.templateName) + 1]);
+        changeTemplates(++images);
       };
       $scope.decreaseImages = function () {
-        console.log($stateParams.templateName);
-        $scope.swap(templates[_.indexOf(templates, $stateParams.templateName) - 1]);
+        changeTemplates(--images);
       };
       $scope.add = function () {
-<<<<<<< HEAD
-        var modalInstance = $modal.open({
-            templateUrl: 'edit/newslide.modal.tpl.html',
-            controller: _newSlideModalCtrl,
-            resolve: {
-              templates: function () {
-                return $scope.templates;
-              }
-            }
-          });
-        modalInstance.result.then(function (selectedTemplate) {
-          $scope.selected = selectedTemplate;
-          anduril.insert(answer, page + 1, { templateName: selectedTemplate });
-          anduril.post(answer);
-          $state.go('edit', {
-            templateName: selectedTemplate,
-            'presentationId': presentationId,
-            'page': page + 1
-          });
-        }, function () {
-          $log.info('Modal dismissed at: ' + new Date());
-=======
-        var selectedTemplate = 'imageText';
-        $scope.selected = selectedTemplate;
-        anduril.insert(presentationId, page + 1, { templateName: selectedTemplate });
-        anduril.post(presentationId);
-        console.log(selectedTemplate);
+        anduril.insert(answer, page + 1, { templateName: '1imageText' });
+        anduril.post(answer);
+        console.log('hello');
         $state.go('edit', {
-          templateName: selectedTemplate,
-          'presentationId': presentationId,
-          'page': page + 1
->>>>>>> pupun/feature/ui-edit-record
+          'page': page + 1,
+          templateName: 'imageText',
+          images: 1
         });
       };
     }

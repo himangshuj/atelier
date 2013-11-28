@@ -59,16 +59,13 @@
             templateFragment.splice(page, 0, presentationMap);
             return answer;
           },
-<<<<<<< HEAD
-          remove: function (answer, page) {
-=======
-          swap: function (presentationId, page, presentationMap) {
+          changeTemplate: function (answer, page, templateName) {
             'use strict';
-            var templateFragment = fragments[presentationId].presentationData;
-            templateFragment[page].templateName = presentationMap.templateName;
+            var templateFragment = answer.presentationData;
+            console.log('[Old:' + templateFragment[page].templateName + '] [New' + templateName + ']');
+            templateFragment[page].templateName = templateName;
           },
           remove: function (presentationId, page) {
->>>>>>> pupun/feature/ui-edit-record
             'use strict';
             var templateFragment = answer.presentationData;
             templateFragment.splice(page, 1);

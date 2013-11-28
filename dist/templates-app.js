@@ -122,7 +122,9 @@ angular.module("edit/search.tpl.html", []).run(["$templateCache", function($temp
 
 angular.module("edit/template.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/template.tpl.html",
-    "<sokratik-dialogue presentation=\"presentation\" increase-images=\"increaseImages\" decrease-images=\"decreaseImages\" swap=\"swap\"/>\n" +
+    "<sokratik-dialogue presentation=\"presentation\"\n" +
+    "                   increase-images=\"increaseImages\"\n" +
+    "                   decrease-images=\"decreaseImages\"></sokratik-dialogue>\n" +
     "\n" +
     "");
 }]);

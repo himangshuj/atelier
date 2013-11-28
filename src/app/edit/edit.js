@@ -97,9 +97,9 @@
                         anduril.post(anduril.remove(answer, page));
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
-                    console.log(templates);
                     var changeTemplates = function (images) {
                         anduril.changeTemplate(answer, page, images + $stateParams.templateName);
+                        anduril.post(answer);
                         $state.go("edit", { images: images});
                     };
                     $scope.increaseImages = function () {
@@ -109,8 +109,9 @@
                         changeTemplates(--images);
                     };
                     $scope.add = function () {
-                        anduril.insert(answer, page + 1, '1imageText');
+                        anduril.insert(answer, page + 1, {templateName: '1imageText'});
                         anduril.post(answer);
+                        console.log("hello");
                         $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
