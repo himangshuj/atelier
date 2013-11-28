@@ -5,13 +5,16 @@
       '$scope',
       '$modalInstance',
       'images',
-      function ($scope, $modalInstance, images) {
+      '$http',
+      '$sce',
+      function ($scope, $modalInstance, images, $http, $sce) {
         $scope.selected = { image: images[0].url };
         $scope.imageGroups = _.chain(images).groupBy(function (image, index) {
           return Math.floor(index / 5);
         }).values().value();
-        $scope.ok = function () {
-          $modalInstance.close($scope.selected.image);
+        $scope.ok = function (selectedImage) {
+          selectedImage = $sce.trustAsHtml(selectedImage);
+          $modalInstance.close(selectedImage);
         };
         $scope.cancel = function () {
           $modalInstance.dismiss('cancel');
@@ -45,7 +48,7 @@
         },
         'image': function (scope, element, attrs, sokratikDialogueCtrl) {
           _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-          editCommonLink(scope, attrs, sokratikDialogueCtrl);
+          editCommonLink(scope, attrs);
           scope.addImage = function () {
             var modalInstance = _injectors.$modal.open({
                 templateUrl: 'edit/image.modal.tpl.html',
@@ -57,7 +60,7 @@
                 }
               });
             modalInstance.result.then(function (selectedImage) {
-              scope.model.value = _injectors.$sce.trustAsHtml(selectedImage);
+              scope.model.value = selectedImage;
               sokratikDialogueCtrl.setProperty(attrs.model, selectedImage);
             }, function () {
               _injectors.$log.info('Modal dismissed at: ' + new Date());

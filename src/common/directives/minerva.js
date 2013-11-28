@@ -9,28 +9,29 @@
     /*   */
     /**
      * the modal which will be used to populate images
-     * @type {Array} the list of angular dependencies and the modal controoler
+     * @type {Array} the list of angular dependencies and the modal controller
      * @private
      */
-    var _imageSelectionModal = ["$scope", "$modalInstance", "images", function ($scope, $modalInstance, images) {
-        $scope.selected = {
-            image: images[0].url
-        };
-        $scope.imageGroups = _.chain(images).
-            groupBy(function (image, index) {
-                //noinspection JSUnresolvedVariable
-                return Math.floor(index / 5);//splitting images into groups of 5
-            })
-            .values()
-            .value();
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.image);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    }];
+    var _imageSelectionModal = ["$scope", "$modalInstance", "images", "$http", "$sce",
+        function ($scope, $modalInstance, images, $http, $sce) {
+            $scope.selected = {
+                image: images[0].url
+            };
+            $scope.imageGroups = _.chain(images).
+                groupBy(function (image, index) {
+                    //noinspection JSUnresolvedVariable
+                    return Math.floor(index / 5);//splitting images into groups of 5
+                })
+                .values()
+                .value();
+            $scope.ok = function (selectedImage) {
+                selectedImage = $sce.trustAsHtml(selectedImage);
+                $modalInstance.close(selectedImage);
+            };
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        }];
 
     /**
      * Common actions performed by all post link functions of sokratik fragment
@@ -41,7 +42,7 @@
      */
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
-        scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) ;
+        scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
         scope.model.css = ["fragment"];
         if (!_.str.isBlank(scope.model.value)) {
             sokratikDialogueCtrl.addFragment(scope.model);
@@ -72,7 +73,7 @@
             "image": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 //registers the current value in the parent dialogue which is aware of the entire presentation
-                editCommonLink(scope, attrs,sokratikDialogueCtrl);
+                editCommonLink(scope, attrs);
                 scope.addImage = function () {
                     var modalInstance = _injectors.$modal.open({
                         templateUrl: 'edit/image.modal.tpl.html',
@@ -85,8 +86,9 @@
                     });
 
                     modalInstance.result.then(function (selectedImage) {
-                        scope.model.value = _injectors.$sce.trustAsHtml(selectedImage);
+                        scope.model.value = selectedImage;
                         sokratikDialogueCtrl.setProperty(attrs.model, selectedImage);
+
                     }, function () {
                         //noinspection JSUnresolvedFunction
                         _injectors.$log.info('Modal dismissed at: ' + new Date());
@@ -99,7 +101,7 @@
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                scope.model.value =  sokratikDialogueCtrl.getProperty(attrs.model)  || "<br/>";
+                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
@@ -110,7 +112,7 @@
         "play": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                scope.model.value =  sokratikDialogueCtrl.getProperty(attrs.model)  || "<br/>";
+                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {

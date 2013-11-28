@@ -1,18 +1,4 @@
 (function (ng, app) {
-    var _newSlideModalCtrl = ["$scope", "$modalInstance", "templates", function ($scope, $modalInstance, templates) {
-        $scope.templates = templates;
-        $scope.selected = {
-            template: $scope.templates[0]
-        };
-
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.template);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    }];
     ng.module(app, [
             'ui.router',
             'titleService',
@@ -103,10 +89,12 @@
                         $state.go("edit", { images: images});
                     };
                     $scope.increaseImages = function () {
-                        changeTemplates(++images);
+                        changeTemplates((++images) % 5);
                     };
                     $scope.decreaseImages = function () {
-                        changeTemplates(--images);
+                        if (images > 0) {
+                            changeTemplates(--images);
+                        }
                     };
                     $scope.add = function () {
                         anduril.insert(answer, page + 1, {templateName: '1imageText'});
