@@ -36,11 +36,7 @@ angular.module("edit/image.modal.tpl.html", []).run(["$templateCache", function(
     "<div class=\"modal-dialog\">\n" +
     "    <div class=\"modal-content\">\n" +
     "        <div class=\"modal-header\">\n" +
-<<<<<<< HEAD
-    "            <input type=\"text\" ng-model=\"selected.image\"/>\n" +
-=======
     "            Enter image URL <input type=\"text\" ng-model=\"selected.image\">\n" +
->>>>>>> pupun/release/v1.2
     "        </div>\n" +
     "        <div class=\"modal-body\">\n" +
     "            <div class=\"row-fluid image-container\">\n" +
@@ -209,12 +205,7 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "<button class=\"btn btn-light no-border button-top-left-1\" ng-click=\"next()\" ng-show=\"recording && index < totalFragments  \"><i class=\"icon-step-forward bigger-160\"></button><br/>\n" +
     "\n" +
     "<div ng-show=\"recording\" class=\"control-bar-left\">\n" +
-    "<!--\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"masterView()\">MasterView</button><br/>\n" +
-    "-->\n" +
-    "<!--\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"previous()\"ng-show=\"index > 0 \">Previous Fragment</button><br/>\n" +
-    "-->\n" +
+    "\n" +
     "</div>\n" +
     "");
 }]);
@@ -263,13 +254,7 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "<button class=\"btn btn-light no-border button-top-left-0\" ng-click=\"record()\" ng-hide=\"recording\"><i class=\"icon-circle bigger-160 red\"></i></button>\n" +
     "<button class=\"btn btn-light no-border button-top-left-0\" ng-click=\"pause()\" ng-show=\"recording\"><i class=\"icon-pause bigger-160\"></i></button>\n" +
     "<button class=\"btn btn-light no-border button-top-right\" ng-click=\"complete()\" ng-show=\"recording\"><i class=\"icon-check bigger-160 blue\"></i></button><br/>\n" +
-    "<div class=\"control-bar\">\n" +
-    "<!--\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"complete()\" ng-show=\"recording\">Complete</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"record()\" ng-hide=\"recording\">Record Audio</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"pause()\" ng-show=\"recording\">Pause Recording</button><br/>\n" +
-    "-->\n" +
-    "</div>");
+    "");
 }]);
 
 angular.module("record/text.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {

@@ -110,10 +110,12 @@
         $state.go('edit', { images: images });
       };
       $scope.increaseImages = function () {
-        changeTemplates(++images);
+        changeTemplates(++images % 5);
       };
       $scope.decreaseImages = function () {
-        changeTemplates(--images);
+        if (images > 0) {
+          changeTemplates(--images);
+        }
       };
       $scope.add = function () {
         anduril.insert(answer, page + 1, { templateName: '1imageText' });

@@ -25,7 +25,6 @@
                 .values()
                 .value();
             $scope.ok = function (selectedImage) {
-                selectedImage = $sce.trustAsHtml(selectedImage);
                 $modalInstance.close(selectedImage);
             };
             $scope.cancel = function () {
@@ -86,9 +85,8 @@
                     });
 
                     modalInstance.result.then(function (selectedImage) {
-                        scope.model.value = selectedImage;
+                        scope.model.value = _injectors.$sce.trustAsHtml(selectedImage);
                         sokratikDialogueCtrl.setProperty(attrs.model, selectedImage);
-
                     }, function () {
                         //noinspection JSUnresolvedFunction
                         _injectors.$log.info('Modal dismissed at: ' + new Date());
