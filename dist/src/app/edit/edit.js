@@ -83,12 +83,14 @@
     '$log',
     function ($scope, page, $stateParams, answer, anduril, $state, templates, $modal, $log) {
       $scope.page = page = parseInt(page, 10);
+      console.log(1);
       var presentationId = $stateParams.presentationId;
       $scope.presentationId = presentationId;
       $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
       $scope.totalPages = _.size(answer.presentationData);
+      console.log('total pages' + $scope.totalPages);
       $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
-      anduril.put(presentationId, page, $scope.presentation);
+      anduril.put(answer, page, $scope.presentation);
       $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
       $scope.presentation.css = [''];
       $state.go('edit.template', {
@@ -98,13 +100,12 @@
       });
       page = parseInt(page, 10);
       $scope.resume = function () {
-        anduril.put(presentationId, page, $scope.presentation);
-        anduril.post(presentationId);
-        $state.go('record.master');
+        anduril.post(answer);
+        $state.go('record.activate', { page: 0 });
       };
       $scope.goToPage = function (page) {
         'use strict';
-        anduril.post(presentationId);
+        anduril.post(answer);
         $state.go('edit.template', {
           templateName: $stateParams.templateName,
           presentationId: presentationId,
@@ -113,8 +114,7 @@
       };
       $scope.remove = function () {
         'use strict';
-        anduril.remove(presentationId, page);
-        anduril.post(presentationId);
+        anduril.post(anduril.remove(answer, page));
         $state.go('edit.template', {
           templateName: $stateParams.templateName,
           presentationId: presentationId,
@@ -134,8 +134,8 @@
           });
         modalInstance.result.then(function (selectedTemplate) {
           $scope.selected = selectedTemplate;
-          anduril.insert(presentationId, page + 1, { templateName: selectedTemplate });
-          anduril.post(presentationId);
+          anduril.insert(answer, page + 1, { templateName: selectedTemplate });
+          anduril.post(answer);
           $state.go('edit', {
             templateName: selectedTemplate,
             'presentationId': presentationId,

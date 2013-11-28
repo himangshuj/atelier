@@ -74,28 +74,26 @@
                     $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
                     $scope.totalPages = _.size(answer.presentationData);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
-                    anduril.put(presentationId, page, $scope.presentation);
+                    anduril.put(answer, page, $scope.presentation);
                     $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
                     $scope.presentation.css = [""];
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
 
                     page = parseInt(page, 10);
                     $scope.resume = function () {
-                        anduril.put(presentationId, page, $scope.presentation);
-                        anduril.post(presentationId);
-                        $state.go("record.master");
+                        anduril.post(answer);
+                        $state.go("record.activate", {page: 0});
 
                     };
 
                     $scope.goToPage = function (page) {
                         "use strict";
-                        anduril.post(presentationId);
+                        anduril.post(answer);
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
                     $scope.remove = function () {
                         "use strict";
-                        anduril.remove(presentationId, page);
-                        anduril.post(presentationId);
+                        anduril.post(anduril.remove(answer, page));
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     $scope.templates = templates;
@@ -112,9 +110,8 @@
 
                         modalInstance.result.then(function (selectedTemplate) {
                             $scope.selected = selectedTemplate;
-                            anduril.insert(presentationId, page + 1, {templateName: selectedTemplate});
-
-                            anduril.post(presentationId);
+                            anduril.insert(answer, page + 1, {templateName: selectedTemplate});
+                            anduril.post(answer);
                             $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });
                         }, function () {
                             //noinspection JSUnresolvedFunction
