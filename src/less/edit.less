@@ -28,6 +28,7 @@ body{
 
 .internal{
   height:inherit;
+  width:inherit;
   /* Internet Explorer 10 */
   display:-ms-flexbox;
   -ms-flex-pack:center;
@@ -131,14 +132,6 @@ body{
   text-align: left;
 }
 
-.image-buttons{
-  visibility: none;
-}
-
-.edit .image-buttons{
-  visibility: visible;
-}
-
 .image-button-left{
   position: absolute;
   right: 0px;
@@ -163,6 +156,14 @@ body{
     right: 1px;
     left:inherit !important;
   }
+}
+
+.image-buttons{
+  visibility: none;
+}
+
+.edit .image-buttons{
+  visibility: visible;
 }
 
 .nav-button{
@@ -228,6 +229,94 @@ body{
     left:inherit !important;
     top: 5px !important;
     right: 51px !important;
+  }
+}
+
+.button-top-left-0{
+  position:absolute;
+  top: 4px;
+  left:50px;           //TODO
+  border:none;
+  *{
+    vertical-align:baseline;
+  }
+  /*
+    &:hover{
+      &:after{
+        content:"Go to record mode";
+      }
+    }
+  */
+  &:active{
+    left: 49px !important;
+    top: 5px !important;
+    //    right: 51px !important;
+  }
+}
+
+.button-top-left-1{
+  position:absolute;
+  top: 4px;
+  left:105px;           //TODO
+  border:none;
+  *{
+    vertical-align:baseline;
+  }
+  /*
+    &:hover{
+      &:after{
+        content:"Go to record mode";
+      }
+    }
+  */
+  &:active{
+    left: 104px !important;
+    top: 5px !important;
+    //    right: 51px !important;
+  }
+}
+
+.button-top-left-2{
+  position:absolute;
+  top: 4px;
+  left:160px;           //TODO
+  border:none;
+  *{
+    vertical-align:baseline;
+  }
+  /*
+    &:hover{
+      &:after{
+        content:"Go to record mode";
+      }
+    }
+  */
+  &:active{
+    left: 159px !important;
+    top: 5px !important;
+    //    right: 51px !important;
+  }
+}
+
+.button-bottom-left{
+  position:absolute;
+  top: 4px;
+  left:104px;           //TODO
+  border:none;
+  *{
+    vertical-align:baseline;
+  }
+  /*
+    &:hover{
+      &:after{
+        content:"Go to record mode";
+      }
+    }
+  */
+  &:active{
+    left: 103px !important;
+    top: 5px !important;
+    //    right: 51px !important;
   }
 }
 

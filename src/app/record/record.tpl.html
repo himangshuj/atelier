@@ -4,8 +4,6 @@ this is the place holder for all the templates which are being played
 <div class="full-height">
     <div ui-view="workspace" class="workspace full-height"></div>
 </div>
-<div class="control-bar">
-    <button class="btn btn-primary" ng-click="complete()" ng-show="recording">Complete</button><br/>
-    <button class="btn btn-primary" ng-click="record()" ng-hide="recording">Record Audio</button><br/>
-    <button class="btn btn-primary" ng-click="pause()" ng-show="recording">Pause Recording</button><br/>
-</div>
+<button class="btn btn-light no-border button-top-left-0" ng-click="record()" ng-hide="recording"><i class="icon-circle bigger-160 red"></i></button>
+<button class="btn btn-light no-border button-top-left-0" ng-click="pause()" ng-show="recording"><i class="icon-pause bigger-160"></i></button>
+<button class="btn btn-light no-border button-top-right" ng-click="complete()" ng-show="recording"><i class="icon-check bigger-160 blue"></i></button><br/>
