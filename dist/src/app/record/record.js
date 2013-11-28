@@ -107,7 +107,7 @@
       var answerId = answer._id;
       $scope.complete = function () {
         acoustics.stopRecording(audioNode, stream, answer._id);
-        $q.when(anduril.completeRecord(answer)).then(function (resp) {
+        $q.when(anduril.completeRecord(answer)).then(function () {
           'use strict';
           $state.go('complete', { answerId: answerId });
         });
@@ -150,6 +150,7 @@
         anduril.recordAction(answer, resp);
       };
       $scope.presentationId = answer._id;
+      _.defer($scope.activate(0));
     }
   ]).controller('RecordDialogue', [
     '$scope',
@@ -161,18 +162,24 @@
     '$q',
     function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q) {
       var page = parseInt($stateParams.page, 10);
+      $scope.page = page;
       $scope.presentation = answer.presentationData[page];
       var fragmentFn = null;
+      $scope.totalPages = _.size(answer.presentationData);
       $scope.addFragment = function (fragment) {
         fragmentFn = fragment;
+        console.log('hello123');
         function resetFragments() {
-          dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer()).then(ng.noop);
+          if (_.size(fragment()) > 0) {
+            dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer()).then(ng.noop);
+            $scope.totalFragments = _.size(fragment());
+            console.log('here');
+          } else {
+            _.delay(resetFragments, 1000);
+          }
         }
-        if (_.size(fragment()) > 0) {
-          resetFragments();
-        } else {
-          _.delay(resetFragments, 1000);
-        }
+        resetFragments();
+        $scope.totalFragments = _.size(fragment());
       };
       $scope.masterView = function () {
         recordAction(dialogue.changeState({
@@ -180,17 +187,19 @@
           params: null
         }));
       };
-      var index = 0;
+      $scope.index = 0;
       $scope.next = function () {
+        $scope.totalFragments = _.size(fragmentFn());
         dialogue.makeVisible({
           fragments: fragmentFn(),
-          index: index++
+          index: $scope.index++
         }, $q.defer()).then(recordAction);
       };
       $scope.previous = function () {
+        $scope.totalFragments = _.size(fragmentFn());
         dialogue.hide({
           fragments: fragmentFn(),
-          index: --index
+          index: --$scope.index
         }, $q.defer()).then(recordAction);
       };
       $scope.nextSlide = function () {
@@ -210,7 +219,7 @@
         dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer()).then(function () {
           $scope.pause();
         });
-        index = 0;
+        $scope.index = 0;
       };
     }
   ]).controller('RecordComplete', [

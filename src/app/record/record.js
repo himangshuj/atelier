@@ -84,7 +84,7 @@
                 $scope.complete = function () {
                     acoustics.stopRecording(audioNode, stream, answer._id);
                     $q.when(anduril.completeRecord(answer))
-                        .then(function (resp) {
+                        .then(function () {
                             "use strict";
                             $state.go("complete", {answerId: answerId});
                         });
@@ -107,6 +107,7 @@
             }])
         .controller('RecordMaster', ["$scope", "answer", "acoustics", "audioNode", "stream", "dialogue", "anduril", "recordAction",
             function ($scope, answer, acoustics, audioNode, stream, dialogue, anduril, recordAction) {
+                //noinspection JSUnresolvedVariable
                 $scope.presentations = _.map(answer.presentationData, function (obj) { //todo move to clojure script
                     obj.templateName = obj.templateName || "master";
                     return obj;
@@ -116,34 +117,41 @@
                     anduril.recordAction(answer, resp);
                 };
                 $scope.presentationId = answer._id;
-
+                _.defer($scope.activate(0));
             }])
         .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction", "$q",
             function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q) {
                 var page = parseInt($stateParams.page, 10);
+                $scope.page = page;
                 $scope.presentation = answer.presentationData[page];
                 var fragmentFn = null;
+                $scope.totalPages = _.size(answer.presentationData);
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
                     function resetFragments() {
-                        dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(ng.noop);
+                        if (_.size(fragment()) > 0) {  //TODO tie this properly with fragments in presentation also try prelinking and postlinking
+                            dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(ng.noop);
+                            $scope.totalFragments = _.size(fragment());
+                        } else {
+                            _.delay(resetFragments, 1000);//dom is not yet ready retry after 1000 ms
+                        }
                     }
 
-                    if (_.size(fragment()) > 0) {  //TODO tie this properly with fragments in presentation also try prelinking and postlinking
-                        resetFragments();
-                    } else {
-                        _.delay(resetFragments, 1000);//dom is not yet ready retry after 1000 ms
-                    }
+                    resetFragments();
+                    $scope.totalFragments = _.size(fragment());
+
                 };
                 $scope.masterView = function () {
                     recordAction(dialogue.changeState({subState: ".master", params: null}));
                 };
-                var index = 0;
+                $scope.index = 0;
                 $scope.next = function () {
-                    dialogue.makeVisible({fragments: fragmentFn(), index: index++}, $q.defer()).then(recordAction);
+                    $scope.totalFragments = _.size(fragmentFn());
+                    dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
                 };
                 $scope.previous = function () {
-                    dialogue.hide({fragments: fragmentFn(), index: --index}, $q.defer()).then(recordAction);
+                    $scope.totalFragments = _.size(fragmentFn());
+                    dialogue.hide({fragments: fragmentFn(), index: --$scope.index}, $q.defer()).then(recordAction);
                 };
                 $scope.nextSlide = function () {
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
@@ -160,7 +168,7 @@
                     dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(function () {
                         $scope.pause();
                     });
-                    index = 0;
+                    $scope.index = 0;
                 };
             }
         ])

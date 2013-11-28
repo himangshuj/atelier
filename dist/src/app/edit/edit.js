@@ -83,12 +83,10 @@
     '$log',
     function ($scope, page, $stateParams, answer, anduril, $state, templates, $modal, $log) {
       $scope.page = page = parseInt(page, 10);
-      console.log(1);
       var presentationId = $stateParams.presentationId;
       $scope.presentationId = presentationId;
       $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
       $scope.totalPages = _.size(answer.presentationData);
-      console.log('total pages' + $scope.totalPages);
       $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
       anduril.put(answer, page, $scope.presentation);
       $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
@@ -101,7 +99,7 @@
       page = parseInt(page, 10);
       $scope.resume = function () {
         anduril.post(answer);
-        $state.go('record.activate', { page: 0 });
+        $state.go('record.master');
       };
       $scope.goToPage = function (page) {
         'use strict';

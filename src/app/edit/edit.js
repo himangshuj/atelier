@@ -82,7 +82,7 @@
                     page = parseInt(page, 10);
                     $scope.resume = function () {
                         anduril.post(answer);
-                        $state.go("record.activate", {page: 0});
+                        $state.go("record.master");
 
                     };
 
