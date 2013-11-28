@@ -36,7 +36,7 @@ angular.module("edit/image.modal.tpl.html", []).run(["$templateCache", function(
     "<div class=\"modal-dialog\">\n" +
     "    <div class=\"modal-content\">\n" +
     "        <div class=\"modal-header\">\n" +
-    "            <input type=\"text\" ng-model=\"selected.image\">\n" +
+    "            Enter image URL <input type=\"text\" ng-model=\"selected.image\">\n" +
     "        </div>\n" +
     "        <div class=\"modal-body\">\n" +
     "            <div class=\"row-fluid image-container\">\n" +
@@ -198,12 +198,18 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "    <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\" presentation-id=\"{{presentationId}}\" class=\"zoom-in\"\n" +
     "                       add-fragment=\"addFragment(fragment)\"/>\n" +
     "</div>\n" +
+    "<button class=\"btn btn-light nav-button nav-button-right full-height\" ng-show=\"recording && page < totalPages -1\" ng-click=\"nextSlide()\"><i class=\"icon-chevron-right\"></i></button>\n" +
+    "\n" +
+    "<button class=\"btn btn-light no-border button-top-left-2\" ng-show=\"recording\" ng-click=\"redoSlide()\"><i class=\"icon-undo bigger-160 red\"></i></button>\n" +
+    "<button class=\"btn btn-light no-border button-top-left-1\" ng-click=\"next()\" ng-show=\"recording && index < totalFragments  \"><i class=\"icon-step-forward bigger-160\"></button><br/>\n" +
+    "\n" +
     "<div ng-show=\"recording\" class=\"control-bar-left\">\n" +
+    "<!--\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"masterView()\">MasterView</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"next()\" ng-show=\"index < totalFragments  \">Next Fragment</button><br/>\n" +
+    "-->\n" +
+    "<!--\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"previous()\"ng-show=\"index > 0 \">Previous Fragment</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"nextSlide()\" ng-show=\"page < totalPages -1\">Next Slide</button><br/>\n" +
-    "    <button class=\"btn btn-primary\" ng-click=\"redoSlide()\">Redo Slide</button><br/>\n" +
+    "-->\n" +
     "</div>\n" +
     "");
 }]);
@@ -249,10 +255,15 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "<div class=\"full-height\">\n" +
     "    <div ui-view=\"workspace\" class=\"workspace full-height\"></div>\n" +
     "</div>\n" +
+    "<button class=\"btn btn-light no-border button-top-left-0\" ng-click=\"record()\" ng-hide=\"recording\"><i class=\"icon-circle bigger-160 red\"></i></button>\n" +
+    "<button class=\"btn btn-light no-border button-top-left-0\" ng-click=\"pause()\" ng-show=\"recording\"><i class=\"icon-pause bigger-160\"></i></button>\n" +
+    "<button class=\"btn btn-light no-border button-top-right\" ng-click=\"complete()\" ng-show=\"recording\"><i class=\"icon-check bigger-160 blue\"></i></button><br/>\n" +
     "<div class=\"control-bar\">\n" +
+    "<!--\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"complete()\" ng-show=\"recording\">Complete</button><br/>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"record()\" ng-hide=\"recording\">Record Audio</button><br/>\n" +
     "    <button class=\"btn btn-primary\" ng-click=\"pause()\" ng-show=\"recording\">Pause Recording</button><br/>\n" +
+    "-->\n" +
     "</div>");
 }]);
 
