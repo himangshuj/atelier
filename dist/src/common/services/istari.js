@@ -6,7 +6,6 @@
     }
   ]);
   var andurilForger = function () {
-    var fragments = {};
     var injectors = {};
     var _getAllTemplates = function () {
       var deferred = injectors.$q.defer();
@@ -28,14 +27,14 @@
       });
       return deferred.promise;
     };
-    var _recordScript = function (presentationId, tuple) {
-      fragments[presentationId].script.push(tuple);
+    var _recordScript = function (answer, tuple) {
+      answer.script.push(tuple);
     };
-    var _insertScript = function (presentationId, script) {
-      fragments[presentationId].script = script;
+    var _insertScript = function (answer, script) {
+      answer.script = script;
     };
-    var _postScript = function (presentationId) {
-      return fragments[presentationId].$update();
+    var _postScript = function (answer) {
+      return answer.$update();
     };
     this.$get = [
       '$http',
@@ -49,30 +48,35 @@
         injectors.$resource = $resource;
         var Answer = $resource('/answer/:answerId', { answerId: '@_id' }, { update: { method: 'PUT' } });
         return {
-          put: function (presentationId, page, presentationMap) {
-            var templateFragment = fragments[presentationId].presentationData;
+          put: function (answer, page, presentationMap) {
+            var templateFragment = answer.presentationData;
             templateFragment[page] = presentationMap;
+            return answer;
           },
-          insert: function (presentationId, page, presentationMap) {
+          insert: function (answer, page, presentationMap) {
             'use strict';
-            var templateFragment = fragments[presentationId].presentationData;
+            var templateFragment = answer.presentationData;
             templateFragment.splice(page, 0, presentationMap);
+            return answer;
           },
-          remove: function (presentationId, page) {
+          remove: function (answer, page) {
             'use strict';
-            var templateFragment = fragments[presentationId].presentationData;
+            var templateFragment = answer.presentationData;
             templateFragment.splice(page, 1);
+            return answer;
           },
-          post: function (presentationId) {
-            return fragments[presentationId].$update();
+          post: function (answer) {
+            return answer.$update(function (resp) {
+              'use strict';
+              console.log('I have updated' + ng.toJson(resp));
+            });
           },
           getAllTemplates: _getAllTemplates,
           fetchImages: _fetchImages,
           fetchAnswer: function (answerId) {
             var deferred = $q.defer();
             Answer.get({ answerId: answerId }, function (answer) {
-              fragments[answerId] = _.extend(fragments[answerId] || answer, answer);
-              deferred.resolve(fragments[answerId]);
+              deferred.resolve(answer);
             });
             return deferred.promise;
           },
