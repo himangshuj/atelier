@@ -73,7 +73,12 @@
                     return answer;
 
                 },
-                remove: function (answer, page) {
+                changeTemplate: function (answer, page, templateName) {
+                    "use strict";
+                    var templateFragment = answer.presentationData;   
+                    templateFragment[page].templateName=templateName;
+                },
+                remove: function (presentationId, page) {
                     "use strict";
                     var templateFragment = answer.presentationData;
                     templateFragment.splice(page,1);

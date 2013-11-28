@@ -26,8 +26,8 @@
       sokratikDialogueCtrl.addFragment(scope.model);
     }
   };
-  var editCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
-    scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || attrs.default;
+  var editCommonLink = function (scope, attrs) {
+    scope.model.value = scope.model.value || attrs.default;
   };
   var _fragmentLink = {
       'edit': {
@@ -36,7 +36,7 @@
           element.on('blur keyup change', function () {
             scope.$apply(read);
           });
-          editCommonLink(scope, attrs, sokratikDialogueCtrl);
+          editCommonLink(scope, attrs);
           function read() {
             var html = angular.element(element).children().html();
             scope.model.value = _injectors.$sce.trustAsHtml(html);
@@ -139,12 +139,15 @@
             index: '@',
             presentationId: '@',
             addFragment: '&?',
-            questionId: '@?'
+            questionId: '@?',
+            increaseImages: '=',
+            decreaseImages: '=',
+            swap: '='
           },
           controller: [
             '$scope',
             function ($scope) {
-              $scope.templateName = '/views/templates/' + ($scope.presentation.templateName || 'master') + '.html';
+              $scope.templateName = '/views/templates/' + ($scope.presentation.templateName || 'imageText') + '.html';
               $scope.currentFragmentIndex = 0;
               var dialogueFragments = [];
               this.addFragment = function (dialogueFragment) {
