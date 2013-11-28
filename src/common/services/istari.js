@@ -7,9 +7,7 @@
     }]);
 
     var andurilForger = function () {
-        var fragments = {};
         var injectors = {};
-
         var _getAllTemplates = function () {
             var deferred = injectors.$q.defer();
             injectors.$http.get("/templates/list", {cache: true})
@@ -36,16 +34,16 @@
             return deferred.promise;
         };
 
-        var _recordScript = function (presentationId, tuple) {
-            fragments[presentationId].script.push(tuple);
+        var _recordScript = function (answer, tuple) {
+            answer.script.push(tuple);
         };
 
-        var _insertScript = function (presentationId, script) {
-            fragments[presentationId].script = script;
+        var _insertScript = function (answer, script) {
+            answer.script = script;
         };
-        var _postScript = function (presentationId) {
+        var _postScript = function (answer) {
             //noinspection JSUnresolvedFunction
-            return fragments[presentationId].$update();
+            return answer.$update();
         };
         this.$get = ["$http", "$log", "$q", "$resource", function ($http, $log, $q, $resource) {
             injectors.$http = $http;
@@ -62,24 +60,31 @@
             });
 
             return {
-                put: function (presentationId, page, presentationMap) {
+                put: function (answer, page, presentationMap) {
                     //noinspection JSUnresolvedVariable
-                    var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
+                    var templateFragment = answer.presentationData;
                     templateFragment[page] = presentationMap;
+                    return answer;
                 },
-                insert: function (presentationId, page, presentationMap) {
+                insert: function (answer, page, presentationMap) {
                     "use strict";
-                    var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
+                    var templateFragment = answer.presentationData;
                     templateFragment.splice(page,0,presentationMap);
+                    return answer;
+
                 },
-                remove: function (presentationId, page) {
+                remove: function (answer, page) {
                     "use strict";
-                    var templateFragment = fragments[presentationId].presentationData;   //TODO fix this in a cleaner way
+                    var templateFragment = answer.presentationData;
                     templateFragment.splice(page,1);
+                    return answer;
                 },
-                post: function (presentationId) {
+                post: function (answer) {
                     //noinspection JSUnresolvedFunction
-                    return fragments[presentationId].$update();
+                    return answer.$update(function(resp){
+                        "use strict";
+                        console.log("I have updated"+ng.toJson(resp));
+                    });
                 },
                 getAllTemplates: _getAllTemplates,
                 fetchImages: _fetchImages,
@@ -87,8 +92,7 @@
 
                     var deferred = $q.defer();
                     Answer.get({answerId: answerId}, function (answer) {
-                        fragments[answerId] = _.extend(fragments[answerId] || answer, answer); //remote version wins
-                        deferred.resolve(fragments[answerId]);
+                        deferred.resolve(answer);
                     });
                     return deferred.promise;
 
@@ -96,7 +100,6 @@
                 recordAction: _recordScript,
                 completeRecord: _postScript,
                 insertScript: _insertScript
-
             };
         }
         ]

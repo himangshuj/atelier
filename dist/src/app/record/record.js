@@ -36,11 +36,11 @@
           ],
           recordAction: [
             'anduril',
-            '$stateParams',
-            function (anduril, $stateParams) {
+            'answer',
+            function (anduril, answer) {
               'use strict';
               return function (resp) {
-                anduril.recordAction($stateParams.presentationId, resp);
+                anduril.recordAction(answer, resp);
               };
             }
           ]
@@ -107,7 +107,7 @@
       var answerId = answer._id;
       $scope.complete = function () {
         acoustics.stopRecording(audioNode, stream, answer._id);
-        $q.when(anduril.completeRecord(answer._id)).then(function (resp) {
+        $q.when(anduril.completeRecord(answer)).then(function (resp) {
           'use strict';
           $state.go('complete', { answerId: answerId });
         });
@@ -147,7 +147,7 @@
             subState: '.activate',
             params: { page: index }
           });
-        anduril.recordAction(answer._id, resp);
+        anduril.recordAction(answer, resp);
       };
       $scope.presentationId = answer._id;
     }
@@ -205,7 +205,7 @@
         var scriptToPreserve = _.first(answer.script, stepsRecordedTillThisSlide);
         console.log('[Redo] Before scripts size' + _.size(answer.script) + ' After scripts ' + stepsRecordedTillThisSlide);
         scriptToPreserve[stepsRecordedTillThisSlide - 1].actionInitiated = new Date().getTime();
-        anduril.insertScript(answer._id, scriptToPreserve);
+        anduril.insertScript(answer, scriptToPreserve);
         answer.script = scriptToPreserve;
         dialogue.resetFragments({ fragments: fragmentFn() }, $q.defer()).then(function () {
           $scope.pause();
