@@ -11,11 +11,10 @@
     var _closeStream = function (stream, iteration, deferred) {
         "use strict";
         if ((iteration > 100) || (_sentPackets == _receivedPackets)) {
-            console.log(stream);
             stream.destroy();
             deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
         } else {
-            _.delay(_closeStream, 10000, [stream, ++iteration, deferred]);
+            _.delay(_closeStream, 10000, stream, ++iteration, deferred);
         }
     };
     var acoustics = function () {
@@ -87,7 +86,7 @@
                     volume.disconnect();
                     _streams[answerId] = null;
                     var deferred = $q.defer();
-                    _closeStream(stream, 0,deferred);
+                    _closeStream(stream, 0, deferred);
                     return deferred.promise;
                 }
 
