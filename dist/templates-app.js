@@ -12,11 +12,17 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
     "<div class=\"edit full-height\" ui-view=\"template\"></div>\n" +
     "\n" +
     "\n" +
-    "<button class=\"btn btn-light nav-button nav-button-right full-height\" ng-click=\"goToPage(page+1)\" ng-show=\"page < (totalPages-1)\"><i class=\"icon-chevron-right\"></i></button><br/>\n" +
-    "<button class=\"btn btn-light nav-button nav-button-right full-height\" ng-click=\"add()\" ng-show=\"page >= (totalPages-1)\"><i class=\"icon-chevron-right\"></i></button><br/>\n" +
-    "<button class=\"btn btn-light nav-button nav-button-left full-height\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \"><i class=\"icon-chevron-left\"></i></button>\n" +
-    "<button class=\"btn btn-light no-border button-lower-right\" ng-click=\"remove()\"><i class=\"icon-trash bigger-160\"></i></button>\n" +
-    "<button class=\"btn btn-light no-border button-top-right\" ng-click=\"resume()\"><i class=\"icon-circle bigger-160 red\"></i> Go to record mode</button>\n" +
+    "<button class=\"btn btn-light nav-button nav-button-right\" ng-click=\"goToPage(page+1)\" ng-show=\"page < (totalPages-1)\"><b class=\"stretch\"><i class=\"icon-caret-right\"></i></b></button><br/>\n" +
+    "<button class=\"btn btn-light nav-button nav-button-right\" ng-click=\"add()\" ng-show=\"page >= (totalPages-1)\"><b class=\"stretch\"><i class=\"icon-caret-right\"></i></b></button><br/>\n" +
+    "<button class=\"btn btn-light nav-button nav-button-left\" ng-click=\"goToPage(page-1)\" ng-show=\"page > 0 \"><b class=\"stretch\"><i class=\"icon-caret-left\"></i></b></button>\n" +
+    "\n" +
+    "<button class=\"btn btn-light no-border button-delete\" ng-click=\"remove()\"><i class=\"icon-trash bigger-160\"></i> Delete slide</button>\n" +
+    "<button class=\"btn no-border btn-danger button-record\" ng-click=\"resume()\"><i class=\"icon-circle bigger-275 red\"></i> Go to record mode</button>\n" +
+    "\n" +
+    "<div ng-show=\"loading\">\n" +
+    "    <div class=\"spinner-backdrop\" style=\"opacity:0.5\"></div>\n" +
+    "    <div id=\"spinner\"></div>\n" +
+    "</div>\n" +
     "\n" +
     "\n" +
     "\n" +
@@ -26,7 +32,8 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
 angular.module("edit/image.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/image.fragment.tpl.html",
     "<span ng-class=\"model.css\">\n" +
-    "     <img ng-src=\"{{model.value}}\" ng-click=\"addImage()\" tooltip=\"click to change image\"/>\n" +
+    "<img ng-show=\"model.value==''\" ng-click=\"addImage()\" src='/img/image-icon.png' class=\"image-proxy\">\n" +
+    "<img ng-hide=\"model.value==''\" ng-src=\"{{model.value}}\"/>\n" +
     "</span>\n" +
     "");
 }]);
@@ -132,7 +139,11 @@ angular.module("edit/template.tpl.html", []).run(["$templateCache", function($te
 
 angular.module("edit/text.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/text.fragment.tpl.html",
-    "<span ng-class=\"model.css\" ng-bind-html=\"model.value\" contenteditable=\"true\"></span>\n" +
+    "<span ng-class=\"model.css\">\n" +
+    "    <input type=\"text\" ng-model=\"model.value\" placeholder=\"{{model.placeholder}}\"/>\n" +
+    "</span>\n" +
+    "\n" +
+    "\n" +
     "");
 }]);
 
@@ -199,10 +210,12 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "    <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\" presentation-id=\"{{presentationId}}\" class=\"zoom-in\"\n" +
     "                       add-fragment=\"addFragment(fragment)\"/>\n" +
     "</div>\n" +
-    "<button class=\"btn btn-light nav-button nav-button-right full-height\" ng-show=\"recording && page < totalPages -1\" ng-click=\"nextSlide()\"><i class=\"icon-chevron-right\"></i></button>\n" +
+    "<button class=\"btn btn-light no-border button-top-left-1\" ng-show=\"recording && page < totalPages -1\" ng-click=\"nextSlide()\"><i class=\"icon-chevron-right\"></i></button>\n" +
     "\n" +
     "<button class=\"btn btn-light no-border button-top-left-2\" ng-show=\"recording\" ng-click=\"redoSlide()\"><i class=\"icon-undo bigger-160 red\"></i></button>\n" +
+    "<!--\n" +
     "<button class=\"btn btn-light no-border button-top-left-1\" ng-click=\"next()\" ng-show=\"recording && index < totalFragments  \"><i class=\"icon-step-forward bigger-160\"></button><br/>\n" +
+    "-->\n" +
     "\n" +
     "<div ng-show=\"recording\" class=\"control-bar-left\">\n" +
     "\n" +
@@ -253,7 +266,7 @@ angular.module("record/record.tpl.html", []).run(["$templateCache", function($te
     "</div>\n" +
     "<button class=\"btn btn-light no-border button-top-left-0\" ng-click=\"record()\" ng-hide=\"recording\"><i class=\"icon-circle bigger-160 red\"></i></button>\n" +
     "<button class=\"btn btn-light no-border button-top-left-0\" ng-click=\"pause()\" ng-show=\"recording\"><i class=\"icon-pause bigger-160\"></i></button>\n" +
-    "<button class=\"btn btn-light no-border button-top-right\" ng-click=\"complete()\" ng-show=\"recording\"><i class=\"icon-check bigger-160 blue\"></i></button><br/>\n" +
+    "<button class=\"btn btn-danger no-border button-complete\" ng-click=\"complete()\" ng-show=\"recording\"><i class=\"icon-check bigger-275\"></i> Done!</button><br/>\n" +
     "");
 }]);
 
