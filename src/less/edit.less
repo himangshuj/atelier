@@ -202,7 +202,7 @@ body{
 .button-delete{
   position:absolute;
   top: 75px;
-  right:-86px;         //TODO
+  right:-88px;         //TODO
   border:none;
 /*
   *{
@@ -222,7 +222,7 @@ body{
 .button-record{
   position:absolute;
   top: 4px;
-  right:-136px;           //TODO
+  right:-138px;           //TODO
 /*
   border:none;
   *{
@@ -249,7 +249,7 @@ body{
 .button-complete{
   position:absolute;
   top: 4px;
-  right:-53px;           //TODO
+  right:-59px;           //TODO
   /*
     border:none;
     *{
@@ -392,7 +392,7 @@ div[contenteditable=true], span[contenteditable=true] {
   -o-transform:scale(2,3); /* Opera */
 }
 
-.fragment input[type="textarea"], input[type="text"]{
+.fragment > input[type="textarea"], .fragment > input[type="text"]{
   font:inherit;
   color: inherit;
 //  line-height: inherit;
@@ -492,10 +492,12 @@ div[contenteditable=true], span[contenteditable=true] {
 .image-proxy {
   -webkit-transition: all ease-in-out 0.30s;
   transition: all ease-in-out 0.30s;
-  -webkit-filter: blur(2px);
-  filter: blur(2px);
+  -webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0));
+  filter: drop-shadow(12px 12px 7px rgba(0,0,0,0));
+  filter: url(/img/image-icon.png);
   &:hover{
-    -webkit-filter: blur(0px);
-    filter: blur(0px);
+    -webkit-filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));
+    filter: drop-shadow(12px 12px 7px rgba(0,0,0,0.5));
+    filter: url(/img/image-icon.png);
   }
 }

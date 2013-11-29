@@ -32,8 +32,8 @@ angular.module("edit/edit.tpl.html", []).run(["$templateCache", function($templa
 angular.module("edit/image.fragment.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("edit/image.fragment.tpl.html",
     "<span ng-class=\"model.css\">\n" +
-    "<img ng-show=\"model.value==''\" ng-click=\"addImage()\" src='/img/image-icon.png' class=\"image-proxy\">\n" +
-    "<img ng-hide=\"model.value==''\" ng-src=\"{{model.value}}\"/>\n" +
+    "    <img ng-show=\"model.value==''\" ng-click=\"addImage()\" src='/img/image-icon.png' class=\"image-proxy\">\n" +
+    "<img ng-hide=\"model.value==''\" ng-src=\"{{model.value}}\" ng-click=\"addImage()\" src='/img/image-icon.png' onload=\"console.log('Image laoded')\"/>\n" +
     "</span>\n" +
     "");
 }]);
@@ -43,7 +43,7 @@ angular.module("edit/image.modal.tpl.html", []).run(["$templateCache", function(
     "<div class=\"modal-dialog\">\n" +
     "    <div class=\"modal-content\">\n" +
     "        <div class=\"modal-header\">\n" +
-    "            Enter image URL <input type=\"text\" ng-model=\"selected.image\">\n" +
+    "            <span style=\"font-size:initial\">Enter image URL </span>&nbsp; &nbsp;<input type=\"text\" ng-model=\"selected.image\" style=\"width:70%\">\n" +
     "        </div>\n" +
     "        <div class=\"modal-body\">\n" +
     "            <div class=\"row-fluid image-container\">\n" +
@@ -212,7 +212,7 @@ angular.module("record/active.tpl.html", []).run(["$templateCache", function($te
     "                       add-fragment=\"addFragment(fragment)\" ng-click=\"next()\"/>\n" +
     "</div>\n" +
     "<button class=\"btn btn-light no-border button-top-left-1\" ng-show=\"recording && page < totalPages -1\"\n" +
-    "        ng-click=\"nextSlide()\"><i class=\"icon-chevron-right bigger-160\"></i></button>\n" +
+    "        ng-click=\"nextSlide()\"><i class=\"icon-skip-forward bigger-160\"></i></button>\n" +
     "\n" +
     "<button class=\"btn btn-light no-border button-top-left-2\" ng-show=\"recording\" ng-click=\"redoSlide()\"><i\n" +
     "        class=\"icon-undo bigger-160 red\"></i></button>\n" +
