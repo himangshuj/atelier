@@ -207,13 +207,15 @@ angular.module("play/text.fragment.tpl.html", []).run(["$templateCache", functio
 angular.module("record/active.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("record/active.tpl.html",
     "<div class=\"full-height\">\n" +
-    "    <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\" presentation-id=\"{{presentationId}}\" class=\"zoom-in\"\n" +
-    "                       add-fragment=\"addFragment(fragment)\"/>\n" +
+    "    <sokratik-dialogue presentation=\"presentation\" index=\"{{$index}}\" presentation-id=\"{{presentationId}}\"\n" +
+    "                       class=\"zoom-in\"\n" +
+    "                       add-fragment=\"addFragment(fragment)\" ng-click=\"next()\"/>\n" +
     "</div>\n" +
-    "<button class=\"btn btn-light nav-button nav-button-right full-height\" ng-show=\"recording && page < totalPages -1\" ng-click=\"nextSlide()\"><i class=\"icon-chevron-right\"></i></button>\n" +
+    "<button class=\"btn btn-light no-border button-top-left-1\" ng-show=\"recording && page < totalPages -1\"\n" +
+    "        ng-click=\"nextSlide()\"><i class=\"icon-chevron-right bigger-160\"></i></button>\n" +
     "\n" +
-    "<button class=\"btn btn-light no-border button-top-left-2\" ng-show=\"recording\" ng-click=\"redoSlide()\"><i class=\"icon-undo bigger-160 red\"></i></button>\n" +
-    "<button class=\"btn btn-light no-border button-top-left-1\" ng-click=\"next()\" ng-show=\"recording && index < totalFragments  \"><i class=\"icon-step-forward bigger-160\"></button><br/>\n" +
+    "<button class=\"btn btn-light no-border button-top-left-2\" ng-show=\"recording\" ng-click=\"redoSlide()\"><i\n" +
+    "        class=\"icon-undo bigger-160 red\"></i></button>\n" +
     "\n" +
     "<div ng-show=\"recording\" class=\"control-bar-left\">\n" +
     "</div>\n" +

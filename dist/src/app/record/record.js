@@ -207,11 +207,13 @@
       };
       $scope.index = 0;
       $scope.next = function () {
-        $scope.totalFragments = _.size(fragmentFn());
-        dialogue.makeVisible({
-          fragments: fragmentFn(),
-          index: $scope.index++
-        }, $q.defer()).then(recordAction);
+        if ($scope.recording) {
+          $scope.totalFragments = _.size(fragmentFn());
+          dialogue.makeVisible({
+            fragments: fragmentFn(),
+            index: $scope.index++
+          }, $q.defer()).then(recordAction);
+        }
       };
       $scope.previous = function () {
         $scope.totalFragments = _.size(fragmentFn());

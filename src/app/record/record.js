@@ -88,7 +88,7 @@
                         recordAction({"fnName": "redo", "args": {},
                             actionInitiated: new Date().getTime() });
 
-                        var resp = dialogue.changeState({subState: ".activate",params: {dummy: _.size(answer.script)} });
+                        var resp = dialogue.changeState({subState: ".activate", params: {dummy: _.size(answer.script)} });
                         anduril.recordAction(answer, resp);
                     };
                 };
@@ -160,8 +160,10 @@
                 };
                 $scope.index = 0;
                 $scope.next = function () {
-                    $scope.totalFragments = _.size(fragmentFn());
-                    dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
+                    if ($scope.recording) {
+                        $scope.totalFragments = _.size(fragmentFn());
+                        dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
+                    }
                 };
                 $scope.previous = function () {
                     $scope.totalFragments = _.size(fragmentFn());
