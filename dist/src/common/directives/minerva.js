@@ -28,6 +28,7 @@
   };
   var editCommonLink = function (scope, attrs) {
     scope.model.value = scope.model.value || attrs.default;
+    scope.model.placeholder = attrs.placeholder;
   };
   var _fragmentLink = {
       'edit': {
@@ -38,9 +39,7 @@
           });
           editCommonLink(scope, attrs);
           function read() {
-            var html = angular.element(element).children().html();
-            scope.model.value = _injectors.$sce.trustAsHtml(html);
-            sokratikDialogueCtrl.setProperty(attrs.model, html);
+            sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
           }
         },
         'image': function (scope, element, attrs, sokratikDialogueCtrl) {

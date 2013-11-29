@@ -1,3 +1,4 @@
 <span ng-class="model.css">
-     <img ng-src="{{model.value}}" ng-click="addImage()" tooltip="click to change image"/>
+<img ng-show="model.value==''" ng-click="addImage()" src='/img/image-icon.png' class="image-proxy">
+<img ng-hide="model.value==''" ng-src="{{model.value}}"/>
 </span>
