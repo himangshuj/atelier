@@ -8,12 +8,14 @@
     var _streams = {};
     var _sentPackets = 0;
     var _receivedPackets = 0;
-    var _closeStream = function (stream, iteration) {
+    var _closeStream = function (stream, iteration, deferred) {
         "use strict";
         if ((iteration > 100) || (_sentPackets == _receivedPackets)) {
+            console.log(stream);
             stream.destroy();
+            deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
         } else {
-            _.delay(_closeStream, 10000, [stream, ++iteration]);
+            _.delay(_closeStream, 10000, [stream, ++iteration, deferred]);
         }
     };
     var acoustics = function () {
@@ -50,7 +52,6 @@
                         stream.on("data", function (data) {
                             "use strict";
                             _receivedPackets++;
-                            console.log("Recieved" + data);
                         });
                     });
                     return deferred.promise;
@@ -85,7 +86,9 @@
                     recorder.disconnect();
                     volume.disconnect();
                     _streams[answerId] = null;
-                    _closeStream(stream, 0);
+                    var deferred = $q.defer();
+                    _closeStream(stream, 0,deferred);
+                    return deferred.promise;
                 }
 
 

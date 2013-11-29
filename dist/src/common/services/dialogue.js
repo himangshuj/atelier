@@ -80,6 +80,10 @@
           resume: function (context) {
             'use strict';
             return context;
+          },
+          redo: function (context) {
+            'use strict';
+            return context;
           }
         };
       }

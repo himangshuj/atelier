@@ -64,7 +64,7 @@
                     var actionInitiated = new Date().getTime();
                     _.delay(function () {
 
-                        _changeFragmentClass(context.fragments[context.index], "fragment", ["animated" ,"fadeIn"]);
+                        _changeFragmentClass(context.fragments[context.index], "fragment", ["animated" , "fadeIn"]);
                         deferred.resolve({"fnName": "hide", "args": {index: context.index},
                             actionInitiated: actionInitiated });
                     });
@@ -88,8 +88,11 @@
                 resume: function (context) {
                     "use strict";
                     return context;
+                },
+                redo: function (context) {
+                    "use strict";
+                    return context;
                 }
-
             };
 
         }];

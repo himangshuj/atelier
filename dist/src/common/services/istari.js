@@ -32,6 +32,7 @@
     };
     var _insertScript = function (answer, script) {
       answer.script = script;
+      return answer;
     };
     var _postScript = function (answer) {
       return answer.$update();
