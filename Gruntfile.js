@@ -553,6 +553,15 @@ module.exports = function (grunt) {
     ]);
 
     /**
+     * The `build` task gets your app ready to run for development and testing.
+     */
+    grunt.registerTask('build-ec2', [
+        'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'recess:build',
+        'copy:build_assets', 'copy:build_appjs', 'copy:build_vendor_js', 'copy:build_vendorcss',
+        'index:build'
+    ]);
+
+    /**
      * The `compile` task gets your app ready for deployment by concatenating and
      * minifying your code.
      */
