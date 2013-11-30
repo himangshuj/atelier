@@ -1,11 +1,13 @@
 <div class="full-height">
-    <sokratik-dialogue presentation="presentation" index="{{$index}}" presentation-id="{{presentationId}}" class="zoom-in"
-                       add-fragment="addFragment(fragment)"/>
+    <sokratik-dialogue presentation="presentation" index="{{$index}}" presentation-id="{{presentationId}}"
+                       class="zoom-in"
+                       add-fragment="addFragment(fragment)" ng-click="next()"/>
 </div>
+<button class="btn btn-light no-border button-top-left-1" ng-show="recording && page < totalPages -1"
+        ng-click="nextSlide()"><i class="icon-step-forward bigger-160"></i></button>
+
+<button class="btn btn-light no-border button-top-left-2" ng-show="recording" ng-click="redoSlide()"><i
+        class="icon-undo bigger-160 red"></i></button>
+
 <div ng-show="recording" class="control-bar-left">
-    <button class="btn btn-primary" ng-click="masterView()">MasterView</button><br/>
-    <button class="btn btn-primary" ng-click="next()" ng-show="index < totalFragments  ">Next Fragment</button><br/>
-    <button class="btn btn-primary" ng-click="previous()"ng-show="index > 0 ">Previous Fragment</button><br/>
-    <button class="btn btn-primary" ng-click="nextSlide()" ng-show="page < totalPages -1">Next Slide</button><br/>
-    <button class="btn btn-primary" ng-click="redoSlide()">Redo Slide</button><br/>
 </div>

@@ -24,7 +24,7 @@
                     recordAction: ["anduril", "answer", function (anduril, answer) {
                         "use strict";
                         return function (resp) {
-                            anduril.recordAction(answer, resp);
+                            return anduril.recordAction(answer, resp);
                         };
                     }]
                 },
@@ -49,7 +49,7 @@
                 }
             });
             $stateProvider.state('record.activate', {
-                url: "/activate/:page",
+                url: "/activate/:page/:dummy",
                 views: {
                     "workspace": {
                         controller: 'RecordDialogue',
@@ -68,27 +68,41 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer", "recordAction",
-            function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer", "recordAction", "dialogue",
+            function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction, dialogue) {
                 answer.script = [];//reseting the script
                 $scope.presentationId = answer._id;
                 answer.recordingStarted = new Date().getTime();
+
                 $scope.record = function () {
                     $scope.recording = true;
+                    acoustics.resume(audioNode, stream);
                     recordAction({"fnName": "resume", "args": {},
                         actionInitiated: new Date().getTime() });
-                    acoustics.resume(audioNode, stream);
+                    console.log("Recording started " + new Date().getTime());
+                    console.log("Resetting redo slide definition");
+                    var instructionsToKeep = _.clone(answer.script);
+                    $scope.redoSlide = function () {
+                        "use strict";
+                        anduril.insertScript(answer, instructionsToKeep);
+                        recordAction({"fnName": "redo", "args": {},
+                            actionInitiated: new Date().getTime() });
+
+                        var resp = dialogue.changeState({subState: ".activate", params: {dummy: _.size(answer.script)} });
+                        anduril.recordAction(answer, resp);
+                    };
                 };
                 var answerId = answer._id;//this is a HACK replace with restangular why this is hack log the answer in
                 //then clause
                 $scope.complete = function () {
-                    acoustics.stopRecording(audioNode, stream, answer._id);
-                    $q.when(anduril.completeRecord(answer))
-                        .then(function () {
-                            "use strict";
-                            $state.go("complete", {answerId: answerId});
-                        });
-
+                    acoustics.stopRecording(audioNode, stream, answer._id).then(function (resp) {
+                        console.log(resp);
+                        $q.when(anduril.completeRecord(answer))
+                            .then(function () {
+                                "use strict";
+                                $state.go("complete", {answerId: answerId});
+                            });
+                    });
                 };
                 var pause = $scope.pause = function () {
                     acoustics.pause(audioNode, stream);
@@ -117,7 +131,7 @@
                     anduril.recordAction(answer, resp);
                 };
                 $scope.presentationId = answer._id;
-                _.defer($scope.activate(0));
+                $scope.activate(0);
             }])
         .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction", "$q",
             function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q) {
@@ -146,8 +160,10 @@
                 };
                 $scope.index = 0;
                 $scope.next = function () {
-                    $scope.totalFragments = _.size(fragmentFn());
-                    dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
+                    if ($scope.recording) {
+                        $scope.totalFragments = _.size(fragmentFn());
+                        dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
+                    }
                 };
                 $scope.previous = function () {
                     $scope.totalFragments = _.size(fragmentFn());
@@ -156,20 +172,9 @@
                 $scope.nextSlide = function () {
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 };
-                var stepsRecordedTillThisSlide = _.size(answer.script) - 1;//we exclude the pause
+                var stepsRecordedTillThisSlide = _.size(answer.script) + 1; // the first resume should be kept intact
 
-                $scope.redoSlide = function () {
-                    "use strict";
-                    var scriptToPreserve = _.first(answer.script, stepsRecordedTillThisSlide);
-                    console.log("[Redo] Before scripts size" + _.size(answer.script) + " After scripts " + stepsRecordedTillThisSlide);
-                    scriptToPreserve[stepsRecordedTillThisSlide - 1].actionInitiated = new Date().getTime();
-                    anduril.insertScript(answer, scriptToPreserve);
-                    answer.script = scriptToPreserve;
-                    dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(function () {
-                        $scope.pause();
-                    });
-                    $scope.index = 0;
-                };
+                console.log("steps recorded till now" + stepsRecordedTillThisSlide);
             }
         ])
         .controller('RecordComplete', ["$scope", "$stateParams", function ($scope, $stateParams) {

@@ -1,11 +1,17 @@
 <div class="edit full-height" ui-view="template"></div>
 
 
-<button class="btn btn-light nav-button nav-button-right full-height" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)"><i class="icon-chevron-right"></i></button><br/>
-<button class="btn btn-light nav-button nav-button-right full-height" ng-click="add()" ng-show="page >= (totalPages-1)"><i class="icon-chevron-right"></i></button><br/>
-<button class="btn btn-light nav-button nav-button-left full-height" ng-click="goToPage(page-1)" ng-show="page > 0 "><i class="icon-chevron-left"></i></button>
-<button class="btn btn-light no-border button-lower-right" ng-click="remove()"><i class="icon-trash bigger-160"></i></button>
-<button class="btn btn-light no-border button-top-right" ng-click="resume()"><i class="icon-circle bigger-160 red"></i> Go to record mode</button>
+<button class="btn btn-light nav-button nav-button-right" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)"><b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
+<button class="btn btn-light nav-button nav-button-right" ng-click="add()" ng-show="page >= (totalPages-1)"><b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
+<button class="btn btn-light nav-button nav-button-left" ng-click="goToPage(page-1)" ng-show="page > 0 "><b class="stretch"><i class="icon-caret-left"></i></b></button>
+
+<button class="btn btn-light no-border button-delete" ng-click="remove()"><i class="icon-trash bigger-160"></i> Delete slide</button>
+<button class="btn no-border btn-danger button-record" ng-click="resume()"><i class="icon-circle bigger-275 red"></i> Go to record mode</button>
+
+<div ng-show="loading">
+    <div class="spinner-backdrop" style="opacity:0.5"></div>
+    <div id="spinner"></div>
+</div>
 
 
 

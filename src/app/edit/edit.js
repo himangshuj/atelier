@@ -1,18 +1,4 @@
 (function (ng, app) {
-    var _newSlideModalCtrl = ["$scope", "$modalInstance", "templates", function ($scope, $modalInstance, templates) {
-        $scope.templates = templates;
-        $scope.selected = {
-            template: $scope.templates[0]
-        };
-
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.template);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    }];
     ng.module(app, [
             'ui.router',
             'titleService',
@@ -97,20 +83,23 @@
                         anduril.post(anduril.remove(answer, page));
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
-                    console.log(templates);
                     var changeTemplates = function (images) {
-                        anduril.changeTemplate(answer, page, images + $stateParams.templateName);
-                        $state.go("edit", { images: images});
+                        anduril.changeTemplate(answer, page, images + "imageText");
+                        anduril.post(answer);
+                        $state.go("edit", { images: images,templateName:"imageText"});
                     };
                     $scope.increaseImages = function () {
-                        changeTemplates(++images);
+                        changeTemplates((++images) % 5);
                     };
                     $scope.decreaseImages = function () {
-                        changeTemplates(--images);
+                        if (images > 0) {
+                            changeTemplates(--images);
+                        }
                     };
                     $scope.add = function () {
-                        anduril.insert(answer, page + 1, '1imageText');
+                        anduril.insert(answer, page + 1, {templateName: '1imageText'});
                         anduril.post(answer);
+                        console.log("hello");
                         $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
