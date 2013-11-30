@@ -80,7 +80,7 @@
                     console.log("[Old:" + templateFragment[page].templateName + "] [New" + templateName + "]");
                     templateFragment[page].templateName = templateName;
                 },
-                remove: function (presentationId, page) {
+                remove: function (answer, page) {
                     "use strict";
                     var templateFragment = answer.presentationData;
                     templateFragment.splice(page, 1);

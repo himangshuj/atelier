@@ -84,9 +84,9 @@
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     var changeTemplates = function (images) {
-                        anduril.changeTemplate(answer, page, images + $stateParams.templateName);
+                        anduril.changeTemplate(answer, page, images + "imageText");
                         anduril.post(answer);
-                        $state.go("edit", { images: images});
+                        $state.go("edit", { images: images,templateName:"imageText"});
                     };
                     $scope.increaseImages = function () {
                         changeTemplates((++images) % 5);
