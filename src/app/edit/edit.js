@@ -1,18 +1,4 @@
 (function (ng, app) {
-    var _newSlideModalCtrl = ["$scope", "$modalInstance", "templates", function ($scope, $modalInstance, templates) {
-        $scope.templates = templates;
-        $scope.selected = {
-            template: $scope.templates[0]
-        };
-
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.template);
-        };
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
-    }];
     ng.module(app, [
             'ui.router',
             'titleService',
@@ -24,7 +10,7 @@
 
         .config(["$stateProvider", function config($stateProvider) {
             $stateProvider.state('edit', {
-                url: '/edit/:questionId/:templateName/:presentationId/:page',
+                url: '/edit/:questionId/:templateName/:presentationId/:page/:images',
                 resolve: {
 
                     page: ["$stateParams", function ($stateParams) {
@@ -65,8 +51,8 @@
         }])
 
         .controller('EditCtrl',
-            ["$scope", "page", "$stateParams", "answer", "anduril", "$state", "templates", "$modal", "$log",
-                function ($scope, page, $stateParams, answer, anduril, $state, templates, $modal, $log) {
+            ["$scope", "page", "$stateParams", "answer", "anduril", "$state", "templates",
+                function ($scope, page, $stateParams, answer, anduril, $state, templates) {
                     //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;
@@ -75,10 +61,11 @@
                     $scope.totalPages = _.size(answer.presentationData);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(answer, page, $scope.presentation);
-                    $scope.presentation.templateName = $scope.presentation.templateName || $stateParams.templateName;
+                    var images = $stateParams.images || 1;
+                    $scope.images = images;
+                    $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
                     $scope.presentation.css = [""];
                     $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
-
                     page = parseInt(page, 10);
                     $scope.resume = function () {
                         anduril.post(answer);
@@ -96,28 +83,24 @@
                         anduril.post(anduril.remove(answer, page));
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
-                    $scope.templates = templates;
+                    var changeTemplates = function (images) {
+                        anduril.changeTemplate(answer, page, images + "imageText");
+                        anduril.post(answer);
+                        $state.go("edit", { images: images,templateName:"imageText"});
+                    };
+                    $scope.increaseImages = function () {
+                        changeTemplates((++images) % 5);
+                    };
+                    $scope.decreaseImages = function () {
+                        if (images > 0) {
+                            changeTemplates(--images);
+                        }
+                    };
                     $scope.add = function () {
-                        var modalInstance = $modal.open({
-                            templateUrl: 'edit/newslide.modal.tpl.html',
-                            controller: _newSlideModalCtrl,
-                            resolve: {
-                                templates: function () {
-                                    return $scope.templates;
-                                }
-                            }
-                        });
-
-                        modalInstance.result.then(function (selectedTemplate) {
-                            $scope.selected = selectedTemplate;
-                            anduril.insert(answer, page + 1, {templateName: selectedTemplate});
-                            anduril.post(answer);
-                            $state.go("edit", {templateName: selectedTemplate, "presentationId": presentationId, "page": page + 1 });
-                        }, function () {
-                            //noinspection JSUnresolvedFunction
-                            $log.info('Modal dismissed at: ' + new Date());
-                        });
-
+                        anduril.insert(answer, page + 1, {templateName: '1imageText'});
+                        anduril.post(answer);
+                        console.log("hello");
+                        $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
                 }])

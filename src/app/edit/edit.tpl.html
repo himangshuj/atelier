@@ -1,12 +1,16 @@
 <div class="edit full-height" ui-view="template"></div>
 
 
-<div class="control-bar">
-    <button class="btn btn-primary" ng-click="resume()">Resume</button><br/>
-    <button class="btn btn-info" ng-click="add()">Insert Another Slide</button><br/>
-    <button class="btn btn-danger" ng-click="remove()">Remove Current Slide</button><br/>
-    <button class="btn btn-warning" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">Next Slide</button><br/>
-    <button class="btn btn-success" ng-click="goToPage(page-1)" ng-show="page > 0 ">Previous Slide</button>
+<button class="btn btn-light nav-button nav-button-right" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)"><b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
+<button class="btn btn-light nav-button nav-button-right" ng-click="add()" ng-show="page >= (totalPages-1)"><b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
+<button class="btn btn-light nav-button nav-button-left" ng-click="goToPage(page-1)" ng-show="page > 0 "><b class="stretch"><i class="icon-caret-left"></i></b></button>
+
+<button class="btn btn-light no-border button-delete" ng-click="remove()"><i class="icon-trash bigger-160"></i> Delete slide</button>
+<button class="btn no-border btn-danger button-record" ng-click="resume()"><i class="icon-circle bigger-275 red"></i> Go to record mode</button>
+
+<div ng-show="loading">
+    <div class="spinner-backdrop" style="opacity:0.5"></div>
+    <div id="spinner"></div>
 </div>
 
 

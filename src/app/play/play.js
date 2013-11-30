@@ -9,11 +9,12 @@ var atelierPlayer = function (ng, app, answer) {
             var delay = 0;
             pausedInterval = parseInt(pausedInterval, 10);
             var recordingDelay = instructions[index].actionInitiated - (timeStamp || instructions[index].actionInitiated);
-
             if (_.isEqual(instruction.fnName, "resume")) {
                 pausedInterval += recordingDelay;
-            } else {
+            } else if (!_.isEqual(instruction.fnName, "redo")) {
                 delay = recordingDelay;
+            }else{
+                console.log("forwarding audio"+ (recordingDelay/1000));
             }
             var intraState = function () {
                 _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope);
@@ -26,6 +27,11 @@ var atelierPlayer = function (ng, app, answer) {
 
             };
             _.delay(function () {
+                console.log(instruction);
+                console.log(delay);
+                console.log("Recording Delay" + (recordingDelay / 1000 ) + " fnName " + instruction.fnName);
+                console.log("paused Interval" + (pausedInterval / 1000 ));
+
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
                     (instruction.args || {}).params, {pausedInterval: pausedInterval});
                 $q.when(dialogue[instruction.fnName](_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
