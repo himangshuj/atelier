@@ -46,7 +46,7 @@
                     var actionInitiated = new Date().getTime();
                     _.delay(function () {
                         _changeAllDialogues(context.fragments, "fragment", ["animated", "fadeIn"]);
-                        deferred.resolve({"fnName": "resetFragments", "args": {}, actionInitiated: actionInitiated });
+                        deferred.resolve({"fnName": "resetFragments", "args": {}, actionInitiated: actionInitiated, module: "dialogue" });
                     });
 
                     return deferred.promise;
@@ -56,7 +56,7 @@
                     _.delay(function () {
                         _changeFragmentClass(context.fragments[context.index], ["animated", "fadeIn"], "fragment");
                         deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
-                            actionInitiated: actionInitiated });
+                            actionInitiated: actionInitiated, module: "dialogue" });
                     });
                     return deferred.promise;
                 },
@@ -66,7 +66,7 @@
 
                         _changeFragmentClass(context.fragments[context.index], "fragment", ["animated" , "fadeIn"]);
                         deferred.resolve({"fnName": "hide", "args": {index: context.index},
-                            actionInitiated: actionInitiated });
+                            actionInitiated: actionInitiated, module: "dialogue"});
                     });
                     return deferred.promise;
                 },
@@ -75,20 +75,13 @@
 
                     var result = {fnName: "changeState",
                         args: {subState: context.subState, params: context.params},
-                        actionInitiated: new Date().getTime()};
+                        actionInitiated: new Date().getTime(), module: "dialogue"};
                     _.defer(function () {
                         $state.go($state.current.data.mode + context.subState, context.params);
                     });
                     return  result;
                 },
-                pause: function (context) {
-                    "use strict";
-                    return context;
-                },
-                resume: function (context) {
-                    "use strict";
-                    return context;
-                },
+
                 redo: function (context) {
                     "use strict";
                     return context;

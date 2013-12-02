@@ -97,13 +97,11 @@
         },
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             }
@@ -111,12 +109,10 @@
         "play": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             }
