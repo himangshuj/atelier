@@ -12,10 +12,11 @@
      * @type {Array} the list of angular dependencies and the modal controller
      * @private
      */
-    var _imageSelectionModal = ["$scope", "$modalInstance", "images",
-        function ($scope, $modalInstance, images) {
+    var _imageSelectionModal = ["$scope", "$modalInstance", "images", "initImage", "initCaption",
+        function ($scope, $modalInstance, images, initImage, initCaption) {
             $scope.selected = {
-                image: images[0].url
+                image: initImage || images[0].url,
+                caption:initCaption
             };
             $scope.imageGroups = _.chain(images).
                 groupBy(function (image, index) {
@@ -24,11 +25,16 @@
                 })
                 .values()
                 .value();
-            $scope.ok = function (selectedImage) {
-                $modalInstance.close(selectedImage);
+            $scope.ok = function (selectedImage, selectedCaption) {
+                $modalInstance.close({selectedImage:selectedImage, selectedCaption:selectedCaption});
             };
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
+            };
+            $scope.keypressCallback = function($event) {
+                alert('Voila!');
+                $event.preventDefault();
+                $scope.ok($scope.selected.image,$scope.selected.caption);
             };
         }];
 
@@ -42,6 +48,7 @@
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
         scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
+        scope.model.caption = sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
         scope.model.css = ["fragment"];
         if (!_.str.isBlank(scope.model.value)) {
             sokratikDialogueCtrl.addFragment(scope.model);
@@ -77,15 +84,25 @@
                         templateUrl: 'edit/image.modal.tpl.html',
                         controller: _imageSelectionModal,
                         resolve: {
+                            initCaption: function(){
+                                console.log('In resolve '+ sokratikDialogueCtrl.getProperty(attrs.model+'_Caption'));
+                                return sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
+                            },
+                            initImage: function(){
+                                console.log('In resolve '+ sokratikDialogueCtrl.getProperty(attrs.model));
+                                return sokratikDialogueCtrl.getProperty(attrs.model);
+                            },
                             images: function () {
                                 return _injectors.anduril.fetchImages(_injectors.$stateParams.questionId);
                             }
                         }
                     });
 
-                    modalInstance.result.then(function (selectedImage) {
-                        scope.model.value = _injectors.$sce.trustAsHtml(selectedImage);
-                        sokratikDialogueCtrl.setProperty(attrs.model, selectedImage);
+                    modalInstance.result.then(function (selected) {
+                        scope.model.value = _injectors.$sce.trustAsHtml(selected.selectedImage);
+                        sokratikDialogueCtrl.setProperty(attrs.model, selected.selectedImage);
+                        sokratikDialogueCtrl.setProperty(attrs.model+'_Caption', selected.selectedCaption);
+                        scope.model.caption = sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
                     }, function () {
                         //noinspection JSUnresolvedFunction
                         _injectors.$log.info('Modal dismissed at: ' + new Date());
