@@ -29,6 +29,9 @@ var atelierPlayer = function (ng, app, answer) {
                 $q.when(modules[instruction.module][instruction.fnName](_.extend((instruction.args || {}),
                     {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
             }, delay);
+        } else {
+            _.delay(
+                modules.apollo.stopBGAudio, 1000);
         }
     };
     ng.module(app, [
@@ -114,6 +117,7 @@ var atelierPlayer = function (ng, app, answer) {
         .controller("PlayAudio", ["$scope", "$state", "$stateParams", "$q", "modules",
             function ($scope, $state, $stateParams, $q, modules) {
                 "use strict";
+                modules.apollo.initBGAudio();
                 _executeInstruction(answer.script,
                     modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);

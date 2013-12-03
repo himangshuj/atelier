@@ -15,6 +15,19 @@ background
 
             };
         }];
+    var _sokratikBackgroundAudioTrack = ["apollo",
+        function (apollo) {
+            return {
+                "restrict": "A",
+                "transclude": true,
+                "template":"<div ng-transclude></div>" ,
+                compile: function (tElement) {
+                    apollo.addBGAudio(ng.element(tElement)[0]);
+                }
+
+            };
+        }];
     ng.module(app, ['sokratik.atelier.services.apollo'])
-        .directive("sokratikAudioTrack", _sokratikAudioTrack);
+        .directive("sokratikAudioTrack", _sokratikAudioTrack)
+        .directive("sokratikBackgroundAudioTrack",_sokratikBackgroundAudioTrack);
 })(angular,"sokratik.atelier.directives.apollo");

@@ -25,16 +25,15 @@
                 })
                 .values()
                 .value();
-            $scope.ok = function (selectedImage, selectedCaption) {
+            var ok = $scope.ok = function (selectedImage, selectedCaption) {
                 $modalInstance.close({selectedImage:selectedImage, selectedCaption:selectedCaption});
             };
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-            $scope.keypressCallback = function($event) {
-                alert('Voila!');
+            $scope.storeImage = function($event) {
                 $event.preventDefault();
-                $scope.ok($scope.selected.image,$scope.selected.caption);
+                ok($scope.selected.image,$scope.selected.caption);
             };
         }];
 
@@ -85,11 +84,9 @@
                         controller: _imageSelectionModal,
                         resolve: {
                             initCaption: function(){
-                                console.log('In resolve '+ sokratikDialogueCtrl.getProperty(attrs.model+'_Caption'));
                                 return sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
                             },
                             initImage: function(){
-                                console.log('In resolve '+ sokratikDialogueCtrl.getProperty(attrs.model));
                                 return sokratikDialogueCtrl.getProperty(attrs.model);
                             },
                             images: function () {
@@ -100,9 +97,9 @@
 
                     modalInstance.result.then(function (selected) {
                         scope.model.value = _injectors.$sce.trustAsHtml(selected.selectedImage);
+                        scope.model.caption = sokratikDialogueCtrl.getProperty(selected.selectedCaption);
                         sokratikDialogueCtrl.setProperty(attrs.model, selected.selectedImage);
                         sokratikDialogueCtrl.setProperty(attrs.model+'_Caption', selected.selectedCaption);
-                        scope.model.caption = sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
                     }, function () {
                         //noinspection JSUnresolvedFunction
                         _injectors.$log.info('Modal dismissed at: ' + new Date());

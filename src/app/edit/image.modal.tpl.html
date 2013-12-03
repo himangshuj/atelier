@@ -2,7 +2,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <span style="font-size:initial">Enter image URL </span>&nbsp; &nbsp;<input type="text" ng-model="selected.image" style="width:70%"><br/>
-            <span style="font-size:initial">Enter caption </span>&nbsp; &nbsp;&nbsp;&nbsp;<input type="text" ng-model="selected.caption" style="width:70%" ui-keyup="{'enter':'keypressCallback($event)'}">
+            <span style="font-size:initial">Enter caption </span>&nbsp; &nbsp;&nbsp;&nbsp;<input type="text" ng-model="selected.caption" style="width:70%" ui-keyup="{'enter':'storeImage($event)'}">
         </div>
         <div class="modal-body">
             <div class="row-fluid image-container">
