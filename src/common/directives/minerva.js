@@ -12,10 +12,11 @@
      * @type {Array} the list of angular dependencies and the modal controller
      * @private
      */
-    var _imageSelectionModal = ["$scope", "$modalInstance", "images",
-        function ($scope, $modalInstance, images) {
+    var _imageSelectionModal = ["$scope", "$modalInstance", "images", "initImage", "initCaption",
+        function ($scope, $modalInstance, images, initImage, initCaption) {
             $scope.selected = {
-                image: images[0].url
+                image: initImage || images[0].url,
+                caption:initCaption
             };
             $scope.imageGroups = _.chain(images).
                 groupBy(function (image, index) {
@@ -24,11 +25,15 @@
                 })
                 .values()
                 .value();
-            $scope.ok = function (selectedImage) {
-                $modalInstance.close(selectedImage);
+            var ok = $scope.ok = function (selectedImage, selectedCaption) {
+                $modalInstance.close({selectedImage:selectedImage, selectedCaption:selectedCaption});
             };
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
+            };
+            $scope.storeImage = function($event) {
+                $event.preventDefault();
+                ok($scope.selected.image,$scope.selected.caption);
             };
         }];
 
@@ -42,6 +47,7 @@
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
         scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
+        scope.model.caption = sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
         scope.model.css = ["fragment"];
         if (!_.str.isBlank(scope.model.value)) {
             sokratikDialogueCtrl.addFragment(scope.model);
@@ -77,15 +83,23 @@
                         templateUrl: 'edit/image.modal.tpl.html',
                         controller: _imageSelectionModal,
                         resolve: {
+                            initCaption: function(){
+                                return sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
+                            },
+                            initImage: function(){
+                                return sokratikDialogueCtrl.getProperty(attrs.model);
+                            },
                             images: function () {
                                 return _injectors.anduril.fetchImages(_injectors.$stateParams.questionId);
                             }
                         }
                     });
 
-                    modalInstance.result.then(function (selectedImage) {
-                        scope.model.value = _injectors.$sce.trustAsHtml(selectedImage);
-                        sokratikDialogueCtrl.setProperty(attrs.model, selectedImage);
+                    modalInstance.result.then(function (selected) {
+                        scope.model.value = _injectors.$sce.trustAsHtml(selected.selectedImage);
+                        scope.model.caption = sokratikDialogueCtrl.getProperty(selected.selectedCaption);
+                        sokratikDialogueCtrl.setProperty(attrs.model, selected.selectedImage);
+                        sokratikDialogueCtrl.setProperty(attrs.model+'_Caption', selected.selectedCaption);
                     }, function () {
                         //noinspection JSUnresolvedFunction
                         _injectors.$log.info('Modal dismissed at: ' + new Date());
@@ -97,13 +111,11 @@
         },
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             }
@@ -111,12 +123,10 @@
         "play": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
-                console.log(sokratikDialogueCtrl + "sokratikDialogueCtrl");
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
 
             }

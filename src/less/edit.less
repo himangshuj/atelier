@@ -104,6 +104,22 @@ body{
     margin-right: auto;
     height:100%;
   }
+  .caption-holder {
+    position:absolute;
+    bottom: 0px;
+    left:50%;
+    .caption{
+      font-size:18px;
+      position:relative;left:-50%;
+      background-image: none;
+      background-color: rgba(0,0,0,0.2);
+      color:#FFF;
+    }
+    width:97.5%;
+    input{
+      background-color: transparent;
+    }
+  }
 }
 
 .slide{
@@ -413,6 +429,21 @@ div[contenteditable=true], span[contenteditable=true] {
     padding:0px !important;
     margin:2px;
   }
+  &:focus::-webkit-input-placeholder{
+    opacity: 0;
+    transition: opacity ease 0.15s;
+    -webkit-transition: opacity ease 0.15s;
+  }
+  &:focus:-moz-placeholder{
+    opacity: 0;
+    transition: opacity ease 0.15s;
+    -webkit-transition: opacity ease 0.15s;
+  }
+  &:focus::-moz-placeholder{
+    opacity: 0;
+    transition: opacity ease 0.15s;
+    -webkit-transition: opacity ease 0.15s;
+  }
 }
 
 ::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder {
@@ -423,8 +454,6 @@ div[contenteditable=true], span[contenteditable=true] {
 
 ::-webkit-input-placeholder {
   text-align: left;
-  padding-bottom: 0px !important;
-  vertical-align: baseline;
 }
 
 .edit p{

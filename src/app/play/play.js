@@ -1,7 +1,7 @@
 var atelierPlayer = function (ng, app, answer) {
-    var _injectors = {};
     var fragmentFn = ng.noop;//global variable is this really bad
-    var _executeInstruction = function (instructions, dialogue, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
+    var _executeInstruction = function (instructions, modules, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
+
         "use strict";
         if (scriptIndex < _.size(instructions)) {
             var index = scriptIndex || 0;
@@ -13,29 +13,25 @@ var atelierPlayer = function (ng, app, answer) {
                 pausedInterval += recordingDelay;
             } else if (!_.isEqual(instruction.fnName, "redo")) {
                 delay = recordingDelay;
-            }else{
-                console.log("forwarding audio"+ (recordingDelay/1000));
+            } else {
             }
             var intraState = function () {
-                _executeInstruction(instructions, dialogue, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope);
+                _executeInstruction(instructions, modules, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope);
             };
             var postExecute = function () {
                 if (!(ng.equals(instruction.fnName, "changeState"))) {
                     intraState();
                 }
-                $scope.$emit(instruction.fnName, {pausedInterval: pausedInterval, timeStamp: instruction.actionInitiated});
-
             };
             _.delay(function () {
-                console.log(instruction);
-                console.log(delay);
-                console.log("Recording Delay" + (recordingDelay / 1000 ) + " fnName " + instruction.fnName);
-                console.log("paused Interval" + (pausedInterval / 1000 ));
-
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
                     (instruction.args || {}).params, {pausedInterval: pausedInterval});
-                $q.when(dialogue[instruction.fnName](_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
+                $q.when(modules[instruction.module][instruction.fnName](_.extend((instruction.args || {}),
+                    {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
             }, delay);
+        } else {
+            _.delay(
+                modules.apollo.stopBGAudio, 1000);
         }
     };
     ng.module(app, [
@@ -44,6 +40,7 @@ var atelierPlayer = function (ng, app, answer) {
             'sokratik.atelier.services.istari', ,
             'sokratik.atelier.services.dialogue',
             'sokratik.atelier.directives.minerva',
+            'sokratik.atelier.directives.apollo',
             'ui.bootstrap',
             'ngSanitize',
             'ngAnimate'])
@@ -58,6 +55,9 @@ var atelierPlayer = function (ng, app, answer) {
                         var instruction = answer.script[index];
                         var delay = answer.script[index].actionInitiated - ($stateParams.timeStamp || answer.script[index].actionInitiated);
                         return {instruction: instruction, delay: delay};
+                    }],
+                    modules: ["dialogue", "apollo", function (dialogue, apollo) {
+                        return {apollo: apollo, dialogue: dialogue};
                     }]
                 },
                 data: {
@@ -98,36 +98,35 @@ var atelierPlayer = function (ng, app, answer) {
                 })
             ;
         }])
-        .controller("PlayCtrl", ["$scope", "$stateParams", "dialogue",
-            function ($scope, $stateParams, dialogue) {
+        .controller("PlayCtrl", ["$scope",
+            function ($scope) {
                 //noinspection JSUnresolvedVariable
                 $scope.presentations = answer.presentationData;
                 $scope.presentationId = answer._id;
-                _injectors.dialogue = dialogue;
 
             }])
-        .controller("PlayMaster", ["$scope", "$state", "dialogue", "$stateParams", "$q",
-            function ($scope, $state, dialogue, $stateParams, $q) {
+        .controller("PlayMaster", ["$scope",
+            function ($scope, $state, $stateParams, $q, modules) {
                 "use strict";
                 _executeInstruction(answer.script,
-                    dialogue, $state,
+                    modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
 
             }])
-        .controller("PlayAudio", ["$scope", "$state", "dialogue", "$stateParams", "$q",
-            function ($scope, $state, dialogue, $stateParams, $q) {
+        .controller("PlayAudio", ["$scope", "$state", "$stateParams", "$q", "modules",
+            function ($scope, $state, $stateParams, $q, modules) {
                 "use strict";
-                //TODO skip audio if time Stamp does not match
+                modules.apollo.initBGAudio();
                 _executeInstruction(answer.script,
-                    dialogue, $state,
+                    modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
 
             }])
 
-        .controller("PlayActive", ["$scope", "$state", "$stateParams", "dialogue", "$q",
-            function ($scope, $state, $stateParams, dialogue, $q) {
+        .controller("PlayActive", ["$scope", "$state", "$stateParams", "$q", "modules",
+            function ($scope, $state, $stateParams, $q, modules) {
                 "use strict";
                 var page = parseInt($stateParams.page, 10);
                 //noinspection JSUnresolvedVariable
@@ -136,12 +135,14 @@ var atelierPlayer = function (ng, app, answer) {
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
                     function resetFragments() {
-                        dialogue.resetFragments({fragments: fragmentFn()}, $q.defer());
-                        _executeInstruction(answer.script,
-                            dialogue, $state,
-                            $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
+                        modules.dialogue.resetFragments({fragments: fragmentFn()}, $q.defer());
+
 
                     }
+
+                    _executeInstruction(answer.script,
+                        modules, $state,
+                        $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
                     if (_.size(fragment()) > 0) {  //TODO tie this properly with fragments in presentation also try prelinking and postlinking
                         resetFragments();
