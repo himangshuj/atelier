@@ -135,14 +135,17 @@ var atelierPlayer = function (ng, app, answer) {
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
                     function resetFragments() {
-                        modules.dialogue.resetFragments({fragments: fragmentFn()}, $q.defer());
+                        modules.dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(
+                          function(){
+                              _executeInstruction(answer.script,
+                                  modules, $state,
+                                  $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
+                          }
+                        );
 
 
                     }
 
-                    _executeInstruction(answer.script,
-                        modules, $state,
-                        $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
                     if (_.size(fragment()) > 0) {  //TODO tie this properly with fragments in presentation also try prelinking and postlinking
                         resetFragments();

@@ -3,10 +3,29 @@
 (function (ng, app) {
     'use strict';
 
+
     var apollo = function () {
         var _mainAudio = null;
         var _backGroundAudio = [];
         var _recordingStarted = null;
+        var _seekAudio = function (context, deferred) {
+            console.log(_mainAudio.seekable);
+            if ((_mainAudio.seekable || []).length > 0) {
+                _mainAudio.volume = 0;
+                var args = context.params;
+                var pausedInterval = parseInt(args.pausedInterval, 10);
+                _recordingStarted = _recordingStarted || (args.timeStamp - pausedInterval);
+                var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval) / 1000;
+                console.log("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
+                _mainAudio.currentTime = reqdPosition;
+                _mainAudio.play();
+                _mainAudio.volume = 1;
+                deferred.resolve("Audio seeked");
+            } else {
+                _.delay(_seekAudio, 1000, context, deferred);
+            }
+
+        };
         this.$get = ["$log", function ($log) {
             return {
                 addMainAudio: function (mainAudio) {
@@ -24,18 +43,8 @@
                     return context;
                 },
                 resume: function (context, deferred) {
-                    var args = context.params;
-                    var pausedInterval = parseInt(args.pausedInterval, 10);
-                    _recordingStarted = _recordingStarted || (args.timeStamp - pausedInterval);
-                    var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval) / 1000;
-                    console.log(_mainAudio.seekable);
-                    _mainAudio.volume = 0;
-                    console.log("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
-                    _mainAudio.currentTime = reqdPosition;
-                    _mainAudio.play();
-                    _mainAudio.volume = 1;
-                    deferred.resolve("Audio seeked");
-                    return context;
+                    _seekAudio(context, deferred);
+                    return deferred.promise;
                 },
                 addBGAudio: function (backGroundAudio) {
                     _backGroundAudio.push(backGroundAudio);
