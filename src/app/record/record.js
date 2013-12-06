@@ -6,6 +6,7 @@
             'sokratik.atelier.services.istari',
             'sokratik.atelier.services.dialogue',
             'sokratik.atelier.services.acoustics',
+            'sokratik.atelier.services.sokratube',
             'ngSanitize',
             'ngAnimate'])
 
@@ -68,8 +69,8 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer", "recordAction", "dialogue",
-            function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction, dialogue) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer", "recordAction",
+            function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction) {
                 answer.script = [];//reseting the script
                 $scope.presentationId = answer._id;
                 answer.recordingStarted = new Date().getTime();
@@ -137,11 +138,11 @@
                 $scope.presentationId = answer._id;
                 $scope.activate(0);
             }])
-        .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction", "$q",
-            function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q) {
+        .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction", "$q", "sokratube",
+            function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q, sokratube) {
                 var page = parseInt($stateParams.page, 10);
                 $scope.page = page;
-                $scope.presentation = answer.presentationData[page];
+                var activePresentation = $scope.presentation = answer.presentationData[page];
                 var fragmentFn = null;
                 $scope.totalPages = _.size(answer.presentationData);
                 $scope.addFragment = function (fragment) {//TODO remove duplication
@@ -169,10 +170,20 @@
                         dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
                     }
                 }, 1500);
+                var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"}) ;
+                $scope.videoPresent = !!existingVideo;
+                $scope.recordYTAction = function () {
+                    $scope.pause();//pausing the audio
+                    var videoId = existingVideo.params.videoId;
+                    sokratube.initYTVideo({videoId: videoId}, $q.defer()).then(function(resp){
+                        console.log(resp);
+                        recordAction(resp);
+                    });
+                };
                 $scope.previous = _.throttle(function () {
                     $scope.totalFragments = _.size(fragmentFn());
                     dialogue.hide({fragments: fragmentFn(), index: --$scope.index}, $q.defer()).then(recordAction);
-                });
+                },1500);
                 $scope.nextSlide = _.throttle(function () {
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 }, 1000);

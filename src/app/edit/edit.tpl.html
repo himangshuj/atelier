@@ -1,9 +1,14 @@
 <div class="edit full-height" ui-view="template"></div>
 
 
-<button class="btn btn-light nav-button nav-button-right" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)"><b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
-<button class="btn btn-light nav-button nav-button-right" ng-click="add()" ng-show="page >= (totalPages-1)"><b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
-<button class="btn btn-light nav-button nav-button-left" ng-click="goToPage(page-1)" ng-show="page > 0 "><b class="stretch"><i class="icon-caret-left"></i></b></button>
+<button class="btn btn-light nav-button nav-button-right" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">
+    <b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
+<button class="btn btn-light nav-button nav-button-right" ng-click="add()" ng-show="page >= (totalPages-1)">
+    <b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
+<button class="btn btn-light nav-button nav-button-left" ng-click="goToPage(page-1)" ng-show="page > 0 ">
+    <b class="stretch"><i class="icon-caret-left"></i></b></button>
+<button class="btn btn-light no-border button-app" ng-click="addVideo()">
+    <i class="icon-youtube-sign bigger-200">Embed Youtube Video</i></button>
 
 <button class="btn btn-light no-border button-delete" ng-click="remove()"><i class="icon-trash bigger-160"></i> Delete slide</button>
 <button class="btn no-border btn-danger button-record" ng-click="resume()"><i class="icon-circle bigger-275 red"></i> Go to record mode</button>

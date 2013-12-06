@@ -1,0 +1,15 @@
+<div class="modal-dialog" xmlns="http://www.w3.org/1999/html">
+    <div class="modal-content">
+        <div class="modal-header">
+            <input type="text" ng-model="selectedMedia" placeholder="Enter Youtube Video Embed code" ng-blur="renderYT(selectedMedia)"/>
+        </div>
+        <div class="modal-body">
+            <div id="player"/>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" ng-click="cancel()">Close</button>
+            <button class="btn btn-primary" ng-click="ok(selectedMedia)">Ok</button>
+        </div>
+    </div>
+</div>
+
