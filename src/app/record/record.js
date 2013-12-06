@@ -85,7 +85,7 @@
                     $scope.redoSlide = function () {
                         "use strict";
                         anduril.insertScript(answer, instructionsToKeep);
-                        recordAction({"fnName": "redo", "args": {},
+                        recordAction({"fnName": "redo", "args": {}, module: "dialogue",
                             actionInitiated: new Date().getTime() });
                         $state.go("record.activate", {dummy: _.size(answer.script)});
                     };
@@ -160,19 +160,19 @@
                     recordAction(dialogue.changeState({subState: ".master", params: null}));
                 };
                 $scope.index = 0;
-                $scope.next = function () {
+                $scope.next = _.throttle(function () {
                     if ($scope.recording) {
                         $scope.totalFragments = _.size(fragmentFn());
                         dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
                     }
-                };
-                $scope.previous = function () {
+                }, 1500);
+                $scope.previous = _.throttle(function () {
                     $scope.totalFragments = _.size(fragmentFn());
                     dialogue.hide({fragments: fragmentFn(), index: --$scope.index}, $q.defer()).then(recordAction);
-                };
-                $scope.nextSlide = function () {
+                });
+                $scope.nextSlide = _.throttle(function () {
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
-                };
+                }, 1000);
 
             }
         ])
