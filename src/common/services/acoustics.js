@@ -10,6 +10,11 @@
     var _receivedPackets = 0;
     var _closeStream = function (stream, iteration, deferred) {
         "use strict";
+        if (!stream.writable) {
+            deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
+            return;
+
+        }
         if ((iteration > 100) || (_sentPackets == _receivedPackets)) {
             stream.destroy();
             deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
@@ -89,8 +94,6 @@
                     _closeStream(stream, 0, deferred);
                     return deferred.promise;
                 }
-
-
 
 
             };

@@ -150,7 +150,7 @@ var atelierPlayer = function (ng, app, answer) {
                     if (_.size(fragment()) > 0) {  //TODO tie this properly with fragments in presentation also try prelinking and postlinking
                         resetFragments();
                     } else {
-                        _.delay(resetFragments, 1000);//dom is not yet ready retry after 1000 ms
+                        _.defer(resetFragments);//dom is not yet ready retry after 1000 ms
                     }
                 };
             }]);
