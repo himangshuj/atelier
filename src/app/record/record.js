@@ -102,18 +102,21 @@
                             });
                     });
                 };
+
+
                 var pause = $scope.pause = function () {
                     acoustics.pause(audioNode, stream);
                     console.log("pausing initiated" + new Date().getTime());
-                    stream.on("pause", function () {
-                        console.log("pausing" + new Date().getTime());
+                    _.defer(function () {
                         recordAction({"fnName": "pause", "args": {},
                             actionInitiated: new Date().getTime(), module: "apollo" });
-                        $scope.recording = false;
                     });
+                    $scope.recording = false;
+
+
                 };
 
-                $scope.$on('$stateChangeStart',
+                $scope.$on('$stateChangeSuccess',
                     function () {
                         "use strict";
                         pause(audioNode, stream);

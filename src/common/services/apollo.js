@@ -22,6 +22,7 @@
                 _mainAudio.volume = 1;
                 deferred.resolve("Audio seeked");
             } else {
+                console.log("Delaying");
                 _.delay(_seekAudio, 1000, context, deferred);
             }
 
@@ -54,7 +55,6 @@
                     $log.info("[Play ] BackGround Audio played");
                 },
                 initBGAudio: function (index, volume) {
-                    console.log("here");
                     _backGroundAudio[index || 0].volume = volume || 0.10;
                 },
                 stopBGAudio: function () {
