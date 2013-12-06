@@ -8,18 +8,6 @@
 
     var andurilForger = function () {
         var injectors = {};
-        var _getAllTemplates = function () {
-            var deferred = injectors.$q.defer();
-            injectors.$http.get("/templates/list", {cache: true})
-                .success(function (data) {
-                    deferred.resolve(_.pluck(data, "name"));
-                })
-                .error(function (data) {
-                    injectors.$log.info("call failed getting default data");
-                    deferred.resolve([]);
-                });
-            return deferred.promise;
-        };
         //given a question fetches the images for the answer
         var _fetchImages = function (questionId) {
             var deferred = injectors.$q.defer();
@@ -93,7 +81,6 @@
                         console.log("I have updated" + ng.toJson(resp));
                     });
                 },
-                getAllTemplates: _getAllTemplates,
                 fetchImages: _fetchImages,
                 fetchAnswer: function (answerId) {
 
