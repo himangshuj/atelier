@@ -41,6 +41,7 @@ var atelierPlayer = function (ng, app, answer) {
             'sokratik.atelier.services.dialogue',
             'sokratik.atelier.directives.minerva',
             'sokratik.atelier.directives.apollo',
+            'sokratik.atelier.services.sokratube',
             'ui.bootstrap',
             'ngSanitize',
             'ngAnimate'])
@@ -56,8 +57,8 @@ var atelierPlayer = function (ng, app, answer) {
                         var delay = answer.script[index].actionInitiated - ($stateParams.timeStamp || answer.script[index].actionInitiated);
                         return {instruction: instruction, delay: delay};
                     }],
-                    modules: ["dialogue", "apollo", function (dialogue, apollo) {
-                        return {apollo: apollo, dialogue: dialogue};
+                    modules: ["dialogue", "apollo", "sokratube", function (dialogue, apollo, sokratube) {
+                        return {apollo: apollo, dialogue: dialogue, sokratube: sokratube};
                     }]
                 },
                 data: {

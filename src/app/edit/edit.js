@@ -1,4 +1,43 @@
 (function (ng, app) {
+
+
+    var _videoModalCtrl = ["$scope", "$modalInstance", "$sce", "existingVideo", function ($scope, $modalInstance, $sce, existingVideo) {
+
+
+        $scope.ok = function (selectedMedia) {
+            var videoId = (selectedMedia || "watch?v=").split("watch?v=")[1];
+            console.log("here i am" + videoId);
+            $modalInstance.close(videoId);
+        };
+
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+
+
+        var player;
+        var videoId = ((existingVideo || {}).params || {}).videoId;
+
+        $scope.selectedMedia = "http://www.youtube.com/watch?v=" + videoId;
+
+        _.defer(function () {
+            player = new YT.Player("player", {
+                playerVars: { 'autoplay': 1, 'controls': 0 },
+                height: '300',
+                width: '640',
+                videoId:videoId
+            });
+        });
+
+        $scope.renderYT = function (selectedMedia) {
+            var videoId = (selectedMedia || "watch?v=").split("watch?v=")[1];
+            _.defer(function () {
+                player.loadVideoById(videoId, 0, "large");
+            });
+        };
+
+    }];
     ng.module(app, [
             'ui.router',
             'titleService',
@@ -22,11 +61,7 @@
                     }],
                     images: ["$stateParams", "anduril", function ($stateParams, anduril) {
                         return anduril.fetchImages($stateParams.questionId);
-                    }],
-                    templates: ["anduril", function (anduril) {
-                        return anduril.getAllTemplates();
                     }]
-
                 },
                 data: {
                     mode: "edit"
@@ -51,13 +86,13 @@
         }])
 
         .controller('EditCtrl',
-            ["$scope", "page", "$stateParams", "answer", "anduril", "$state", "templates",
-                function ($scope, page, $stateParams, answer, anduril, $state, templates) {
+            ["$scope", "page", "$stateParams", "answer", "anduril", "$state", "$modal", "$log",
+                function ($scope, page, $stateParams, answer, anduril, $state, $modal, $log) {
                     //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;
                     $scope.presentationId = presentationId;
-                    $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
+                    var activePresentation = $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
                     $scope.totalPages = _.size(answer.presentationData);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(answer, page, $scope.presentation);
@@ -86,7 +121,7 @@
                     var changeTemplates = function (images) {
                         anduril.changeTemplate(answer, page, images + "imageText");
                         anduril.post(answer);
-                        $state.go("edit", { images: images,templateName:"imageText"});
+                        $state.go("edit", { images: images, templateName: "imageText"});
                     };
                     $scope.increaseImages = function () {
                         changeTemplates((++images) % 5);
@@ -103,6 +138,31 @@
                         $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
+                    $scope.addVideo = function () {
+                        var modalInstance = $modal.open({
+                            templateUrl: 'edit/yt.modal.tpl.html',
+                            controller: _videoModalCtrl,
+                            resolve: {
+                                existingVideo: function () {
+                                    activePresentation.apps = activePresentation.apps || [];
+                                    return _.findWhere(activePresentation.apps, {name: "YT"});
+                                }
+                            }
+                        });
+                        activePresentation.apps = activePresentation.apps || {};
+                        var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"}) || {name: "YT"};
+                        modalInstance.result.then(function (ytEmbedUrl) {
+                            console.log("videoId" + ytEmbedUrl);
+                            activePresentation.apps = _.without(activePresentation.apps, existingVideo);
+                            existingVideo.params = {"videoId": ytEmbedUrl};
+                            activePresentation.apps = _.union(activePresentation.apps, existingVideo);
+                            answer = anduril.put(answer, page, activePresentation);
+                            console.log("hello");
+                        }, function () {
+                            //noinspection JSUnresolvedFunction
+                            $log.info('Modal dismissed at: ' + new Date());
+                        });
+                    };
                 }])
         .controller('TemplateCtrl', function TemplateController() {
         });
