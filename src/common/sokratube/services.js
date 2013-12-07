@@ -3,9 +3,10 @@
 (function (ng, app) {
 
 
-    var _videoModalCtrl = ["$scope", "$modalInstance", "$sce", "videoId", "deferred", "timeOut",
-        function ($scope, $modalInstance, $sce, videoId, deferred, timeOut) {
+    var _videoModalCtrl = ["$scope", "$modalInstance", "$sce", "videoId", "deferred", "timeOut","apollo",
+        function ($scope, $modalInstance, $sce, videoId, deferred, timeOut,apollo) {
             var actionInitiated = new Date().getTime();
+            apollo.muteBGAudio();
             var player;
             _.defer(function () {
                 console.log(videoId + "videoId");
@@ -19,6 +20,7 @@
             });
 
             var done = $scope.done = function () {
+                apollo.initBGAudio();
                 deferred.resolve({"fnName": "initYTVideo", module: "sokratube",
                     "args": {timeOut: player.getCurrentTime() * 1000, videoId: videoId},
                     actionInitiated: actionInitiated });
@@ -27,6 +29,10 @@
 
 
             var countDownStarted = false;
+
+            $scope.closeLabel = !!timeOut ? "skip":"done";
+
+            console.log($scope.closeLabel);
 
             function onStateChange(event) {//asumes no buffering need to fix this
                 if (event.data == YT.PlayerState.PLAYING && !countDownStarted && !!timeOut) {
@@ -39,9 +45,8 @@
             }
 
         }];
-
     var _saas = function () {//sokratube as a service
-        this.$get = ["$modal", function ($modal) {
+        this.$get = ["$modal","apollo", function ($modal) {
             return {
                 initYTVideo: function (context, deferred) {
                     _.defer(function () {
@@ -74,7 +79,7 @@
         }];
     };
 
-    ng.module(app, [], ["$provide", function ($provide) {
+    ng.module(app, ["sokratik.atelier.services.apollo"], ["$provide", function ($provide) {
         $provide.provider("sokratube", _saas);
 
     }]);
