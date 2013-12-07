@@ -7,6 +7,7 @@
             'sokratik.atelier.services.dialogue',
             'sokratik.atelier.services.acoustics',
             'sokratik.atelier.services.sokratube',
+            'sokratik.atelier.services.apollo',
             'ngSanitize',
             'ngAnimate'])
 

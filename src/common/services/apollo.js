@@ -55,11 +55,17 @@
                     $log.info("[Play ] BackGround Audio played");
                 },
                 initBGAudio: function (index, volume) {
-                    _backGroundAudio[index || 0].volume = volume || 0.10;
+
+                    (_backGroundAudio[index || 0] || {}).volume = volume || 0.10;
                 },
                 stopBGAudio: function () {
                     _.each(_backGroundAudio, function (audio) {
                         audio.pause();
+                    });
+                },
+                muteBGAudio: function () {
+                    _.each(_backGroundAudio, function (audio) {
+                        (audio || {}).volume = 0;
                     });
                 }
             };

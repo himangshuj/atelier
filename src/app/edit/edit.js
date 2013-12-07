@@ -6,6 +6,7 @@
 
         $scope.ok = function (selectedMedia) {
             var videoId = (selectedMedia || "watch?v=").split("watch?v=")[1];
+            console.log("here i am" + videoId);
             $modalInstance.close(videoId);
         };
 
@@ -16,21 +17,22 @@
 
 
         var player;
-        $scope.selectedMedia = "http://www.youtube.com/watch?v=" + ((existingVideo || {}).params || {}).videoId;
+        var videoId = ((existingVideo || {}).params || {}).videoId;
+
+        $scope.selectedMedia = "http://www.youtube.com/watch?v=" + videoId;
+
         _.defer(function () {
             player = new YT.Player("player", {
                 playerVars: { 'autoplay': 1, 'controls': 0 },
-                videoId: existingVideo.params.videoId,
                 height: '300',
-                width: '640'
+                width: '640',
+                videoId:videoId
             });
         });
-
 
         $scope.renderYT = function (selectedMedia) {
             var videoId = (selectedMedia || "watch?v=").split("watch?v=")[1];
             _.defer(function () {
-                console.log(videoId);
                 player.loadVideoById(videoId, 0, "large");
             });
         };
@@ -135,6 +137,7 @@
                         console.log("hello");
                         $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
+
                     $scope.addVideo = function () {
                         var modalInstance = $modal.open({
                             templateUrl: 'edit/yt.modal.tpl.html',
@@ -149,15 +152,16 @@
                         activePresentation.apps = activePresentation.apps || {};
                         var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"}) || {name: "YT"};
                         modalInstance.result.then(function (ytEmbedUrl) {
+                            console.log("videoId" + ytEmbedUrl);
                             activePresentation.apps = _.without(activePresentation.apps, existingVideo);
                             existingVideo.params = {"videoId": ytEmbedUrl};
                             activePresentation.apps = _.union(activePresentation.apps, existingVideo);
                             answer = anduril.put(answer, page, activePresentation);
+                            console.log("hello");
                         }, function () {
                             //noinspection JSUnresolvedFunction
                             $log.info('Modal dismissed at: ' + new Date());
                         });
-
                     };
                 }])
         .controller('TemplateCtrl', function TemplateController() {
