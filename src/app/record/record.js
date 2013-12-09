@@ -18,9 +18,21 @@
                     answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
                         return anduril.fetchAnswer($stateParams.presentationId);
                     }],
-                    recorder: [ "acoustics", "$stateParams", function (acoustics, $stateParams) {
-                        console.log("buha");
-                        return acoustics.getRecorder($stateParams.presentationId);
+                    mediaRecorderOrAudioNode: ["acoustics", function (acoustics) {
+                        return acoustics.mediaRecorderOrAudioNode();
+                    }],
+                    stream: ["acoustics", "$stateParams", "mediaRecorderOrAudioNode", function (acoustics, $stateParams, mediaRecorderOrAudioNode) {
+                        return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode);
+                    }],
+                    recorder: ["mediaRecorderOrAudioNode", "stream", function (mediaRecorderOrAudioNode, stream) {
+                        if (!!MediaRecorder) {
+                            return {mediaRecorder: mediaRecorderOrAudioNode,
+                                    stream: stream};
+                        } else {
+                            return {mediaRecorder: false,
+                                    audionode: mediaRecorderOrAudioNode,
+                                    stream: stream};
+                        }
                     }],
                     recordAction: ["anduril", "answer", function (anduril, answer) {
                         "use strict";
