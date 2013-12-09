@@ -17,14 +17,14 @@
                 resolve: {
                     answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
                         return anduril.fetchAnswer($stateParams.presentationId);
-                    }], audioNode: ["acoustics", function (acoustics) {
-                        return acoustics.getAudioNode();
                     }],
-                    stream: [ "acoustics", "$stateParams", function (acoustics, $stateParams) {
-                        return acoustics.stream($stateParams.presentationId);
+                    recorder: [ "acoustics", "$stateParams", function (acoustics, $stateParams) {
+                        console.log("buha");
+                        return acoustics.getRecorder($stateParams.presentationId);
                     }],
                     recordAction: ["anduril", "answer", function (anduril, answer) {
                         "use strict";
+                        console.log("i");
                         return function (resp) {
                             return anduril.recordAction(answer, resp);
                         };
@@ -70,15 +70,15 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "audioNode", "$state", "anduril", "$q", "stream", "answer", "recordAction",
-            function ($scope, acoustics, audioNode, $state, anduril, $q, stream, answer, recordAction) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder",
+            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder) {
                 answer.script = [];//reseting the script
                 $scope.presentationId = answer._id;
                 answer.recordingStarted = new Date().getTime();
 
                 $scope.record = function () {
                     $scope.recording = true;
-                    acoustics.resume(audioNode, stream);
+                    acoustics.resume(recorder);
                     recordAction({"fnName": "resume", "args": {},
                         actionInitiated: new Date().getTime(), module: "apollo"});
                     console.log("Recording started " + new Date().getTime());
@@ -95,7 +95,7 @@
                 var answerId = answer._id;//this is a HACK replace with restangular why this is hack log the answer in
                 //then clause
                 $scope.complete = function () {
-                    acoustics.stopRecording(audioNode, stream, answer._id).then(function (resp) {
+                    acoustics.stopRecording(recorder, answer._id).then(function (resp) {
                         console.log(resp);
                         $q.when(anduril.completeRecord(answer))
                             .then(function () {
@@ -107,7 +107,7 @@
 
 
                 var pause = $scope.pause = function () {
-                    acoustics.pause(audioNode, stream);
+                    acoustics.pause(recorder);
                     console.log("pausing initiated" + new Date().getTime());
                     _.defer(function () {
                         recordAction({"fnName": "pause", "args": {},
@@ -121,12 +121,12 @@
                 $scope.$on('$stateChangeSuccess',
                     function () {
                         "use strict";
-                        pause(audioNode, stream);
+                        pause();
                         $scope.recording = false;
                     });
             }])
-        .controller('RecordMaster', ["$scope", "answer", "acoustics", "audioNode", "stream", "dialogue", "anduril", "recordAction",
-            function ($scope, answer, acoustics, audioNode, stream, dialogue, anduril, recordAction) {
+        .controller('RecordMaster', ["$scope", "answer", "acoustics", "dialogue", "anduril", "recordAction",
+            function ($scope, answer, acoustics, dialogue, anduril, recordAction) {
                 //noinspection JSUnresolvedVariable
                 $scope.presentations = _.map(answer.presentationData, function (obj) { //todo move to clojure script
                     obj.templateName = obj.templateName || "master";
