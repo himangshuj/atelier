@@ -1,9 +1,15 @@
 (function (ng, app) {
+    //noinspection JSUnresolvedVariable
+
     var AudioContext = window.webkitAudioContext || window.mozAudioContext || ng.noop;
     var context = new AudioContext() || {};
+    //noinspection JSUnresolvedVariable
+
     var MediaStream = window.MediaStream || window.webkitMediaStream;
 
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
+    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var volume = context.createGain ? context.createGain() : {};
     var _streams = {};
     var _sentPackets = 0;
@@ -22,80 +28,168 @@
             _.delay(_closeStream, 10000, stream, ++iteration, deferred);
         }
     };
-    var acoustics = function () {
-        this.$get = ["$log", "$location", "$q", function ($log, $location, $q) {
-            return {
-                stream: function (answerId) {
-                    if (_streams[answerId]) {
-                        return _streams[answerId];
-                    }
-                    var client = new BinaryClient("ws://socket.closed-beta.sokratik.com:" + $location.port() + "/writer");//todo fix this remove hardcoding
-                    var deferred = $q.defer();
-                    client.on('open', function () {
-                        var stream = client.createStream({answerId: answerId, sampleRate: context.sampleRate });
-                        _streams[answerId] = stream;
-                        deferred.resolve(stream);
-                        _sentPackets = 0;
-                        _receivedPackets = 0;
-                        recorder.onaudioprocess = function (e) {
-                            var left = e.inputBuffer.getChannelData(0);
-                            //noinspection JSUnresolvedVariable
-                            var right = e.inputBuffer.getChannelData(1);
-                            var buffer = new ArrayBuffer(left.length * 4);
-                            var view = new DataView(buffer);
-                            var index = 0;
-                            for (var i = 0; i < left.length; i++) {
-                                view.setInt16(index, left[i] * 0x7FFF, true);
-                                view.setInt16(index + 2, right[i] * 0x7FFF, true);
-                                index += 4;
-                            }
-                            stream.write(buffer);
-                            _sentPackets++;
-                        };
-                        stream.pause();
-                        stream.on("data", function (data) {
-                            "use strict";
-                            _receivedPackets++;
-                        });
-                    });
-                    return deferred.promise;
-                },
-                getAudioNode: function () {
-                    var deferred = $q.defer();
-                    navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-                    navigator.getUserMedia({audio: true}, function (mediaStream) {
-                        //noinspection JSUnresolvedFunction
-                        var audioStream = new MediaStream(mediaStream.getAudioTracks());
-                        //noinspection JSUnresolvedFunction
-                        var audioInput = context.createMediaStreamSource(audioStream);
-                        deferred.resolve(audioInput);
-                    });
-                    return deferred.promise;
-                },
 
-                pause: function (audioInput, stream) {
-                    audioInput.disconnect();
-                    recorder.disconnect();
-                    volume.disconnect();
-                    stream.pause();
+    var streamRaw = function (answerId, $q, $location) {
+        if (_streams[answerId]) {
+            return _streams[answerId];
+        }
+        var client = new BinaryClient("ws://socket.closed-beta.sokratik.com:" + $location.port() + "/writer");
+        var deferred = $q.defer();
+        //noinspection JSUnresolvedVariable
+        client.on('open', function () {
+            var stream = client.createStream({answerId: answerId, sampleRate: context.sampleRate });
+            _streams[answerId] = stream;
+            deferred.resolve(stream);
+            _sentPackets = 0;
+            _receivedPackets = 0;
+            recorder.onaudioprocess = function (e) {
+                //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+                var left = e.inputBuffer.getChannelData(0);
+                //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+                var right = e.inputBuffer.getChannelData(1);
+                var buffer = new ArrayBuffer(left.length * 4);
+                var view = new DataView(buffer);
+                var index = 0;
+                for (var i = 0; i < left.length; i++) {
+                    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+                    view.setInt16(index, left[i] * 0x7FFF, true);
+                    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
+                    view.setInt16(index + 2, right[i] * 0x7FFF, true);
+                    index += 4;
+                }
+                stream.write(buffer);
+                _sentPackets++;
+            };
+            stream.pause();
+            stream.on("data", function () {
+                "use strict";
+                _receivedPackets++;
+            });
+        });
+        return deferred.promise;
+    };
+
+    var streamOgg = function (mediaRecorder, answerId, $q, $location) {
+        if (_streams[answerId]) {
+            return _streams[answerId];
+        }
+        var client = new BinaryClient("ws://socket.closed-beta.sokratik.com:" + $location.port() + "/ogg-writer");
+        var deferred = $q.defer();
+        //noinspection JSUnresolvedVariable
+        client.on('open', function () {
+            var stream = client.createStream({answerId: answerId});
+            _streams[answerId] = stream;
+            deferred.resolve(stream);
+            _sentPackets = 0;
+            _receivedPackets = 0;
+            mediaRecorder.ondataavailable = function (e) {
+                stream.write(e.data);
+                _sentPackets++;
+            };
+            mediaRecorder.start(2000);
+            mediaRecorder.pause();
+            stream.pause();
+            stream.on("data", function () {
+                "use strict";
+                _receivedPackets++;
+            });
+        });
+        return deferred.promise;
+    };
+
+    var getAudioNode = function ($q) {
+        console.log("getting audionode");
+        var deferred = $q.defer();
+        //noinspection JSUnresolvedVariable
+        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        navigator.getUserMedia({audio: true}, function (mediaStream) {
+            //noinspection JSUnresolvedFunction
+            var audioStream = new MediaStream(mediaStream.getAudioTracks());
+            //noinspection JSUnresolvedFunction
+            var audioInput = context.createMediaStreamSource(audioStream);
+            deferred.resolve(audioInput);
+        }, function (err) {
+            console.log("getUserMedia error: " + err);
+        });
+        return deferred.promise;
+    };
+
+    var getMediaRecorder = function ($q) {
+        var deferred = $q.defer();
+        //noinspection JSUnresolvedVariable
+        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        navigator.getUserMedia({audio: true}, function (mediaStream) {
+            //noinspection JSUnresolvedFunction
+            var mediaRecorder = new MediaRecorder(mediaStream);
+            console.log("mediarecorder: " + mediaRecorder);
+            deferred.resolve(mediaRecorder);
+        }, function (err) {
+            console.log("getUserMedia error: " + err);
+        });
+        return deferred.promise;
+    };
+
+
+    var acoustics = function () {
+        this.$get = ["$log", "$location", "$q", "$window", function ($log, $location, $q, $window) {
+
+            return {
+                pause: function (_recorder) {
+                    if (_recorder.mediaRecorder) {
+                        _recorder.mediaRecorder.pause();
+
+                    } else {
+                        _recorder.audionode.disconnect();
+                        recorder.disconnect();
+                        volume.disconnect();
+                    }
+                    _recorder.stream.pause();
                 },
-                resume: function (audioInput, stream) {
-                    stream.resume();
-                    audioInput.connect(volume);
-                    volume.connect(recorder);
-                    recorder.connect(context.destination);
+                resume: function (_recorder) {
+                    _recorder.stream.resume();
+                    if (_recorder.mediaRecorder) {
+                        _recorder.mediaRecorder.resume();
+                    }
+                    else {
+                        _recorder.audionode.connect(volume);
+                        volume.connect(recorder);
+                        //noinspection JSUnresolvedVariable
+                        recorder.connect(context.destination);
+                    }
                 },
-                stopRecording: function (audioInput, stream, answerId) {
-                    audioInput.disconnect();
-                    recorder.disconnect();
-                    volume.disconnect();
+                stopRecording: function (_recorder, answerId) {
+                    if (_recorder.mediaRecorder) {
+                        _recorder.mediaRecorder.stop();
+                    }
+                    else {
+                        _recorder.audionode.disconnect();
+                        recorder.disconnect();
+                        volume.disconnect();
+                    }
                     _streams[answerId] = null;
                     var deferred = $q.defer();
-                    _closeStream(stream, 0, deferred);
+                    _closeStream(_recorder.stream, 0, deferred);
                     return deferred.promise;
+                },
+
+                getStream: function (answerId, recorder) {
+                    if (!!$window.MediaRecorder) {
+                        return streamOgg(recorder, answerId, $q, $location);
+                    } else {
+                        return streamRaw(answerId, $q, $location);
+                    }
+                },
+
+                mediaRecorderOrAudioNode: function () {
+                    if (!!$window.MediaRecorder) {
+                        return getMediaRecorder($q);
+
+                    } else {
+                        return getAudioNode($q);
+
+
+                    }
                 }
-
-
             };
         }];
     };
