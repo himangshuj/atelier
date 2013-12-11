@@ -210,8 +210,7 @@
             'ui.router',
             'ui.route',
             'ui.bootstrap',
-            'templates-app',
-            'ngSanitize'
+            'templates-app'
         ])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
