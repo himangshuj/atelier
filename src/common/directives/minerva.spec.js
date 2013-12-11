@@ -222,13 +222,38 @@ describe('minerva edit mode image', function () {
         var fragmentElement = angular.element(dialogueElement.children()[0]);
         fragmentElement.children().scope().addImage();
         $httpBackend.flush();
-        scope.$digest();
         var modal = angular.element($document.find("body")[0]);
-        angular.element(modal.find("button")[1]).triggerHandler("click", defaultImage,"new caption");
-        scope.$digest();
+        scope.$$childTail.selected.caption="new caption";
+
+        angular.element(modal.find("button")[1]).triggerHandler("click");
         expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBe(defaultImage);
-        //TODO this seems to be jquery bug investigate later
-      //  expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("new caption");
+        expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("new caption");
+    }));
+    it("sokratik image modal internal", inject(function ($stateParams, $httpBackend,$document) {
+        scope.presentation = {"templateName": "1Image", keyVals: {}};
+        $httpBackend.when('GET', '/related-images/testId').respond([
+            {url: defaultImage, thumbnail: defaultImage}
+        ]);
+        element = compile(dialogue)(scope);
+        $stateParams.questionId = "testId";
+        scope.$digest();
+        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
+        var fragmentElement = angular.element(dialogueElement.children()[0]);
+        fragmentElement.children().scope().addImage();
+        $httpBackend.flush();
+        var modal = angular.element($document.find("body")[0]);
+        scope.$$childTail.selected.caption="new caption";
+        var newImage = "http://www.ineesite.org/uploads/images/pages/EDUCATION_FIRSTgirlShadow2.jpg";
+        expect(scope.$$childTail.selected.image).toBe(defaultImage);
+        scope.$$childTail.selected.image=newImage;
+        angular.element(modal.find("button")[1]).triggerHandler("click");
+        scope.$digest();
+        expect(element.children().scope().dialogueCtrl.getProperty("image1")).not.toBe(defaultImage);
+        expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBe(newImage);
+
+
+        expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("new caption");
     }));
     it('Sokratik fragment html Test with 2 fragments skip Fragments test', inject(function () {
         scope.presentation = {"templateName": "2Image", keyVals: {image2: defaultImage,

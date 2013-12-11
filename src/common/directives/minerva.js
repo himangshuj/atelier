@@ -66,7 +66,7 @@
                 // Listen for change events to enable binding
 
                 // Write data to the model
-                scope.read = function() {
+                scope.read = function () {
                     sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
                 };
                 editCommonLink(scope, attrs);
@@ -214,7 +214,7 @@
         ])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
-        .controller("DialogueController",["$scope", function ($scope) {
+        .controller("DialogueController", ["$scope", function ($scope) {
             $scope.templateName = "/views/templates/" + ($scope.presentation.templateName || "imageText") + ".html";
             $scope.currentFragmentIndex = 0;
             var dialogueFragments = [];
