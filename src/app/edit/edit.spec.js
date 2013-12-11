@@ -5,9 +5,31 @@
  * automatically.
  */
 describe( 'edit section', function() {
-    beforeEach( module( 'sokratik.atelier.edit' ) );
+    function $get(what) {
+        return jasmine.getEnv().currentSpec.$injector.get(what);
+    }
 
-    it( 'should have a dummy test', inject( function() {
+    function initStateTo(state, optionalParams) {
+        var $state = $get('$state'),
+            $q = $get('$q');
+        $state.transitionTo(state, optionalParams || {});
+        $q.flush();
+        expect($state.current).toBe(state);
+    }
+
+    beforeEach( module( 'sokratik.atelier.edit' ) );
+    var $compile;
+    var $rootScope;
+    beforeEach(inject(function(_$compile_, _$rootScope_,_$state_){
+        // The injector unwraps the underscores (_) from around the parameter names when matching
+        $compile = _$compile_;
+        $rootScope = _$rootScope_;
+        _$state_.go("edit.template");
+    }));
+
+
+
+    it( 'testing test', inject( function($state) {
         expect( true ).toBeTruthy();
     }));
 });

@@ -7,8 +7,8 @@ background
         function (apollo) {
             return {
                 "restrict": "A",
-                "transclude": true,
-                "template":"<div ng-transclude></div>" ,
+                "transclude": false,
+                "template":"" ,
                 compile: function (tElement) {
                     apollo.addMainAudio(ng.element(tElement)[0]);
                 }
@@ -19,8 +19,8 @@ background
         function (apollo) {
             return {
                 "restrict": "A",
-                "transclude": true,
-                "template":"<div ng-transclude></div>" ,
+                "transclude": false,
+                "template":"" ,
                 compile: function (tElement) {
                     apollo.addBGAudio(ng.element(tElement)[0]);
                 }

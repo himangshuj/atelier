@@ -39,6 +39,9 @@
                 getMainAudio: function () {
                     return _mainAudio;
                 },
+                getBGAudio: function () {
+                    return _backGroundAudio;
+                },
                 pause: function (context) {
                     _mainAudio.pause();
                     return context;
