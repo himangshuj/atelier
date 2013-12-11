@@ -42,7 +42,7 @@
             'ui.router',
             'titleService',
             'plusOne',
-            'sokratik.atelier.directives.minerva',
+            'sokratik.atelier.minerva.directives',
             'sokratik.atelier.services.istari',
             'ngSanitize'
         ])

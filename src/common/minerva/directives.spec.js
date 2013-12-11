@@ -3,7 +3,7 @@
  * translates the templates
  */
 describe('minerva edit mode text', function () {
-    beforeEach(module('sokratik.atelier.directives.minerva'));
+    beforeEach(module('sokratik.atelier.minerva.directives'));
     var scope, compile, element;
     var dialogue = "<sokratik-dialogue presentation=\"presentation\"" +
         "increase-images=\"increaseImages\"" +
@@ -95,7 +95,7 @@ describe('minerva edit mode text', function () {
     }));
 });
 describe("minerava dialogue controller test", function () {
-    beforeEach(module('sokratik.atelier.directives.minerva'));
+    beforeEach(module('sokratik.atelier.minerva.directives'));
     var controller, scope;
     beforeEach(inject(function ($controller, $rootScope) {
         controller = $controller;
@@ -121,7 +121,7 @@ describe("minerava dialogue controller test", function () {
     });
 });
 describe('minerva record mode text', function () {
-    beforeEach(module('sokratik.atelier.directives.minerva'));
+    beforeEach(module('sokratik.atelier.minerva.directives'));
     var scope, compile, element;
     var dialogue = "<sokratik-dialogue presentation=\"presentation\"" +
         "increase-images=\"increaseImages\"" +
@@ -193,7 +193,7 @@ describe('minerva record mode text', function () {
     }));
 });
 describe('minerva play mode text', function () {
-    beforeEach(module('sokratik.atelier.directives.minerva'));
+    beforeEach(module('sokratik.atelier.minerva.directives'));
     var scope, compile, element;
     var dialogue = "<sokratik-dialogue presentation=\"presentation\"" +
         "increase-images=\"increaseImages\"" +
@@ -268,7 +268,7 @@ describe('minerva play mode text', function () {
     }));
 });
 describe('minerva edit mode image', function () {
-    beforeEach(module('sokratik.atelier.directives.minerva'));
+    beforeEach(module('sokratik.atelier.minerva.directives'));
     var scope, compile, element;
     var dialogue = "<sokratik-dialogue presentation=\"presentation\"" +
         "increase-images=\"increaseImages\"" +
@@ -445,7 +445,7 @@ describe('minerva edit mode image', function () {
     }));
 });
 describe('minerva record mode image', function () {
-    beforeEach(module('sokratik.atelier.directives.minerva'));
+    beforeEach(module('sokratik.atelier.minerva.directives'));
     var scope, compile, element;
     var dialogue = "<sokratik-dialogue presentation=\"presentation\"" +
         "increase-images=\"increaseImages\"" +
@@ -544,7 +544,7 @@ describe('minerva record mode image', function () {
     }));
 });
 describe('minerva play mode image', function () {
-    beforeEach(module('sokratik.atelier.directives.minerva'));
+    beforeEach(module('sokratik.atelier.minerva.directives'));
     var scope, compile, element;
     var dialogue = "<sokratik-dialogue presentation=\"presentation\"" +
         "increase-images=\"increaseImages\"" +

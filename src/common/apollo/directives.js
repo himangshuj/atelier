@@ -30,4 +30,4 @@ background
     ng.module(app, ['sokratik.atelier.services.apollo'])
         .directive("sokratikAudioTrack", _sokratikAudioTrack)
         .directive("sokratikBackgroundAudioTrack",_sokratikBackgroundAudioTrack);
-})(angular,"sokratik.atelier.directives.apollo");
+})(angular,"sokratik.atelier.apollo.directives");

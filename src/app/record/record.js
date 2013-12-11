@@ -4,7 +4,7 @@
             'titleService',
             'plusOne',
             'sokratik.atelier.services.istari',
-            'sokratik.atelier.services.dialogue',
+            'sokratik.atelier.minerva.services',
             'sokratik.atelier.services.acoustics',
             'sokratik.atelier.services.sokratube',
             'sokratik.atelier.services.apollo',

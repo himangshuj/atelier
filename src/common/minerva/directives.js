@@ -206,7 +206,7 @@
 
         }];
     ng.module(app, ['sokratik.atelier.services.istari',
-            'sokratik.atelier.services.dialogue',
+            'sokratik.atelier.minerva.services',
             'ui.router',
             'ui.route',
             'ui.bootstrap',
@@ -236,4 +236,4 @@
                 return dialogueFragments;//returns a shallow copy
             };
         }]);
-})(angular, "sokratik.atelier.directives.minerva");
+})(angular, "sokratik.atelier.minerva.directives");

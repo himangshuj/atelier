@@ -1,7 +1,7 @@
 describe( 'apollo directive', function() {
     var element, scope,apolloService,compile;
 
-    beforeEach( module( 'sokratik.atelier.directives.apollo' ) );
+    beforeEach( module( 'sokratik.atelier.apollo.directives' ) );
     beforeEach(inject(function($compile, $rootScope,apollo){
         scope = $rootScope;
         apolloService = apollo;

@@ -96,4 +96,4 @@
         $provide.provider("dialogue", dialogueService);
 
     }]);
-})(angular, "sokratik.atelier.services.dialogue");
+})(angular, "sokratik.atelier.minerva.services");
