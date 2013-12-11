@@ -111,7 +111,7 @@
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
+                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) ;
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
@@ -122,7 +122,7 @@
         "play": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
+                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
@@ -210,7 +210,8 @@
             'ui.router',
             'ui.route',
             'ui.bootstrap',
-            'templates-app'
+            'templates-app',
+            'ngSanitize'
         ])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
@@ -234,7 +235,5 @@
             this.getFragments = function () {
                 return dialogueFragments;//returns a shallow copy
             };
-
         }]);
-
 })(angular, "sokratik.atelier.directives.minerva");

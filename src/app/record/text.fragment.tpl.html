@@ -1,1 +1,6 @@
-<span ng-class="model.css" ng-bind-html="model.value"></span>
+<span ng-if="!!model.value" ng-class="model.css">
+        {{model.value}}
+    </span>
+<span ng-if="!model.value" ng-class="model.css">
+        <br/>
+    </span>
