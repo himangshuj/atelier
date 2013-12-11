@@ -124,7 +124,7 @@
                         $state.go("edit", { images: images, templateName: "imageText"});
                     };
                     $scope.increaseImages = function () {
-                        changeTemplates((++images) % 5);
+                        changeTemplates((++images) % 20);
                     };
                     $scope.decreaseImages = function () {
                         if (images > 0) {
