@@ -207,8 +207,6 @@
         }];
     ng.module(app, ['sokratik.atelier.services.istari',
             'sokratik.atelier.minerva.services',
-            'ui.router',
-            'ui.route',
             'ui.bootstrap',
             'templates-app'
         ])

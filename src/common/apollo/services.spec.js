@@ -110,7 +110,7 @@ describe('apollo service main audio', function () {
             expect(element.currentTime).toBeCloseTo(0, 0);
             var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, $q.defer());
             resolved = false;
-            promise.then(function (resp) {
+            promise.then(function () {
                 resolved = true;
             });
             runs(function () {
