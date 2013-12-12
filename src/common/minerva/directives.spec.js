@@ -468,8 +468,6 @@ describe('minerva record mode image', function () {
             "default=\"http://blog.latterdaylearning.org/wp-content/uploads/2013/04/importance_of_education_1.jpg\"" +
             " caption=\"leaves\">" +
             "</sokratik-fragment>");
-
-
     }));
 
     it('Sokratik Dialogue link up Test with 1 fragment', inject(function () {

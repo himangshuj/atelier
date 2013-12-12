@@ -6,7 +6,7 @@
             'sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
             'sokratik.atelier.services.acoustics',
-            'sokratik.atelier.services.sokratube',
+            'sokratik.atelier.sokratube.services',
             'sokratik.atelier.apollo.services',
             'ngSanitize',
             'ngAnimate'])

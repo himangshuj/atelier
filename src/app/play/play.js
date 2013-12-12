@@ -41,7 +41,7 @@ var atelierPlayer = function (ng, app, answer) {
             'sokratik.atelier.minerva.services',
             'sokratik.atelier.minerva.directives',
             'sokratik.atelier.apollo.directives',
-            'sokratik.atelier.services.sokratube',
+            'sokratik.atelier.sokratube.services',
             'ui.bootstrap',
             'ngSanitize',
             'ngAnimate'])
