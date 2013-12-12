@@ -205,7 +205,7 @@
             };
 
         }];
-    ng.module(app, ['sokratik.atelier.services.istari',
+    ng.module(app, ['sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
             'ui.bootstrap',
             'templates-app'

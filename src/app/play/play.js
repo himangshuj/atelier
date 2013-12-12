@@ -37,7 +37,7 @@ var atelierPlayer = function (ng, app, answer) {
     ng.module(app, [
             'ui.router',
             'ui.route',
-            'sokratik.atelier.services.istari', ,
+            'sokratik.atelier.istari.services', ,
             'sokratik.atelier.minerva.services',
             'sokratik.atelier.minerva.directives',
             'sokratik.atelier.apollo.directives',

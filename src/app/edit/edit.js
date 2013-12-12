@@ -43,7 +43,6 @@
             'titleService',
             'plusOne',
             'sokratik.atelier.minerva.directives',
-            'sokratik.atelier.services.istari',
             'ngSanitize'
         ])
 
