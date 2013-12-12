@@ -9,20 +9,19 @@
         var _backGroundAudio = [];
         var _recordingStarted = null;
         var _seekAudio = function (context, deferred) {
-            console.log(_mainAudio.seekable);
             if ((_mainAudio.seekable || []).length > 0) {
                 _mainAudio.volume = 0;
                 var args = context.params;
                 var pausedInterval = parseInt(args.pausedInterval, 10);
                 _recordingStarted = _recordingStarted || (args.timeStamp - pausedInterval);
                 var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval) / 1000;
-                console.log("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
+                deferred.notify("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
                 _mainAudio.currentTime = reqdPosition;
                 _mainAudio.play();
                 _mainAudio.volume = 1;
-                deferred.resolve("Audio seeked");
+                deferred.resolve("Audio seeked " + _mainAudio.currentTime);
             } else {
-                console.log("Delaying");
+                deferred.notify("delaying");
                 _.delay(_seekAudio, 1000, context, deferred);
             }
 
@@ -79,4 +78,4 @@
 
         $provide.provider("apollo", apollo);
     }]);
-})(angular, "sokratik.atelier.services.apollo");
+})(angular, "sokratik.atelier.apollo.services");

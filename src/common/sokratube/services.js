@@ -79,7 +79,7 @@
         }];
     };
 
-    ng.module(app, ["sokratik.atelier.services.apollo"], ["$provide", function ($provide) {
+    ng.module(app, ["sokratik.atelier.apollo.services"], ["$provide", function ($provide) {
         $provide.provider("sokratube", _saas);
 
     }]);

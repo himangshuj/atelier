@@ -27,7 +27,7 @@ background
 
             };
         }];
-    ng.module(app, ['sokratik.atelier.services.apollo'])
+    ng.module(app, ['sokratik.atelier.apollo.services'])
         .directive("sokratikAudioTrack", _sokratikAudioTrack)
         .directive("sokratikBackgroundAudioTrack",_sokratikBackgroundAudioTrack);
 })(angular,"sokratik.atelier.apollo.directives");
