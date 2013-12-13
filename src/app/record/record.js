@@ -87,23 +87,30 @@
         }])
         .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder",
             function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder) {
-                answer.script = [];//reseting the script
+                answer.script = [];//reseting the script    //TODO This is crap
                 $scope.presentationId = answer._id;
-                answer.recordingStarted = new Date().getTime();
+                answer.recordingStarted = new Date().getTime();    //TODO this is crap
+
+                var pause = $scope.pause = function () {
+                    acoustics.pause(recorder);
+                    $scope.recording = false;
+                    recordAction({"fnName": "pause", "args": {},
+                        actionInitiated: new Date().getTime(), module: "apollo" });
+
+                };
 
                 $scope.record = function () {
                     $scope.recording = true;
                     acoustics.resume(recorder);
                     recordAction({"fnName": "resume", "args": {},
                         actionInitiated: new Date().getTime(), module: "apollo"});
-                    console.log("Recording started " + new Date().getTime());
-                    console.log("Resetting redo slide definition");
                     var instructionsToKeep = _.clone(answer.script);
                     $scope.redoSlide = function () {
                         "use strict";
                         anduril.insertScript(answer, instructionsToKeep);
                         recordAction({"fnName": "redo", "args": {}, module: "dialogue",
                             actionInitiated: new Date().getTime() });
+                        pause();
                         $state.go("record.activate", {dummy: _.size(answer.script)});
                     };
                 };
@@ -111,7 +118,6 @@
                 //then clause
                 $scope.complete = function () {
                     acoustics.stopRecording(recorder, answer._id).then(function (resp) {
-                        console.log(resp);
                         $q.when(anduril.completeRecord(answer))
                             .then(function () {
                                 "use strict";
@@ -120,18 +126,6 @@
                     });
                 };
 
-
-                var pause = $scope.pause = function () {
-                    acoustics.pause(recorder);
-                    console.log("pausing initiated" + new Date().getTime());
-                    _.defer(function () {
-                        recordAction({"fnName": "pause", "args": {},
-                            actionInitiated: new Date().getTime(), module: "apollo" });
-                    });
-                    $scope.recording = false;
-
-
-                };
 
                 $scope.$on('$stateChangeSuccess',
                     function () {
@@ -154,7 +148,8 @@
                 $scope.presentationId = answer._id;
                 $scope.activate(0);
             }])
-        .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction", "$q", "sokratube",
+        .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction",
+            "$q", "sokratube",
             function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q, sokratube) {
                 var page = parseInt($stateParams.page, 10);
                 $scope.page = page;
@@ -163,22 +158,14 @@
                 $scope.totalPages = _.size(answer.presentationData);
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
-                    function resetFragments() {
-                        if (_.size(fragment()) > 0) {  //TODO tie this properly with fragments in presentation also try prelinking and postlinking
-                            dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(ng.noop);
-                            $scope.totalFragments = _.size(fragment());
-                        } else {
-                            _.delay(resetFragments, 1000);//dom is not yet ready retry after 1000 ms
-                        }
-                    }
 
-                    resetFragments();
-                    $scope.totalFragments = _.size(fragment());
+                    _.defer(function () {
+                        dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(ng.noop);
+                        $scope.totalFragments = _.size(fragment());
+                    });
 
                 };
-                $scope.masterView = function () {
-                    recordAction(dialogue.changeState({subState: ".master", params: null}));
-                };
+
                 $scope.index = 0;
                 $scope.next = _.throttle(function () {
                     if ($scope.recording) {
@@ -192,14 +179,10 @@
                     $scope.pause();//pausing the audio
                     var videoId = existingVideo.params.videoId;
                     sokratube.initYTVideo({videoId: videoId}, $q.defer()).then(function (resp) {
-                        console.log(resp);
                         recordAction(resp);
                     });
                 };
-                $scope.previous = _.throttle(function () {
-                    $scope.totalFragments = _.size(fragmentFn());
-                    dialogue.hide({fragments: fragmentFn(), index: --$scope.index}, $q.defer()).then(recordAction);
-                }, 1500);
+
                 $scope.nextSlide = _.throttle(function () {
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 }, 1000);
