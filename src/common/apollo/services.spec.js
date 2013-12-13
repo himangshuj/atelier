@@ -43,7 +43,7 @@ describe('apollo service main audio', function () {
         } catch (t) {
             expect(true).toBeTruthy();
         }
-        expect(apollo.getMainAudio()).toBeNull();
+        expect(apollo.getMainAudio()).toBe(element);
         apollo.addMainAudio(element);
         expect(apollo.getMainAudio().src).toBe("audioLocation");
         expect(apollo.getMainAudio().play).toBeDefined();

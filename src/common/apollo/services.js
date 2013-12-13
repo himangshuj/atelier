@@ -29,11 +29,12 @@
         this.$get = ["$log", function ($log) {
             return {
                 addMainAudio: function (mainAudio) {
-                    _mainAudio = mainAudio;
                     mainAudio.play();
                     mainAudio.volume = 0;
                     _recordingStarted = null;
                     $log.info("[Play ] Audio played");
+                    _mainAudio = mainAudio;
+
                 },
                 getMainAudio: function () {
                     return _mainAudio;
@@ -42,7 +43,11 @@
                     return _backGroundAudio;
                 },
                 pause: function (context) {
-                    _mainAudio.pause();
+                    if ((!!_mainAudio)) {
+                        _mainAudio.pause();
+                    }else{
+                        $log.info("trying to pause null audio");
+                    }
                     return context;
                 },
                 resume: function (context, deferred) {

@@ -4,7 +4,6 @@
             'titleService',
             'plusOne'
         ])
-
         .config(["$stateProvider",function config($stateProvider) {
             $stateProvider.state('start', {
                 url: '/start'
