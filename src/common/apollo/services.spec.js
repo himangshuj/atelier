@@ -2,7 +2,7 @@ describe('apollo service main audio', function () {
     beforeEach(module('sokratik.atelier.apollo.services'));
     var element, apollo;
     var played = false;
-    var fakeAudio = function () {
+    var FakeAudio = function () {
         this.play = function () {
             this.onplay();
             this.paused = false;
@@ -18,7 +18,7 @@ describe('apollo service main audio', function () {
     };
 
     beforeEach(inject(function (_apollo_) {
-        element = new fakeAudio();
+        element = new FakeAudio();
 
         element.onplay = function () {
             played = true;
@@ -65,12 +65,12 @@ describe('apollo service main audio', function () {
             return ++iteration;
         }, "dummy delay failed in timeout", 1000);
         runs(function () {
-            expect(element.currentTime / 10).not.toBeCloseTo((new Date).getTime() / 10000, 0);
+            expect(element.currentTime / 10).not.toBeCloseTo((new Date()).getTime() / 10000, 0);
         });
     });
     it("resume main audio", inject(function ($q, $rootScope) {
 
-        var timeStamp = (new Date).getTime();
+        var timeStamp = (new Date()).getTime();
         var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp}}, $q.defer());
         var notified = false;
         var resolved = false;
@@ -134,7 +134,7 @@ describe('apollo service background audio', function () {
     beforeEach(module('sokratik.atelier.apollo.services'));
     var element, apollo;
     var played = false;
-    var fakeAudio = function () {
+    var FakeAudio = function () {
         this.play = function () {
             this.onplay();
             this.paused = false;
@@ -150,7 +150,7 @@ describe('apollo service background audio', function () {
     };
 
     beforeEach(inject(function (_apollo_) {
-        element = new fakeAudio();
+        element = new FakeAudio();
 
         element.onplay = function () {
             played = true;
@@ -192,5 +192,5 @@ describe('apollo service background audio', function () {
         expect(element.paused).toBeFalsy();
         apollo.stopBGAudio();
         expect(element.paused).toBeTruthy();
-    })
+    }) ;
 });

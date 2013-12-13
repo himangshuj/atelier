@@ -147,7 +147,7 @@ describe('Player Activate', function () {
         runs(function () {
             setTimeout(function () {
                 timeOutEnded = true;
-            }, 500)
+            }, 500);
         });
 
         waitsFor(function () {
@@ -265,8 +265,8 @@ describe('Player Activate', function () {
         expect(q.when).toHaveBeenCalled();
         expect(successFn.mock).toHaveBeenCalled();
         expect(dialogue.redo).toHaveBeenCalledWith({ params: { scriptIndex: 5, timeStamp: jasmine.any(Number),
-                page: 0, pausedInterval: 0 }, fragments: [  ] }
-            , deferred);
+                page: 0, pausedInterval: 0 }, fragments: [  ] },
+            deferred);
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);
     }));
     it("resume last", inject(function ($controller, $state, dialogue, apollo) {

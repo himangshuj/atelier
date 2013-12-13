@@ -86,7 +86,7 @@ describe('sokratube services ', function () {
         }, "sokratube not resolved", 3000);
         runs(function(){
             expect(dummyAudio.volume).toBe(0.1);
-        })
+        });
     }));
     it("modal video end close", inject(function (sokratube, $q, $rootScope) {
         var promise = sokratube.initYTVideo({videoId: "dummy",timeOut: null}, $q.defer());
@@ -129,7 +129,7 @@ describe('sokratube services ', function () {
         }, "sokratube not resolved", 3000);
         runs(function(){
             expect(dummyAudio.volume).toBe(0.1);
-        })
+        });
     }));
 
 

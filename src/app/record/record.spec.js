@@ -135,7 +135,7 @@ describe('record section control ', function () {
         runs(function () {
             setTimeout(function () {
                 timedOut = true;
-            }, 100)
+            }, 100);
         });
         waitsFor(function () {
             return timedOut;
@@ -164,7 +164,7 @@ describe('record section control ', function () {
             runs(function () {
                 setTimeout(function () {
                     timedOut = true;
-                }, 100)
+                }, 100)  ;
             });
             waitsFor(function () {
                 return timedOut;
@@ -294,7 +294,7 @@ describe("record active control", function () {
         {templateName: "t11", keyVals: {k10: "v10", k11: "v11", k12: "v12"}},
         {templateName: "t12", keyVals: {k1: "v1"}},
         {templateName: "t13", keyVals: {k1: "v1"}}
-    ],script:[]};
+    ], script: []};
     var fakeMethods = {recordAction: function (resp) {
         answer.script.push(resp);
     }, pause: angular.noop};
@@ -457,7 +457,7 @@ describe("record active control", function () {
             return "state Changed";
         });
         scope.nextSlide();
-        expect(dialogue.changeState).toHaveBeenCalledWith({ subState : '.activate', params : { page : 1 } });
+        expect(dialogue.changeState).toHaveBeenCalledWith({ subState: '.activate', params: { page: 1 } });
     }));
 
 });
