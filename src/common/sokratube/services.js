@@ -3,13 +3,13 @@
 (function (ng, app) {
 
 
-    var _videoModalCtrl = ["$scope", "$modalInstance", "$sce", "videoId", "deferred", "timeOut","apollo",
-        function ($scope, $modalInstance, $sce, videoId, deferred, timeOut,apollo) {
+    var _videoModalCtrl = ["$scope", "$modalInstance", "$sce", "videoId", "deferred", "timeOut", "apollo",
+        function ($scope, $modalInstance, $sce, videoId, deferred, timeOut, apollo) {
             var actionInitiated = new Date().getTime();
             apollo.muteBGAudio();
+            deferred.notify("modal has been initialized");
             var player;
             _.defer(function () {
-                console.log(videoId + "videoId");
                 player = new YT.Player("player", {
                     playerVars: { 'autoplay': 1, "origin": "closed-beta.sokratik.com:3000" },
                     videoId: videoId,
@@ -30,9 +30,8 @@
 
             var countDownStarted = false;
 
-            $scope.closeLabel = !!timeOut ? "skip":"done";
+            $scope.closeLabel = !!timeOut ? "skip" : "done";
 
-            console.log($scope.closeLabel);
 
             function onStateChange(event) {//asumes no buffering need to fix this
                 if (event.data == YT.PlayerState.PLAYING && !countDownStarted && !!timeOut) {
@@ -46,7 +45,7 @@
 
         }];
     var _saas = function () {//sokratube as a service
-        this.$get = ["$modal","apollo", function ($modal) {
+        this.$get = ["$modal", "apollo", function ($modal) {
             return {
                 initYTVideo: function (context, deferred) {
                     _.defer(function () {
@@ -79,8 +78,10 @@
         }];
     };
 
-    ng.module(app, ["sokratik.atelier.services.apollo"], ["$provide", function ($provide) {
+    ng.module(app, ["sokratik.atelier.apollo.services",
+        "templates-common",
+        "ui.bootstrap"], ["$provide", function ($provide) {
         $provide.provider("sokratube", _saas);
 
     }]);
-})(angular, 'sokratik.atelier.services.sokratube');
+})(angular, 'sokratik.atelier.sokratube.services');

@@ -6,7 +6,6 @@
 
         $scope.ok = function (selectedMedia) {
             var videoId = (selectedMedia || "watch?v=").split("watch?v=")[1];
-            console.log("here i am" + videoId);
             $modalInstance.close(videoId);
         };
 
@@ -42,8 +41,7 @@
             'ui.router',
             'titleService',
             'plusOne',
-            'sokratik.atelier.directives.minerva',
-            'sokratik.atelier.services.istari',
+            'sokratik.atelier.minerva.directives',
             'ngSanitize'
         ])
 
@@ -69,7 +67,7 @@
                 views: {
                     "main": {
                         templateUrl: "edit/edit.tpl.html",
-                        controller: 'EditCtrl'
+                        controller: 'EditController'
                     }
                 }
             })
@@ -85,7 +83,7 @@
 
         }])
 
-        .controller('EditCtrl',
+        .controller('EditController',
             ["$scope", "page", "$stateParams", "answer", "anduril", "$state", "$modal", "$log",
                 function ($scope, page, $stateParams, answer, anduril, $state, $modal, $log) {
                     //noinspection JSUnresolvedFunction
@@ -99,10 +97,8 @@
                     var images = $stateParams.images || 1;
                     $scope.images = images;
                     $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
-                    $scope.presentation.css = [""];
-                    $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     page = parseInt(page, 10);
-                    $scope.resume = function () {
+                    $scope.record = function () {
                         anduril.post(answer);
                         $state.go("record.master");
 
@@ -121,7 +117,7 @@
                     var changeTemplates = function (images) {
                         anduril.changeTemplate(answer, page, images + "imageText");
                         anduril.post(answer);
-                        $state.go("edit", { images: images, templateName: "imageText"});
+                        $state.go("edit.template", { images: images, templateName: "imageText"});
                     };
                     $scope.increaseImages = function () {
                         changeTemplates((++images) % 5);
@@ -134,8 +130,7 @@
                     $scope.add = function () {
                         anduril.insert(answer, page + 1, {templateName: '1imageText'});
                         anduril.post(answer);
-                        console.log("hello");
-                        $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
+                        $state.go("edit.template", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
                     $scope.addVideo = function () {
@@ -152,16 +147,15 @@
                         activePresentation.apps = activePresentation.apps || {};
                         var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"}) || {name: "YT"};
                         modalInstance.result.then(function (ytEmbedUrl) {
-                            console.log("videoId" + ytEmbedUrl);
                             activePresentation.apps = _.without(activePresentation.apps, existingVideo);
                             existingVideo.params = {"videoId": ytEmbedUrl};
                             activePresentation.apps = _.union(activePresentation.apps, existingVideo);
                             answer = anduril.put(answer, page, activePresentation);
-                            console.log("hello");
                         }, function () {
                             //noinspection JSUnresolvedFunction
                             $log.info('Modal dismissed at: ' + new Date());
                         });
+                        return modalInstance;
                     };
                 }])
         .controller('TemplateCtrl', function TemplateController() {

@@ -7,8 +7,8 @@ background
         function (apollo) {
             return {
                 "restrict": "A",
-                "transclude": true,
-                "template":"<div ng-transclude></div>" ,
+                "transclude": false,
+                "template":"" ,
                 compile: function (tElement) {
                     apollo.addMainAudio(ng.element(tElement)[0]);
                 }
@@ -19,15 +19,15 @@ background
         function (apollo) {
             return {
                 "restrict": "A",
-                "transclude": true,
-                "template":"<div ng-transclude></div>" ,
+                "transclude": false,
+                "template":"" ,
                 compile: function (tElement) {
                     apollo.addBGAudio(ng.element(tElement)[0]);
                 }
 
             };
         }];
-    ng.module(app, ['sokratik.atelier.services.apollo'])
+    ng.module(app, ['sokratik.atelier.apollo.services'])
         .directive("sokratikAudioTrack", _sokratikAudioTrack)
         .directive("sokratikBackgroundAudioTrack",_sokratikBackgroundAudioTrack);
-})(angular,"sokratik.atelier.directives.apollo");
+})(angular,"sokratik.atelier.apollo.directives");
