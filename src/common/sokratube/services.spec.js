@@ -10,7 +10,7 @@ describe('sokratube services ', function () {
                 options = _options;
                 this.getCurrentTime = function(){
                     return 10;
-                }
+                };
             },
             PlayerState: {PLAYING:1,END:2}
         };
