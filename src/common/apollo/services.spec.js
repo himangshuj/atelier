@@ -133,7 +133,7 @@ ddescribe('apollo service main audio', function () {
         deferred.cb = null;
         deferred.nb = null;
         deferredQ = {};
-        var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, q.defer());
+        promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, q.defer());
         resolved = false;
         promise.then(function () {
             resolved = true;
@@ -146,7 +146,7 @@ ddescribe('apollo service main audio', function () {
         expect(element.paused).toBeFalsy();
         element.currentTime = 10;
         apollo.pause();//records played Time till now;
-        var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, q.defer());
+        promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, q.defer());
         resolved = false;
         promise.then(function () {
             resolved = true;
