@@ -1,21 +1,18 @@
 (function (ng, app) {
     //noinspection JSUnresolvedVariable
-
     var AudioContext = window.webkitAudioContext || window.mozAudioContext || ng.noop;
-    var context = new AudioContext() || {};
+    var context = window.FakeAudioContext || new AudioContext() || {};
     //noinspection JSUnresolvedVariable
-
     var MediaStream = window.MediaStream || window.webkitMediaStream;
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
-    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var volume = context.createGain ? context.createGain() : {};
     var _streams = {};
     var _sentPackets = 0;
     var _receivedPackets = 0;
     var _closeStream = function (stream, iteration, deferred) {
         "use strict";
+        console.log('received packets: ' + _receivedPackets + ', sent packets: ' + _sentPackets);
         if (!stream.writable) {
             deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
             return;
@@ -98,7 +95,6 @@
     };
 
     var getAudioNode = function ($q) {
-        console.log("getting audionode");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -117,11 +113,11 @@
     var getMediaRecorder = function ($q) {
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
-        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        navigator.getUserMedia = fakeNavigator.mockGetUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.getUserMedia({audio: true}, function (mediaStream) {
             //noinspection JSUnresolvedFunction
+            var MediaRecorder = FakeMediaRecorder || MediaRecorder;
             var mediaRecorder = new MediaRecorder(mediaStream);
-            console.log("mediarecorder: " + mediaRecorder);
             deferred.resolve(mediaRecorder);
         }, function (err) {
             console.log("getUserMedia error: " + err);
@@ -141,7 +137,6 @@
                     } else {
                         _recorder.audionode.disconnect();
                         recorder.disconnect();
-                        volume.disconnect();
                     }
                     _recorder.stream.pause();
                 },
@@ -151,8 +146,7 @@
                         _recorder.mediaRecorder.resume();
                     }
                     else {
-                        _recorder.audionode.connect(volume);
-                        volume.connect(recorder);
+                        _recorder.audionode.connect();
                         //noinspection JSUnresolvedVariable
                         recorder.connect(context.destination);
                     }
@@ -164,7 +158,6 @@
                     else {
                         _recorder.audionode.disconnect();
                         recorder.disconnect();
-                        volume.disconnect();
                     }
                     _streams[answerId] = null;
                     var deferred = $q.defer();

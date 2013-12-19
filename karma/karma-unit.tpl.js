@@ -11,6 +11,7 @@ module.exports = function (config) {
         files: [
             <% scripts.forEach( function ( file ) { %>'<%= file %>',
                 <% }); %>
+            'src/common/acoustics/services.mocks.js',
             'src/**/*.js',
       'src/**/*.coffee',
     ],
@@ -48,4 +49,3 @@ module.exports = function (config) {
 
   });
 };
-
