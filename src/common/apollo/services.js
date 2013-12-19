@@ -23,7 +23,7 @@
                 var deltaTime = (_mainAudio.currentTime * 1000) - reqdPosition;
                 if (Math.abs((reqdPosition / 1000) - playedTillNow) < 0.2) {
                     _mainAudio.play();
-                    _mainAudio.currentTime = 0;
+                    _mainAudio.currentTime = reqdPosition/1000;
                     _mainAudio.volume = 1;
                     deferred.resolve("Audio seeked " + _mainAudio.currentTime);
                 } else if (deltaTime > 0) {
