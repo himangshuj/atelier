@@ -62,6 +62,7 @@ module.exports = {
             "vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js",
             "vendor/medium-editor/dist/js/medium.editor.min.js",
             "vendor/underscore/underscore-min.js",
+            "vendor/underscore.string/dist/underscore.string.min.js",
             "vendor/angular-animate/angular-animate.min.js"
         ],
         "css": [

@@ -8,21 +8,39 @@
         var _mainAudio = null;
         var _backGroundAudio = [];
         var _recordingStarted = null;
+        var playedTillNow = 0;
         var _seekAudio = function (context, deferred) {
-            console.log(_mainAudio.seekable);
             if ((_mainAudio.seekable || []).length > 0) {
+                if (_mainAudio.volume > 0) {
+                    playedTillNow = _mainAudio.currentTime;
+                }
                 _mainAudio.volume = 0;
                 var args = context.params;
                 var pausedInterval = parseInt(args.pausedInterval, 10);
                 _recordingStarted = _recordingStarted || (args.timeStamp - pausedInterval);
-                var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval) / 1000;
-                console.log("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
-                _mainAudio.currentTime = reqdPosition;
-                _mainAudio.play();
-                _mainAudio.volume = 1;
-                deferred.resolve("Audio seeked");
+                var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval);
+                deferred.notify("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
+                var deltaTime = (_mainAudio.currentTime * 1000) - reqdPosition;
+                if (Math.abs((reqdPosition / 1000) - playedTillNow) < 0.2) {
+                    _mainAudio.play();
+                    _mainAudio.currentTime = reqdPosition/1000;
+                    _mainAudio.volume = 1;
+                    deferred.resolve("Audio seeked " + _mainAudio.currentTime);
+                } else if (deltaTime > 0) {
+                    _mainAudio.pause();
+                    _.delay(function () {
+                        _mainAudio.play();
+                        _mainAudio.volume = 1;
+                    }, deltaTime);
+                    deferred.resolve("Audio seeked " + _mainAudio.currentTime);
+                } else {
+                    _mainAudio.play();
+                    _mainAudio.volume = 1;
+                    _.delay(deferred.resolve, -deltaTime, "Audio seeked " + _mainAudio.currentTime);
+                }
+
             } else {
-                console.log("Delaying");
+                deferred.notify("delaying");
                 _.delay(_seekAudio, 1000, context, deferred);
             }
 
@@ -30,17 +48,29 @@
         this.$get = ["$log", function ($log) {
             return {
                 addMainAudio: function (mainAudio) {
-                    _mainAudio = mainAudio;
                     mainAudio.play();
                     mainAudio.volume = 0;
+                    playedTillNow = 0;
                     _recordingStarted = null;
                     $log.info("[Play ] Audio played");
+                    _mainAudio = mainAudio;
+
                 },
                 getMainAudio: function () {
                     return _mainAudio;
                 },
+                getBGAudio: function () {
+                    return _backGroundAudio;
+                },
                 pause: function (context) {
-                    _mainAudio.pause();
+                    if ((!!_mainAudio)) {
+                        if (_mainAudio.volume > 0) {
+                            playedTillNow = _mainAudio.currentTime;
+                        }
+                        _mainAudio.pause();
+                    } else {
+                        $log.info("trying to pause null audio");
+                    }
                     return context;
                 },
                 resume: function (context, deferred) {
@@ -76,4 +106,4 @@
 
         $provide.provider("apollo", apollo);
     }]);
-})(angular, "sokratik.atelier.services.apollo");
+})(angular, "sokratik.atelier.apollo.services");

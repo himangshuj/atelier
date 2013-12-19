@@ -16,7 +16,7 @@
         function ($scope, $modalInstance, images, initImage, initCaption) {
             $scope.selected = {
                 image: initImage || images[0].url,
-                caption:initCaption
+                caption: initCaption
             };
             $scope.imageGroups = _.chain(images).
                 groupBy(function (image, index) {
@@ -26,14 +26,14 @@
                 .values()
                 .value();
             var ok = $scope.ok = function (selectedImage, selectedCaption) {
-                $modalInstance.close({selectedImage:selectedImage, selectedCaption:selectedCaption});
+                $modalInstance.close({selectedImage: selectedImage, selectedCaption: selectedCaption});
             };
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
             };
-            $scope.storeImage = function($event) {
+            $scope.storeImage = function ($event) {
                 $event.preventDefault();
-                ok($scope.selected.image,$scope.selected.caption);
+                ok($scope.selected.image, $scope.selected.caption);
             };
         }];
 
@@ -47,7 +47,7 @@
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
         scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
-        scope.model.caption = sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
+        scope.model.caption = sokratikDialogueCtrl.getProperty(attrs.model + '_Caption');
         scope.model.css = ["fragment"];
         if (!_.str.isBlank(scope.model.value)) {
             sokratikDialogueCtrl.addFragment(scope.model);
@@ -64,15 +64,13 @@
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 // Listen for change events to enable binding
-                element.on('blur keyup change', function () {
-                    scope.$apply(read);
-                });
-                editCommonLink(scope, attrs);
 
                 // Write data to the model
-                function read() {
+                scope.read = function () {
                     sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
-                }
+                };
+                editCommonLink(scope, attrs);
+
             },
             "image": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
@@ -83,10 +81,10 @@
                         templateUrl: 'edit/image.modal.tpl.html',
                         controller: _imageSelectionModal,
                         resolve: {
-                            initCaption: function(){
-                                return sokratikDialogueCtrl.getProperty(attrs.model+'_Caption');
+                            initCaption: function () {
+                                return sokratikDialogueCtrl.getProperty(attrs.model + '_Caption');
                             },
-                            initImage: function(){
+                            initImage: function () {
                                 return sokratikDialogueCtrl.getProperty(attrs.model);
                             },
                             images: function () {
@@ -97,13 +95,14 @@
 
                     modalInstance.result.then(function (selected) {
                         scope.model.value = _injectors.$sce.trustAsHtml(selected.selectedImage);
-                        scope.model.caption = sokratikDialogueCtrl.getProperty(selected.selectedCaption);
+                        scope.model.caption = selected.selectedCaption;
                         sokratikDialogueCtrl.setProperty(attrs.model, selected.selectedImage);
-                        sokratikDialogueCtrl.setProperty(attrs.model+'_Caption', selected.selectedCaption);
+                        sokratikDialogueCtrl.setProperty(attrs.model + '_Caption', selected.selectedCaption);
                     }, function () {
                         //noinspection JSUnresolvedFunction
                         _injectors.$log.info('Modal dismissed at: ' + new Date());
                     });
+                    return modalInstance;
                 };
 
             }
@@ -112,7 +111,7 @@
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
+                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) ;
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
@@ -123,7 +122,7 @@
         "play": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) || "<br/>";
+                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
@@ -163,13 +162,12 @@
                 "templateUrl": function (tElement, tAttrs) {
                     return $state.current.data.mode + "/" + ng.lowercase(tAttrs.type || "text") + ".fragment.tpl.html";
                 },
-                require: "?^sokratikDialogue",
+                require: "^sokratikDialogue",
                 "scope": {
                     "model": "="
                 },
                 compile: function (tElement, tAttrs) {
                     return {pre: _fragmentLink[$state.current.data.mode][ng.lowercase(tAttrs.type || "text")]};
-
                 }
 
             };
@@ -196,27 +194,7 @@
                     decreaseImages: "="
                 },
 
-                controller: ["$scope", function ($scope) {
-                    $scope.templateName = "/views/templates/" + ($scope.presentation.templateName || "imageText") + ".html";
-                    $scope.currentFragmentIndex = 0;
-                    var dialogueFragments = [];
-                    this.addFragment = function (dialogueFragment) {
-                        dialogueFragments = _.chain(dialogueFragments)
-                            .union(dialogueFragment)
-                            .flatten()
-                            .value();
-                    };
-                    this.getProperty = function (propertyKey, defaultValue) {
-                        return ($scope.presentation.keyVals || {})[propertyKey] || defaultValue;
-                    };
-
-                    this.setProperty = function (propertyKey, value) {
-                        ($scope.presentation.keyVals || {})[propertyKey] = value;
-                    };
-                    this.getFragments = function () {
-                        return dialogueFragments;//returns a shallow copy
-                    };
-                }],
+                controller: "DialogueController",
                 controllerAs: "dialogueCtrl",
                 compile: function () {
                     return _dialogueLink[$state.current.data.mode];
@@ -227,8 +205,32 @@
             };
 
         }];
-    ng.module(app, ['sokratik.atelier.services.istari', 'sokratik.atelier.services.dialogue'])
+    ng.module(app, ['sokratik.atelier.istari.services',
+            'sokratik.atelier.minerva.services',
+            'ui.bootstrap',
+            'templates-app'
+        ])
         .directive("sokratikFragment", _sokratikFragmentDirective)
-        .directive("sokratikDialogue", _sokratikDialogueContainerDirective);
+        .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
+        .controller("DialogueController", ["$scope", function ($scope) {
+            $scope.templateName = "/views/templates/" + ($scope.presentation.templateName || "imageText") + ".html";
+            $scope.currentFragmentIndex = 0;
+            var dialogueFragments = [];
+            this.addFragment = function (dialogueFragment) {
+                dialogueFragments = _.chain(dialogueFragments)
+                    .union(dialogueFragment)
+                    .flatten()
+                    .value();
+            };
+            this.getProperty = function (propertyKey, defaultValue) {
+                return ($scope.presentation.keyVals || {})[propertyKey] || defaultValue;
+            };
 
-})(angular, "sokratik.atelier.directives.minerva");
+            this.setProperty = function (propertyKey, value) {
+                ($scope.presentation.keyVals || {})[propertyKey] = value;
+            };
+            this.getFragments = function () {
+                return dialogueFragments;//returns a shallow copy
+            };
+        }]);
+})(angular, "sokratik.atelier.minerva.directives");

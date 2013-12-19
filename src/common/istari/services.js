@@ -65,7 +65,6 @@
                 changeTemplate: function (answer, page, templateName) {
                     "use strict";
                     var templateFragment = answer.presentationData;
-                    console.log("[Old:" + templateFragment[page].templateName + "] [New" + templateName + "]");
                     templateFragment[page].templateName = templateName;
                 },
                 remove: function (answer, page) {
@@ -76,10 +75,7 @@
                 },
                 post: function (answer) {
                     //noinspection JSUnresolvedFunction
-                    return answer.$update(function (resp) {
-                        "use strict";
-                        console.log("I have updated" + ng.toJson(resp));
-                    });
+                    return answer.$update();
                 },
                 fetchImages: _fetchImages,
                 fetchAnswer: function (answerId) {
@@ -99,4 +95,4 @@
         ]
         ;
     };
-})(angular, "sokratik.atelier.services.istari");
+})(angular, "sokratik.atelier.istari.services");

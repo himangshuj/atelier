@@ -1,16 +1,12 @@
 (function (ng, app) {
     //noinspection JSUnresolvedVariable
-
     var AudioContext = window.webkitAudioContext || window.mozAudioContext || ng.noop;
-    var context = new AudioContext() || {};
+    var context = window.FakeAudioContext || new AudioContext() || {};
     //noinspection JSUnresolvedVariable
-
     var MediaStream = window.MediaStream || window.webkitMediaStream;
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
-    //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var volume = context.createGain ? context.createGain() : {};
     var _streams = {};
     var _sentPackets = 0;
     var _receivedPackets = 0;
@@ -98,7 +94,6 @@
     };
 
     var getAudioNode = function ($q) {
-        console.log("getting audionode");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -117,11 +112,11 @@
     var getMediaRecorder = function ($q) {
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
-        navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        navigator.getUserMedia = fakeNavigator.mockGetUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.getUserMedia({audio: true}, function (mediaStream) {
             //noinspection JSUnresolvedFunction
+            var MediaRecorder = FakeMediaRecorder || MediaRecorder;
             var mediaRecorder = new MediaRecorder(mediaStream);
-            console.log("mediarecorder: " + mediaRecorder);
             deferred.resolve(mediaRecorder);
         }, function (err) {
             console.log("getUserMedia error: " + err);
@@ -141,7 +136,6 @@
                     } else {
                         _recorder.audionode.disconnect();
                         recorder.disconnect();
-                        volume.disconnect();
                     }
                     _recorder.stream.pause();
                 },
@@ -151,20 +145,19 @@
                         _recorder.mediaRecorder.resume();
                     }
                     else {
-                        _recorder.audionode.connect(volume);
-                        volume.connect(recorder);
                         //noinspection JSUnresolvedVariable
+                        _recorder.audionode.connect(recorder);
                         recorder.connect(context.destination);
                     }
                 },
                 stopRecording: function (_recorder, answerId) {
                     if (_recorder.mediaRecorder) {
+
                         _recorder.mediaRecorder.stop();
                     }
                     else {
                         _recorder.audionode.disconnect();
                         recorder.disconnect();
-                        volume.disconnect();
                     }
                     _streams[answerId] = null;
                     var deferred = $q.defer();
@@ -174,6 +167,7 @@
 
                 getStream: function (answerId, recorder) {
                     if (!!$window.MediaRecorder) {
+
                         return streamOgg(recorder, answerId, $q, $location);
                     } else {
                         return streamRaw(answerId, $q, $location);
@@ -186,8 +180,6 @@
 
                     } else {
                         return getAudioNode($q);
-
-
                     }
                 }
             };
@@ -199,4 +191,4 @@
 
     }]);
 
-})(angular, 'sokratik.atelier.services.acoustics');
+})(angular, 'sokratik.atelier.acoustics.services');

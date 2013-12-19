@@ -34,7 +34,7 @@
          */
         var _changeFragmentClass = function (fragment, classToAdd, classToRemove) {
             fragment.css = _.chain(fragment.css)
-                .without(classToRemove)
+                .difference(classToRemove)
                 .union(classToAdd)
                 .value();
             return fragment;
@@ -54,7 +54,7 @@
                 makeVisible: function (context, deferred) {
                     var actionInitiated = new Date().getTime();
                     _.delay(function () {
-                        _changeFragmentClass(context.fragments[context.index], ["animated", "fadeIn"], "fragment");
+                        _changeFragmentClass(context.fragments[context.index], ["animated", "fadeIn"], ["fragment"]);
                         deferred.resolve({"fnName": "makeVisible", "args": {index: context.index},
                             actionInitiated: actionInitiated, module: "dialogue" });
                     });
@@ -87,13 +87,13 @@
                     return context;
                 }
             };
-
         }];
-
     };
-
-    ng.module(app, [], ["$provide", function ($provide) {
+    ng.module(app,
+        ['ui.router',
+        'ui.route'],
+        ["$provide", function ($provide) {
         $provide.provider("dialogue", dialogueService);
 
     }]);
-})(angular, "sokratik.atelier.services.dialogue");
+})(angular, "sokratik.atelier.minerva.services");
