@@ -199,4 +199,4 @@
 
     }]);
 
-})(angular, 'sokratik.atelier.services.acoustics');
+})(angular, 'sokratik.atelier.acoustics.services');

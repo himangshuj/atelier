@@ -5,7 +5,7 @@
             'plusOne',
             'sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
-            'sokratik.atelier.services.acoustics',
+            'sokratik.atelier.acoustics.services',
             'sokratik.atelier.sokratube.services',
             'sokratik.atelier.apollo.services',
             'ngSanitize',
