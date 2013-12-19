@@ -115,7 +115,7 @@ describe('minerva services fragment changes', function () {
             expect(fragments[4].css).not.toContain("fragment");
             expect(fragments[3].css).toContain("fragment");
 
-        })
+        });
     }));
     it("hide fragment", inject(function (dialogue, $q, $rootScope) {
         var modifiedFragments = _.map(fragments, function (fragment) {

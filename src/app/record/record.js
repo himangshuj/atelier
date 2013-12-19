@@ -5,7 +5,7 @@
             'plusOne',
             'sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
-            'sokratik.atelier.services.acoustics',
+            'sokratik.atelier.acoustics.services',
             'sokratik.atelier.sokratube.services',
             'sokratik.atelier.apollo.services',
             'ngSanitize',
@@ -19,15 +19,12 @@
                         return anduril.fetchAnswer($stateParams.presentationId);
                     }],
                     mediaRecorderOrAudioNode: ["acoustics", function (acoustics) {
-                        console.log(1);
                         return acoustics.mediaRecorderOrAudioNode();
                     }],
                     stream: ["acoustics", "$stateParams", "mediaRecorderOrAudioNode", function (acoustics, $stateParams, mediaRecorderOrAudioNode) {
-                        console.log(2);
                         return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode);
                     }],
                     recorder: ["mediaRecorderOrAudioNode", "stream", "$window", function (mediaRecorderOrAudioNode, stream, $window) {
-                        console.log(3);
                         if (!!$window.MediaRecorder) {
                             return {mediaRecorder: mediaRecorderOrAudioNode,
                                 stream: stream};
@@ -39,7 +36,6 @@
                     }],
                     recordAction: ["anduril", "answer", function (anduril, answer) {
                         "use strict";
-                        console.log("i");
                         return function (resp) {
                             return anduril.recordAction(answer, resp);
                         };

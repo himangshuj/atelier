@@ -17,6 +17,50 @@ describe('apollo service main audio', function () {
         this.seekable = [];
     };
 
+    var deferredQ = {};
+    var deferred = {promise: {then: function (cb, err, nb) {
+        deferred.cb = cb;
+        if (!!deferredQ.cb) {
+            (cb || angular.noop)(deferredQ.cb);
+            deferredQ.cb = null;
+        }
+        if (!!deferredQ.nb) {
+            (nb || angular.noop)(deferredQ.nb);
+            deferredQ.nb = null;
+        }
+        deferred.nb = nb;
+    }},
+        resolve: function (resp) {
+            deferred.resp = resp;
+            deferredQ["cb"] = resp;
+            if (deferred.cb) {
+                deferred.cb(resp);
+                deferred.cb = null;
+            }
+
+        },
+        notify: function (resp) {
+            deferred.respNot = resp;
+            deferredQ["nb"] = resp;
+            if (deferred.nb) {
+                deferred.nb(resp);
+            }
+        }
+
+    };
+    var q = {
+        defer: function () {
+            return deferred;
+        },
+        when: function () {
+            return {
+                then: function (fn) {
+                    successFn.mock(fn);
+                }
+            };
+        }
+    };
+
     beforeEach(inject(function (_apollo_) {
         element = new FakeAudio();
 
@@ -68,10 +112,11 @@ describe('apollo service main audio', function () {
             expect(element.currentTime / 10).not.toBeCloseTo((new Date()).getTime() / 10000, 0);
         });
     });
-    it("resume main audio", inject(function ($q, $rootScope) {
+    it("resume main audio", inject(function ($rootScope) {
 
         var timeStamp = (new Date()).getTime();
-        var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp}}, $q.defer());
+        jasmine.Clock.useMock();
+        var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp}}, q.defer());
         var notified = false;
         var resolved = false;
         promise.then(function () {
@@ -80,55 +125,43 @@ describe('apollo service main audio', function () {
             notified = true;
             element.seekable.push(1);//dummy entry to enable resume
         });
-        $rootScope.$digest();
-        var scope = $rootScope.$new();
-        runs(function () {
-            setTimeout(function () {
-                scope.$apply(function () {
-                });
-            }, 1000);
+        expect(notified).toBeTruthy();
+        expect(resolved).toBeFalsy();
+        jasmine.Clock.tick(1001);  //seekable was not true as yet
+        expect(resolved).toBeTruthy();
+        expect(element.currentTime).toBeCloseTo(0, 0);
+        deferred.cb = null;
+        deferred.nb = null;
+        deferredQ = {};
+        promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, q.defer());
+        resolved = false;
+        promise.then(function () {
+            resolved = true;
         });
+        expect(resolved).toBeFalsy();
+        jasmine.Clock.tick(1001);  //audio lags and hence resolve happens later
+        expect(resolved).toBeTruthy();
+        expect(element.currentTime / 10).toBeCloseTo(0, 0);// a lot of set time outs
+        expect(element.volume).toBeCloseTo(1, 0);
+        expect(element.paused).toBeFalsy();
+        element.currentTime = 10;
+        apollo.pause();//records played Time till now;
+        promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, q.defer());
+        resolved = false;
+        promise.then(function () {
+            resolved = true;
+        });
+        expect(resolved).toBeTruthy();
+        expect(element.paused).toBeTruthy();
+        jasmine.Clock.tick(9901);
+        expect(element.paused).toBeFalsy();
+        element.currentTime = 20;
+        promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 19100}}, q.defer());
+        expect(element.currentTime ).toBeCloseTo(20, 0);// a lot of set time outs
 
-        waitsFor(function () {
-            return notified;
-        }, "seek Audio has not been notified", 3000);
-        runs(function () {
-            expect(notified).toBeTruthy();
-            expect(resolved).toBeFalsy();
-        });
-        runs(function () {
-            setTimeout(function () {
-                scope.$apply(function () {
-                });
-            }, 1000);
-        });
-        waitsFor(function () {
-            return resolved;
-        }, "seek Audio has not been resolved", 3000);
-        runs(function () {
-            expect(resolved).toBeTruthy();
-            expect(element.currentTime).toBeCloseTo(0, 0);
-            var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 1000}}, $q.defer());
-            resolved = false;
-            promise.then(function () {
-                resolved = true;
-            });
-            runs(function () {
-                setTimeout(function () {
-                    scope.$apply(function () {
-                    });
-                }, 1000);
-            });
-            waitsFor(function () {
-                return resolved;
-            }, "seek Audio has not been resolved", 5000);
-            runs(function () {
-                expect(resolved).toBeTruthy();
-                expect(element.currentTime/10).toBeCloseTo(0, 0);// a lot of set time outs
-                expect(element.volume).toBeCloseTo(1,0);
-            });
-        });
+
     }));
+
 });
 describe('apollo service background audio', function () {
     beforeEach(module('sokratik.atelier.apollo.services'));
@@ -164,33 +197,33 @@ describe('apollo service background audio', function () {
             }, 1000);
         });
     }));
-    it("test BG init",inject(function(){
+    it("test BG init", inject(function () {
         expect(element.loop).toBeUndefined();
         apollo.addBGAudio(element);
         expect(element.volume).toBe(0);
         expect(element.loop).toBeTruthy();
 
     }));
-    it("test BG Audio init",inject(function(){
+    it("test BG Audio init", inject(function () {
         apollo.initBGAudio();
         expect(element.volume).toBe(0);
         apollo.addBGAudio(element);
         apollo.initBGAudio();
         expect(element.volume).toBe(0.1);
     }));
-    it("mute bg audio test",function(){
+    it("mute bg audio test", function () {
         apollo.addBGAudio(element);
         apollo.initBGAudio();
         expect(element.volume).toBe(0.1);
         apollo.muteBGAudio();
         expect(element.volume).toBe(0);
     });
-    it("pause bg audio test",function(){
+    it("pause bg audio test", function () {
         apollo.addBGAudio(element);
         apollo.initBGAudio();
         expect(element.volume).toBe(0.1);
         expect(element.paused).toBeFalsy();
         apollo.stopBGAudio();
         expect(element.paused).toBeTruthy();
-    }) ;
+    });
 });
