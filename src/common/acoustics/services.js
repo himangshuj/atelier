@@ -12,7 +12,6 @@
     var _receivedPackets = 0;
     var _closeStream = function (stream, iteration, deferred) {
         "use strict";
-        console.log('received packets: ' + _receivedPackets + ', sent packets: ' + _sentPackets);
         if (!stream.writable) {
             deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
             return;
@@ -146,13 +145,14 @@
                         _recorder.mediaRecorder.resume();
                     }
                     else {
-                        _recorder.audionode.connect();
                         //noinspection JSUnresolvedVariable
+                        _recorder.audionode.connect(recorder);
                         recorder.connect(context.destination);
                     }
                 },
                 stopRecording: function (_recorder, answerId) {
                     if (_recorder.mediaRecorder) {
+
                         _recorder.mediaRecorder.stop();
                     }
                     else {
@@ -167,6 +167,7 @@
 
                 getStream: function (answerId, recorder) {
                     if (!!$window.MediaRecorder) {
+
                         return streamOgg(recorder, answerId, $q, $location);
                     } else {
                         return streamRaw(answerId, $q, $location);
@@ -179,8 +180,6 @@
 
                     } else {
                         return getAudioNode($q);
-
-
                     }
                 }
             };

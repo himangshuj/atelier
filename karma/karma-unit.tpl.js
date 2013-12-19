@@ -11,7 +11,7 @@ module.exports = function (config) {
         files: [
             <% scripts.forEach( function ( file ) { %>'<%= file %>',
                 <% }); %>
-            'src/common/acoustics/services.mocks.js',
+            'src/testingmocks/acoustics.spec.js',
             'src/**/*.js',
       'src/**/*.coffee',
     ],

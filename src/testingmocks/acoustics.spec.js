@@ -3,6 +3,7 @@ var FakeMediaRecorder = function(mediaStream) {
     this.ondataavailable = null;
     this.timeSlice = 2000;
 
+
     this.start = function(timeSlice) {
         this.state = 'recording';
         this.timeSlice = timeSlice;
