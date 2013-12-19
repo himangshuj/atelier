@@ -1,4 +1,4 @@
-ddescribe('apollo service main audio', function () {
+describe('apollo service main audio', function () {
     beforeEach(module('sokratik.atelier.apollo.services'));
     var element, apollo;
     var played = false;
@@ -112,7 +112,7 @@ ddescribe('apollo service main audio', function () {
             expect(element.currentTime / 10).not.toBeCloseTo((new Date()).getTime() / 10000, 0);
         });
     });
-    iit("resume main audio", inject(function ($rootScope) {
+    it("resume main audio", inject(function ($rootScope) {
 
         var timeStamp = (new Date()).getTime();
         jasmine.Clock.useMock();
