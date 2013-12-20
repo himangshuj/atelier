@@ -80,12 +80,8 @@
                         $state.go($state.current.data.mode + context.subState, context.params);
                     });
                     return  result;
-                },
-
-                redo: function (context) {
-                    "use strict";
-                    return context;
                 }
+
             };
         }];
     };
