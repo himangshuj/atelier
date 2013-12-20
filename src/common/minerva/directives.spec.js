@@ -375,6 +375,42 @@ describe('minerva edit mode image', function () {
         expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBe(defaultImage);
         expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("new caption");
     }));
+    it("sokratik image modal internal npe check", inject(function ($stateParams, $httpBackend,$document) {
+        scope.presentation = {"templateName": "1Image", keyVals: {}};
+        $httpBackend.when('GET', '/related-images/testId').respond(null);
+        element = compile(dialogue)(scope);
+        $stateParams.questionId = "testId";
+        scope.$digest();
+        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
+        var fragmentElement = angular.element(dialogueElement.children()[0]);
+        fragmentElement.children().scope().addImage();
+        $httpBackend.flush();
+        var modal = angular.element($document.find("body")[0]);
+        scope.$$childTail.selected.caption="new caption";
+
+        angular.element(modal.find("button")[1]).triggerHandler("click");
+        expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
+        expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("new caption");
+    }));
+    it("sokratik image modal internal npe check for an array of null", inject(function ($stateParams, $httpBackend,$document) {
+        scope.presentation = {"templateName": "1Image", keyVals: {}};
+        $httpBackend.when('GET', '/related-images/testId').respond([null]);
+        element = compile(dialogue)(scope);
+        $stateParams.questionId = "testId";
+        scope.$digest();
+        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
+        var fragmentElement = angular.element(dialogueElement.children()[0]);
+        fragmentElement.children().scope().addImage();
+        $httpBackend.flush();
+        var modal = angular.element($document.find("body")[0]);
+        scope.$$childTail.selected.caption="new caption";
+
+        angular.element(modal.find("button")[1]).triggerHandler("click");
+        expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
+        expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("new caption");
+    }));
     it("sokratik image modal external", inject(function ($stateParams, $httpBackend,$document) {
         scope.presentation = {"templateName": "1Image", keyVals: {}};
         $httpBackend.when('GET', '/related-images/testId').respond([
