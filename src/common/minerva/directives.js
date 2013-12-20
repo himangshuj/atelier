@@ -15,7 +15,7 @@
     var _imageSelectionModal = ["$scope", "$modalInstance", "images", "initImage", "initCaption",
         function ($scope, $modalInstance, images, initImage, initCaption) {
             $scope.selected = {
-                image: initImage || images[0].url,
+                image: initImage || (((images || [{}])[0]) || {}) .url,
                 caption: initCaption
             };
             $scope.imageGroups = _.chain(images).
