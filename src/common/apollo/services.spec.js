@@ -157,10 +157,65 @@ describe('apollo service main audio', function () {
         expect(element.paused).toBeFalsy();
         element.currentTime = 20;
         promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 19100}}, q.defer());
-        expect(element.currentTime ).toBeCloseTo(20, 0);// a lot of set time outs
-
+        expect(element.currentTime).toBeCloseTo(20, 0);// a lot of set time outs
 
     }));
+
+    it("redo main audio", inject(function ($rootScope) {
+        var timeStamp = (new Date()).getTime();
+        jasmine.Clock.useMock();
+        var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp}}, q.defer());
+        var notified = false;
+        var resolved = false;
+        promise.then(function () {
+            resolved = true;
+        }, angular.noop, function () {
+            notified = true;
+            element.seekable.push(1);//dummy entry to enable resume
+        });
+        expect(notified).toBeTruthy();
+        expect(resolved).toBeTruthy();
+        jasmine.Clock.tick(1001);  //seekable was not true as yet
+        expect(resolved).toBeTruthy();
+        expect(notified).toBeTruthy();
+        expect(element.currentTime).toBeCloseTo(0, 0);
+        deferred.cb = null;
+        deferred.nb = null;
+        deferredQ = {};
+        resolved = false;
+        notified = false;
+        promise = apollo.redo({params: {pausedInterval: 2000, timeStamp: timeStamp + 2000}}, q.defer());
+        promise.then(function () {
+            resolved = true;
+        }, angular.noop, function () {
+            notified = true;
+            element.seekable.push(1);//dummy entry to enable resume
+        });
+        expect(element.currentTime).toBeCloseTo(1, 0);
+        promise = apollo.resume({params: {pausedInterval: 2000, timeStamp: timeStamp + 2100}}, q.defer());
+        expect(element.currentTime).toBeCloseTo(1.1, 1);
+        expect(element.paused).toBeFalsy();
+        expect(resolved).toBeTruthy();
+        deferred.cb = null;
+        deferred.nb = null;
+        deferredQ = {};
+        resolved = false;
+        notified = false;
+        promise = apollo.resume({params: {pausedInterval: 2000, timeStamp: timeStamp + 3100}}, q.defer());
+        promise.then(function () {
+            resolved = true;
+        }, angular.noop, function () {
+            notified = true;
+            element.seekable.push(1);//dummy entry to enable resume
+        });
+        expect(element.currentTime).toBeCloseTo(1.1, 1);
+        expect(element.paused).toBeFalsy();
+        expect(resolved).toBeFalsy();
+        jasmine.Clock.tick(1001);
+        expect(resolved).toBeTruthy();
+
+    }));
+
 
 });
 describe('apollo service background audio', function () {

@@ -37,7 +37,7 @@ var answer = {_id: "answerId",
             actionInitiated: startTime + 4000, module: "dialogue"},
         {fnName: "redo",
             args: { params: {page: 0}},
-            actionInitiated: startTime + 9000, module: "dialogue"},
+            actionInitiated: startTime + 9000, module: "apollo"},
         {fnName: "pause",
             args: { params: {page: 0}},
             actionInitiated: startTime + 10000, module: "apollo"} ,
@@ -252,7 +252,7 @@ describe('Player Activate', function () {
         spyOn(_, "defer").andCallFake(function (fn) {
             fn();
         });
-        spyOn(dialogue, "redo");
+        spyOn(apollo, "redo");
         expect(scope.presentation).toBe(presentationData[0]);
         expect(scope.presentationId).toBe("answerId");
         expect(_.delay).not.toHaveBeenCalled();
@@ -264,7 +264,7 @@ describe('Player Activate', function () {
         jasmine.Clock.tick(5);
         expect(q.when).toHaveBeenCalled();
         expect(successFn.mock).toHaveBeenCalled();
-        expect(dialogue.redo).toHaveBeenCalledWith({ params: { scriptIndex: 5, timeStamp: jasmine.any(Number),
+        expect(apollo.redo).toHaveBeenCalledWith({ params: { scriptIndex: 5, timeStamp: jasmine.any(Number),
                 page: 0, pausedInterval: 0 }, fragments: [  ] },
             deferred);
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);

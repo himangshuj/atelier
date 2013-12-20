@@ -62,6 +62,16 @@
                 getBGAudio: function () {
                     return _backGroundAudio;
                 },
+                redo: function(context,deferred){
+                    var args = context.params;
+                    var pausedInterval = parseInt(args.pausedInterval, 10);
+                    var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval)/1000;
+                    deferred.notify("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
+                    _mainAudio.currentTime = reqdPosition;
+                    _mainAudio.pause();
+                    deferred.resolve("Audio seeked " + _mainAudio.currentTime);
+                    return deferred.promise;
+                },
                 pause: function (context) {
                     if ((!!_mainAudio)) {
                         if (_mainAudio.volume > 0) {
