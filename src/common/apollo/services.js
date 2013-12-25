@@ -52,7 +52,6 @@
                     mainAudio.volume = 0;
                     playedTillNow = 0;
                     _recordingStarted = null;
-                    $log.info("[Play ] Audio played");
                     _mainAudio = mainAudio;
 
                 },
@@ -79,7 +78,7 @@
                         }
                         _mainAudio.pause();
                     } else {
-                        $log.info("trying to pause null audio");
+                      //  $log.info("trying to pause null audio");
                     }
                     return context;
                 },
@@ -92,7 +91,7 @@
                     backGroundAudio.play();
                     backGroundAudio.volume = 0;
                     backGroundAudio.loop = true;
-                    $log.info("[Play ] BackGround Audio played");
+                   // $log.info("[Play ] BackGround Audio played");
                 },
                 initBGAudio: function (index, volume) {
 
