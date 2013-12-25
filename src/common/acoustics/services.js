@@ -29,7 +29,8 @@
         if (_streams[answerId]) {
             return _streams[answerId];
         }
-        var client = new BinaryClient("ws://socket" + $location.host + ":" + $location.port() + "/writer");
+        var client = new BinaryClient("ws://socket." + $location.host + ":" + $location.port() + "/writer");
+        console.log(client);
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
