@@ -153,7 +153,6 @@
                             answer = anduril.put(answer, page, activePresentation);
                         }, function () {
                             //noinspection JSUnresolvedFunction
-                            $log.info('Modal dismissed at: ' + new Date());
                         });
                         return modalInstance;
                     };
