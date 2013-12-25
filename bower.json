@@ -1,6 +1,6 @@
 {
     "name": "atelier",
-    "version": "1.6.0",
+    "version": "2.0.2",
     "devDependencies": {
         "angular": "~1.2.1",
         "angular-mocks": "~1.2.1",
