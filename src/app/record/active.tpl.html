@@ -1,15 +1,15 @@
 <div class="full-height">
     <sokratik-dialogue presentation="presentation" index="{{$index}}" presentation-id="{{presentationId}}"
                        class="zoom-in"
-                       add-fragment="addFragment(fragment)" ng-click="next()"/>
+                       add-fragment="addFragment(fragment)" canvas-enabled="canvasEnabled" make-visible="next" record-action="recordAction"/>
 </div>
-<button class="btn btn-light no-border button-top-left-1" ng-show="recording && page < totalPages -1"
+<button style="z-index:1001" class="btn btn-light no-border button-top-left-1" ng-show="recording && page < totalPages -1"
         ng-click="nextSlide()"><i class="icon-step-forward bigger-160"></i></button>
 
-<button class="btn btn-light no-border button-top-left-2" ng-show="recording" ng-click="redoSlide()"><i
+<button style="z-index:1001" class="btn btn-light no-border button-top-left-2" ng-show="recording" ng-click="redoSlide()"><i
         class="icon-undo bigger-160 red"></i></button>
-<button class="btn btn-light no-border button-app" ng-click="recordYTAction()" ng-show="videoPresent">
+<button style="z-index:1001" class="btn btn-light no-border button-app" ng-click="recordYTAction()" ng-show="videoPresent">
     <i class="icon-youtube-sign bigger-275">Play Video</i>
 </button>
-<div ng-show="recording" class="control-bar-left">
+<div style="z-index:1001" ng-show="recording" class="control-bar-left">
 </div>

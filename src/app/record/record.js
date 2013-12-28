@@ -88,6 +88,7 @@
                 answer.recordingStarted = new Date().getTime();    //TODO this is crap
 
                 var pause = $scope.pause = function () {
+                    $scope.canvasEnabled = false;
                     acoustics.pause(recorder);
                     $scope.recording = false;
                     recordAction({"fnName": "pause", "args": {},
@@ -95,7 +96,10 @@
 
                 };
 
+                $scope.recordAction = recordAction;
+                $scope.canvasEnabled = false;
                 $scope.record = function () {
+                    $scope.canvasEnabled = true;
                     $scope.recording = true;
                     acoustics.resume(recorder);
                     recordAction({"fnName": "resume", "args": {},
@@ -103,6 +107,7 @@
                     var instructionsToKeep = _.clone(answer.script);
                     $scope.redoSlide = function () {
                         "use strict";
+                        $scope.canvasEnabled = false;
                         anduril.insertScript(answer, instructionsToKeep);
                         recordAction({"fnName": "redo", "args": {}, module: "dialogue",
                             actionInitiated: new Date().getTime() });
@@ -180,6 +185,7 @@
                 };
 
                 $scope.nextSlide = _.throttle(function () {
+                    $scope.canvasEnabled = false;
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 }, 1000);
 
