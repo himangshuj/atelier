@@ -150,96 +150,43 @@
 
     };
 
-    var linkFn = function (scope) {
-        var t = 0.5;
+    var linkFn = function (scope, _element) {
+        var element = _element.children()[0];
+        var _stage, _splineLayer,
+            _background; //only needed to listen to mouseevents
+        var tension = 0.5; //controls the 'curviness' of the spline
+        // refer: http://scaledinnovation.com/analytics/splines/splines.html
 
-        document.getElementById("annotations-canvas").addEventListener('contextmenu', function (event) {
-            event.preventDefault();
-        });
-        var stage = new Kinetic.Stage({
-            container: 'annotations-canvas',
-            width: window.innerWidth,
-            height: window.innerHeight
-        });
-
-        var layer = new Kinetic.Layer();
-        stage.add(layer);
-        var splineLayer = new Kinetic.Layer();
-        stage.add(splineLayer);
-
-        var background = new Kinetic.Rect({
-            x: 0,
-            y: 0,
-            width: stage.getWidth(),
-            height: stage.getHeight(),
-            opacity: 0
-        });
-
-        background.on('click', function(e){
-            if(e.button == 2) {
-                scope.makeVisible();
-            }
-        });
-
-        layer.add(background);
-        layer.draw();
-
-        // a flag we use to see if we're dragging the mouse
         var isMouseDown=false;
-        // a reference to the line we are currently drawing
-        var newline;
-        // a reference to the array of points making newline
-        var points = [];
         var pointStream = [];
-        var intervalId, lastPoint, lastToLastPoint, pointCount,
-            lastControlPoint, drawingStarted;
+        var intervalId, //stores result of setInterval call
+            lastPoint, lastToLastPoint, //last 2 points when drawing spline
+            pointCount, //increases as points are added to spline
+            lastControlPoint, //meh, moar spline state
+            drawingStarted; //sent as actionInitiated to recordAction
 
-        function onMousedown(event) {
+        function _onMousedown(event) {
             if(event.button === 0 && !isMouseDown) {
                 isMouseDown = true;
-                points=[];
-                points.push(stage.getPointerPosition());
-
-                var line = new Kinetic.Line({
-                    dashArray: [10, 10, 0, 10],
-                    // opacity: 0.3,
-                    points: points,
-                    stroke: 'green',
-                    strokeWidth: 2,
-                    lineCap: 'round',
-                    lineJoin: 'round'
-                });
-
-                layer.add(line);
-                newline=line;
-                intervalId = setInterval(extendSpline, 50);
-                lastPoint = stage.getPointerPosition();
+                intervalId = setInterval(_extendSpline, 50);
+                lastPoint = _stage.getPointerPosition();
                 pointCount = 1;
                 drawingStarted = new Date().getTime();
             }
         }
 
-        function onMouseup(e) {
-            if(e.button === 0) {
+        function _onMouseup(event) {
+            if(event.button === 0) {
                 isMouseDown=false;
                 clearInterval(intervalId);
-                finishSpline(stage.getPointerPosition());
+                _finishSpline(_stage.getPointerPosition());
             }
         }
 
-        function onMousemove(event) {
-            if(!isMouseDown){
-                return;
-            }
-            points.push(stage.getPointerPosition());
-            newline.setPoints(points);
-            layer.drawScene();
-        }
+        function _addPointToSpline(point, lastPoint, lastToLastPoint, pointCount) {
+            var context = _splineLayer.getContext();
 
-        function addPointToSpline(point, lastPoint, lastToLastPoint, pointCount) {
-            var context = splineLayer.getContext();
-
-            var cp = getControlPoints(lastPoint, lastToLastPoint, point);
+            var cp = _getControlPoints(lastPoint, lastToLastPoint, point);
 
             if(pointCount == 3) {
                 context.beginPath();
@@ -260,14 +207,14 @@
             lastControlPoint = cp;
         }
 
-        function extendSpline() {
+        function _extendSpline() {
             if(isMouseDown) {
-                var point = stage.getPointerPosition();
+                var point = _stage.getPointerPosition();
                 if(!!point) {
                     if(++pointCount > 2) {
                         pointStream.push({time: new Date().getTime(),
                                           point: lastToLastPoint});
-                        addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
+                        _addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
                     }
                     lastToLastPoint = lastPoint;
                     lastPoint = point;
@@ -275,13 +222,31 @@
             }
         }
 
-        function renderSpline(pointStream, actionInitiated) {
+        function _finishSpline(point) {
+            if(++pointCount > 2) {
+                pointStream.push({time: new Date().getTime(),
+                                  point: lastPoint});
+                pointStream.push({time: new Date().getTime(),
+                                  point: point});
+                console.log("recording ", pointStream.length, " points");
+                scope.recordAction({"fnName": "renderPointStream",
+                                    "args": {pointStream: pointStream},
+                                    actionInitiated: drawingStarted,
+                                    module: "canvas"});
+                pointStream = [];
+                _addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
+            }
+            lastToLastPoint = lastPoint;
+            lastPoint = point;
+        }
+
+        function _renderSpline(pointStream, actionInitiated) {
             var lastToLastPoint = pointStream[0];
             var lastPoint = pointStream[1];
             var pointCount = 2;
             var extendSpline = function(point) {
                 ++pointCount;
-                addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
+                _addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
                 lastToLastPoint = lastPoint;
                 lastPoint = point;
             };
@@ -291,29 +256,7 @@
             });
         }
 
-        scope.$watch('pointStream', function(newval, oldval) {
-            if(!!newval) {
-                renderSpline(newval.pointStream, newval.actionInitiated);
-            }
-        });
-
-        function finishSpline(point) {
-            if(++pointCount > 2) {
-                pointStream.push({time: new Date().getTime(),
-                                  point: lastPoint});
-                pointStream.push({time: new Date().getTime(),
-                                  point: point});
-                scope.recordAction({"fnName": "renderPointStream",
-                                    "args": {pointStream: pointStream},
-                                    actionInitiated: drawingStarted,
-                                    module: "dialogue"});
-                addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
-            }
-            lastToLastPoint = lastPoint;
-            lastPoint = point;
-        }
-
-        function getControlPoints(point, prevPoint, nextPoint) {
+        function _getControlPoints(point, prevPoint, nextPoint) {
             var x1 = point.x;
             var x0 = prevPoint.x;
             var x2 = nextPoint.x;
@@ -324,8 +267,8 @@
             var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
             var d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
-            var fa = t * d01 / (d01 + d12);
-            var fb = t - fa;
+            var fa = tension * d01 / (d01 + d12);
+            var fb = tension - fa;
 
             var p1x = x1 + fa * (x0 - x2);
             var p1y = y1 + fa * (y0 - y2);
@@ -336,17 +279,52 @@
             return [{x: p1x, y:p1y}, {x: p2x, y:p2y}];
         }
 
-        scope.$watch('canvasEnabled', function(newval, oldval) {
-            if(newval) {
-                background.on('mousedown', onMousedown);
-                background.on('mouseup', onMouseup);
-                background.on('mousemove', onMousemove);
-            } else {
-                background.off('mousemove');
-                background.off('mouseup');
-                background.off('mousedown');
+        element.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+        });
+
+        _stage = new Kinetic.Stage({
+            container: element,
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+
+        _splineLayer = new Kinetic.Layer();
+        _stage.add(_splineLayer);
+
+        _background = new Kinetic.Rect({
+            x: 0,
+            y: 0,
+            width: _stage.getWidth(),
+            height: _stage.getHeight(),
+            opacity: 0
+        });
+
+        _splineLayer.add(_background);
+        _splineLayer.draw();
+
+        _background.on('click', function(e){
+            if(e.button == 2) {
+                scope.makeVisible();
             }
         });
+
+        _injectors.canvas.registerMethods(
+            {enableCanvas: function (enable) {
+                 console.log('enableCanvas called with: ', enable);
+                 if(enable) {
+                     _background.on('mousedown', _onMousedown);
+                     _background.on('mouseup', _onMouseup);
+                 } else {
+                     _background.off('mousedown');
+                     _background.off('mouseup');
+                 }
+             },
+
+             renderPointStream: function (args) {
+                 _renderSpline(args.pointStream, args.params.timeStamp);
+             }
+            });
     };
 
     var _canvasLink = {
@@ -389,10 +367,8 @@
                     return $state.current.data.mode + "/dialogue.tpl.html";
                 },
                 scope: {
-                    canvasEnabled: "=",
                     makeVisible: "=",
                     recordAction: "=",
-                    pointStream: "=",
                     presentation: "=",
                     index: "@",
                     presentationId: "@",
@@ -411,12 +387,8 @@
 
         }];
 
-    var _sokratikCanvasDirective = ["$state", "dialogue", "$q", "anduril",
-        function ($state, dialogue, $q, anduril) {
-            _injectors.$q = $q;
-            _injectors.dialogue = dialogue;
-            _injectors.anduril = anduril;
-            _injectors.$state = $state;
+    var _sokratikCanvasDirective = ["$state", "canvas", function ($state, canvas) {
+            _injectors.canvas = canvas;
             return {
                 restrict: "E",
                 templateUrl: function () {
@@ -431,6 +403,7 @@
 
     ng.module(app, ['sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
+            'sokratik.atelier.canvas.services',
             'ui.bootstrap',
             'templates-app'
         ])

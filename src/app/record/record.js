@@ -5,6 +5,7 @@
             'plusOne',
             'sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
+            'sokratik.atelier.canvas.services',
             'sokratik.atelier.acoustics.services',
             'sokratik.atelier.sokratube.services',
             'sokratik.atelier.apollo.services',
@@ -81,14 +82,19 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder",
-            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder", "canvas",
+            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder, canvas) {
                 answer.script = [];//reseting the script    //TODO This is crap
                 $scope.presentationId = answer._id;
                 answer.recordingStarted = new Date().getTime();    //TODO this is crap
+                $scope.drawing = false;
+                var enableCanvas = $scope.enableCanvas = function(arg) {
+                    canvas.enableCanvas(arg);
+                    $scope.drawing = arg;
+                };
 
                 var pause = $scope.pause = function () {
-                    $scope.canvasEnabled = false;
+                    enableCanvas(false);
                     acoustics.pause(recorder);
                     $scope.recording = false;
                     recordAction({"fnName": "pause", "args": {},
@@ -97,9 +103,7 @@
                 };
 
                 $scope.recordAction = recordAction;
-                $scope.canvasEnabled = false;
                 $scope.record = function () {
-                    $scope.canvasEnabled = true;
                     $scope.recording = true;
                     acoustics.resume(recorder);
                     recordAction({"fnName": "resume", "args": {},
@@ -107,7 +111,6 @@
                     var instructionsToKeep = _.clone(answer.script);
                     $scope.redoSlide = function () {
                         "use strict";
-                        $scope.canvasEnabled = false;
                         anduril.insertScript(answer, instructionsToKeep);
                         recordAction({"fnName": "redo", "args": {}, module: "dialogue",
                             actionInitiated: new Date().getTime() });
@@ -185,7 +188,7 @@
                 };
 
                 $scope.nextSlide = _.throttle(function () {
-                    $scope.canvasEnabled = false;
+                    $scope.enableCanvas(false);
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 }, 1000);
 

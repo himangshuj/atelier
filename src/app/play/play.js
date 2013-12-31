@@ -20,16 +20,10 @@ var atelierPlayer = function (ng, app, answer) {
                 var postExecute = !(ng.equals(instruction.fnName, "changeState")) ? intraState : ng.noop;
 
                 _.delay(function () {
-                    if(instruction.fnName == "renderPointStream" && instruction.module == "dialogue") {
-                        $scope.pointStream = {pointStream: instruction.args.pointStream, actionInitiated: instruction.actionInitiated};
-                        ++scriptIndex;
-                        postExecute();
-                    } else {
-                        var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
-                                              (instruction.args || {}).params, {pausedInterval: pausedInterval});
-                        $q.when(modules[instruction.module][instruction.fnName]
-                                (_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
-                    }
+                    var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
+                                          (instruction.args || {}).params, {pausedInterval: pausedInterval});
+                    $q.when(modules[instruction.module][instruction.fnName]
+                            (_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
                 }, delay);
             }
             else {
@@ -40,6 +34,7 @@ var atelierPlayer = function (ng, app, answer) {
         ng.module(app, [
                 'ui.router',
                 'ui.route',
+                'sokratik.atelier.canvas.services',
                 'sokratik.atelier.istari.services', ,
                 'sokratik.atelier.minerva.services',
                 'sokratik.atelier.minerva.directives',
@@ -60,8 +55,8 @@ var atelierPlayer = function (ng, app, answer) {
                             var delay = answer.script[index].actionInitiated - ($stateParams.timeStamp || answer.script[index].actionInitiated);
                             return {instruction: instruction, delay: delay};
                         }],
-                        modules: ["dialogue", "apollo", "sokratube", function (dialogue, apollo, sokratube) {
-                            return {apollo: apollo, dialogue: dialogue, sokratube: sokratube};
+                        modules: ["dialogue", "apollo", "sokratube", "canvas", function (dialogue, apollo, sokratube, canvas) {
+                            return {apollo: apollo, dialogue: dialogue, sokratube: sokratube, canvas: canvas};
                         }]
                     },
                     data: {
@@ -118,7 +113,6 @@ var atelierPlayer = function (ng, app, answer) {
                     //noinspection JSUnresolvedVariable
                     $scope.presentation = answer.presentationData[page];
                     $scope.presentationId = answer._id;
-                    $scope.pointStream = false;
                     $scope.addFragment = function (fragment) {//TODO remove duplication
                         fragmentFn = fragment;
                         function resetFragments() {
