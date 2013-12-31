@@ -95,7 +95,7 @@ describe('edit section post initialization ', function () {
     }));
     it("record navigation test", inject(function ($state, anduril) {
         scope.record();
-        expect($state.go).toHaveBeenCalledWith("record.master");
+        expect($state.go).toHaveBeenCalledWith("record.activate",{page:0});
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("page navigation test", inject(function ($state, anduril) {

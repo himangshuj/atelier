@@ -100,7 +100,7 @@
                     page = parseInt(page, 10);
                     $scope.record = function () {
                         anduril.post(presentation);
-                        $state.go("record.master");
+                        $state.go("record.activate",{page:0});
 
                     };
 
