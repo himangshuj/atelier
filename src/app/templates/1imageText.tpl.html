@@ -1,0 +1,34 @@
+<div class="slide main-container">
+    <div class="simple align-center full-height">
+        <h2>
+            <div>
+                <sokratik-fragment type="text" model="title" default="" placeholder="Click to edit title"></sokratik-fragment>
+            </div>
+        </h2>
+        <div class="row-fluid part-image">
+            <div class="col-xs-12 full-height" ng-mouseenter="showButtons=true" ng-mouseleave="showButtons=false">
+                <div class="full-height">
+                    <sokratik-fragment type="image" caption="" model="image1" default="" caption="">
+                    </sokratik-fragment>
+
+                </div>
+                <button ng-show="showButtons" class="image-buttons image-button-left btn btn-light" ng-click="decreaseImages()"><i class="icon-minus"></i></button>
+                <button ng-show="showButtons" class="image-buttons image-button-right btn btn-light" ng-click="increaseImages()"><i class="icon-plus"></i></button>
+            </div>
+        </div>
+        <div class="part-text">
+            <div>
+                <sokratik-fragment type="text" model="text1" default="" placeholder="Click to edit line 1"></sokratik-fragment>
+            </div>
+            <p></p>
+            <div>
+                <sokratik-fragment type="text" model="text2" default="" placeholder="Click to edit line 2"></sokratik-fragment>
+            </div>
+            <p></p>
+            <div>
+                <sokratik-fragment type="text" model="text3" default="" placeholder="Click to edit line 3"></sokratik-fragment>
+            </div>
+            <p></p>
+        </div>
+    </div>
+</div>

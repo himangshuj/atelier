@@ -1,8 +1,6 @@
 (function (ng, app) {
     ng.module(app, [
             'ui.router',
-            'titleService',
-            'plusOne',
             'sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
             'sokratik.atelier.acoustics.services',
@@ -16,7 +14,7 @@
                 url: '/record/:presentationId',
                 resolve: {
                     answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
-                        return anduril.fetchAnswer($stateParams.presentationId);
+                        return anduril.fetchPresentation($stateParams.presentationId);
                     }],
                     mediaRecorderOrAudioNode: ["acoustics", function (acoustics) {
                         return acoustics.mediaRecorderOrAudioNode();

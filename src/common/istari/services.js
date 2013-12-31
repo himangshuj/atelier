@@ -40,8 +40,8 @@
             injectors.$q = $q;
             injectors.$resource = $resource;
             //declaring the resource
-            var Answer = $resource('/answer/:answerId', {
-                answerId: '@_id'
+            var Answer = $resource('/presentation/:presentationId', {
+                presentationId: '@_id'
             }, {
                 update: {
                     method: 'PUT'
@@ -78,11 +78,11 @@
                     return answer.$update();
                 },
                 fetchImages: _fetchImages,
-                fetchAnswer: function (answerId) {
+                fetchPresentation: function (presentationId) {
 
                     var deferred = $q.defer();
-                    Answer.get({answerId: answerId}, function (answer) {
-                        deferred.resolve(answer);
+                    Answer.get({presentationId: presentationId}, function (presentation) {
+                        deferred.resolve(presentation);
                     });
                     return deferred.promise;
 

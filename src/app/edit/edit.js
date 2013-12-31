@@ -39,8 +39,6 @@
     }];
     ng.module(app, [
             'ui.router',
-            'titleService',
-            'plusOne',
             'sokratik.atelier.minerva.directives',
             'ngSanitize'
         ])
@@ -55,10 +53,11 @@
                         return parseInt($stateParams.page ? $stateParams.page : 0, 10);
                     }],
                     answer: ["anduril", "$stateParams", function (anduril, $stateParams) {
-                        return anduril.fetchAnswer($stateParams.presentationId);
+                        return anduril.fetchPresentation($stateParams.presentationId);
                     }],
                     images: ["$stateParams", "anduril", function ($stateParams, anduril) {
-                        return anduril.fetchImages($stateParams.questionId);
+                        return [];
+                       // return anduril.fetchImages($stateParams.questionId);
                     }]
                 },
                 data: {
@@ -69,7 +68,8 @@
                         templateUrl: "edit/edit.tpl.html",
                         controller: 'EditController'
                     }
-                }
+                },
+                parent:'root'
             })
                 .state("edit.template", {
                     url: '/',
@@ -157,8 +157,9 @@
                         return modalInstance;
                     };
                 }])
-        .controller('TemplateCtrl', function TemplateController() {
-        });
+        .controller('TemplateCtrl', ['$rootScope',function TemplateController($rootScope) {
+            $rootScope.showCase = false;
+        }]);
 })(angular, "sokratik.atelier.edit");
 
 

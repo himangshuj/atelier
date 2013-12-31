@@ -213,7 +213,7 @@
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
         .controller("DialogueController", ["$scope", function ($scope) {
-            $scope.templateName = "/views/templates/" + ($scope.presentation.templateName || "imageText") + ".html";
+            $scope.templateName = "templates/" + ($scope.presentation.templateName || "imageText") + ".tpl.html";
             $scope.currentFragmentIndex = 0;
             var dialogueFragments = [];
             this.addFragment = function (dialogueFragment) {
