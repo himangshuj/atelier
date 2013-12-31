@@ -1,4 +1,4 @@
-var atelierPlayer = function (ng, app, answer) {
+var atelierPlayer = function (ng, app, presentation) {
         var fragmentFn = ng.noop;//global variable is this really bad
         var _executeInstruction = function (instructions, modules, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
             "use strict";
@@ -49,8 +49,8 @@ var atelierPlayer = function (ng, app, answer) {
                         instructionDetails: [ "$stateParams", function ($stateParams) {
                             "use strict";
                             var index = $stateParams.scriptIndex || 0;
-                            var instruction = answer.script[index];
-                            var delay = answer.script[index].actionInitiated - ($stateParams.timeStamp || answer.script[index].actionInitiated);
+                            var instruction = presentation.script[index];
+                            var delay = presentation.script[index].actionInitiated - ($stateParams.timeStamp || presentation.script[index].actionInitiated);
                             return {instruction: instruction, delay: delay};
                         }],
                         modules: ["dialogue", "apollo", "sokratube", function (dialogue, apollo, sokratube) {
@@ -89,15 +89,15 @@ var atelierPlayer = function (ng, app, answer) {
             .controller("PlayCtrl", ["$scope",
                 function ($scope) {
                     //noinspection JSUnresolvedVariable
-                    $scope.presentations = answer.presentationData;
-                    $scope.presentationId = answer._id;
+                    $scope.presentations = presentation.presentationData;
+                    $scope.presentationId = presentation._id;
 
                 }])
             .controller("PlayAudio", ["$scope", "$state", "$stateParams", "$q", "modules",
                 function ($scope, $state, $stateParams, $q, modules) {
                     "use strict";
                     modules.apollo.initBGAudio();
-                    _executeInstruction(answer.script,
+                    _executeInstruction(presentation.script,
                         modules, $state,
                         $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
 
@@ -109,15 +109,15 @@ var atelierPlayer = function (ng, app, answer) {
                     "use strict";
                     var page = parseInt($stateParams.page, 10);
                     //noinspection JSUnresolvedVariable
-                    $scope.presentation = answer.presentationData[page];
-                    $scope.presentationId = answer._id;
+                    $scope.presentation = presentation.presentationData[page];
+                    $scope.presentationId = presentation._id;
                     $scope.addFragment = function (fragment) {//TODO remove duplication
                         fragmentFn = fragment;
                         function resetFragments() {
 
                             modules.dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(
                                 function () {
-                                    _executeInstruction(answer.script,
+                                    _executeInstruction(presentation.script,
                                         modules, $state,
                                         $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
                                 }
