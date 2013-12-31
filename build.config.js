@@ -51,6 +51,7 @@ module.exports = {
      */
     vendor_files: {
         "js": [
+            "vendor/kinetic-v4.7.4.min.js",
             "vendor/angular/angular.js",
             "vendor/angular-sanitize/angular-sanitize.min.js",
             "vendor/angular-cookies/angular-cookies.min.js",

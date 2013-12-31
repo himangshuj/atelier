@@ -1,7 +1,7 @@
 <div class="full-height">
     <sokratik-dialogue presentation="presentation" index="{{$index}}" presentation-id="{{presentationId}}"
                        class="zoom-in"
-                       add-fragment="addFragment(fragment)" ng-click="next()"/>
+                       add-fragment="addFragment(fragment)" make-visible="next" record-action="recordAction"/>
 </div>
 <button class="btn btn-light no-border button-top-left-1" ng-show="recording && page < totalPages -1"
         ng-click="nextSlide()"><i class="fa fa-step-forward fa-3x"></i></button>
@@ -11,5 +11,8 @@
 <button class="btn btn-light no-border button-app" ng-click="recordYTAction()" ng-show="videoPresent">
     <i class="fa fa-youtube-square fa-4x">Play Video</i>
 </button>
-<div ng-show="recording" class="control-bar-left">
-</div>
+<button  class="btn btn-light no-border button-top-left-3" ng-show="recording && !drawing" ng-click="enableCanvas(true)"><i
+        class="icon-step-forward bigger-160 red"></i>Draw</button>
+<button  class="btn btn-light no-border button-top-left-3" ng-show="recording && drawing" ng-click="enableCanvas(false)"><i
+        class="icon-undo bigger-160 red">Don't draw</i></button>        
+

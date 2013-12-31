@@ -3,6 +3,7 @@
             'ui.router',
             'sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
+            'sokratik.atelier.canvas.services',
             'sokratik.atelier.acoustics.services',
             'sokratik.atelier.sokratube.services',
             'sokratik.atelier.apollo.services',
@@ -71,8 +72,8 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder", "$rootScope",
-            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder, $rootScope) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder", "$rootScope","canvas",
+            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder, $rootScope,canvas) {
                 answer.script = [];//reseting the script    //TODO This is crap
                 recordAction({fnName: "changeState",
                     args: {subState: '.activate', params: {page: 0}},
@@ -80,8 +81,14 @@
 
                 $scope.presentationId = answer._id;
                 answer.recordingStarted = new Date().getTime();    //TODO this is crap
+                $scope.drawing = false;
+                var enableCanvas = $scope.enableCanvas = function(arg) {
+                    canvas.enableCanvas(arg);
+                    $scope.drawing = arg;
+                };
 
                 var pause = $scope.pause = function () {
+                    enableCanvas(false);
                     acoustics.pause(recorder);
                     $scope.recording = false;
                     recordAction({"fnName": "pause", "args": {},
@@ -89,6 +96,7 @@
 
                 };
 
+                $scope.recordAction = recordAction;
                 $scope.record = function () {
                     $scope.recording = true;
                     acoustics.resume(recorder);
@@ -163,6 +171,7 @@
                 };
 
                 $scope.nextSlide = _.throttle(function () {
+                    $scope.enableCanvas(false);
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 }, 1000);
 

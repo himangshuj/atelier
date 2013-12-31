@@ -21,9 +21,9 @@ var atelierPlayer = function (ng, app, presentation) {
 
                 _.delay(function () {
                     var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
-                        (instruction.args || {}).params, {pausedInterval: pausedInterval});
-                    $q.when(modules[instruction.module][instruction.fnName](_.extend((instruction.args || {}),
-                        {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
+                                          (instruction.args || {}).params, {pausedInterval: pausedInterval});
+                    $q.when(modules[instruction.module][instruction.fnName]
+                            (_.extend((instruction.args || {}), {"params": params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
                 }, delay);
             }
             else {
@@ -33,6 +33,7 @@ var atelierPlayer = function (ng, app, presentation) {
         };
         ng.module(app, [
                 'ui.router',
+                'sokratik.atelier.canvas.services',
                 'sokratik.atelier.istari.services', ,
                 'sokratik.atelier.minerva.services',
                 'sokratik.atelier.minerva.directives',
@@ -53,8 +54,8 @@ var atelierPlayer = function (ng, app, presentation) {
                             var delay = presentation.script[index].actionInitiated - ($stateParams.timeStamp || presentation.script[index].actionInitiated);
                             return {instruction: instruction, delay: delay};
                         }],
-                        modules: ["dialogue", "apollo", "sokratube", function (dialogue, apollo, sokratube) {
-                            return {apollo: apollo, dialogue: dialogue, sokratube: sokratube};
+                        modules: ["dialogue", "apollo", "sokratube", "canvas", function (dialogue, apollo, sokratube, canvas) {
+                            return {apollo: apollo, dialogue: dialogue, sokratube: sokratube, canvas: canvas};
                         }]
                     },
                     data: {

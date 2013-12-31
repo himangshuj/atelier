@@ -202,6 +202,28 @@ body {
   .generate-button-alternate(4px, 200px, 200px, 5px);
 }
 
+.button-top-left-3 {
+  position: absolute;
+  top: 4px;
+  left: 201px; //TODO
+  border: none;
+  * {
+    vertical-align: baseline;
+  }
+  /*
+    &:hover{
+      &:after{
+        content:"Start drawing";
+      }
+    }
+  */
+  &:active {
+    left: 200px !important;
+    top: 5px !important;
+    //    right: 51px !important;
+  }
+}
+
 .button-bottom-left {
   .generate-button-alternate(4px, 104px, 103px, 5px);
 }
@@ -422,6 +444,10 @@ video {
   z-index: 1000;
   color: #000;
   cursor: pointer;
+}
+
+.btn-light {
+  z-index: 1001;
 }
 
 .image-youtube{
