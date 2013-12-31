@@ -1,10 +1,4 @@
-@h1-font-size: 3.77em;
-@h2-font-size: 2.11em;
-@h3-font-size: 1.55em;
-@h4-font-size: 1em;
-@h1-font-color: #4799b6;
-@headingLineHeight: 1.2em;
-@regularLineHeight: 1em;
+@import 'edit_helper';
 
 html, body {
   height: 100%;
@@ -12,39 +6,22 @@ html, body {
 
 body {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;;
-  background: white;
-  color: #333333;
+  background: @body-background;
+  color: @body-text-color;
   font-weight: lighter;
-  font-size: 200%;
   overflow: hidden;
-  font-size: 36px;
+  font-size: @body-font-size;
 }
 
 .main-container {
-  height: 100%;
-  width: 100%;
+  .full-sized();
   .padme(@sm-margin,@lg-margin);
 }
 
 .internal {
   height: inherit;
   width: inherit;
-  /* Internet Explorer 10 */
-  display: -ms-flexbox;
-  -ms-flex-pack: center;
-  -ms-flex-align: center;
-  /* Firefox */
-  display: -moz-box;
-  -moz-box-pack: center;
-  -moz-box-align: center;
-  /* Safari, Opera, and Chrome */
-  display: -webkit-box;
-  -webkit-box-pack: center;
-  -webkit-box-align: center;
-  /* W3C */
-  display: box;
-  box-pack: center;
-  box-align: center;
+  .box-position();
 }
 
 .simple {
@@ -69,8 +46,7 @@ body {
     font-size: @h4-font-size;
   }
   p {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin: @simple-margin 0;
   }
 }
 
@@ -78,11 +54,9 @@ body {
   //  background-size: cover;
   background-position: 0px 0px;
   background-repeat: repeat-x;
-  width: 100%;
-  height: 100%;
+  .full-sized();
   .caption {
-    position: absolute;
-    bottom: 0px;
+    .fix-to-bottom();
     width: 100%;
     background-image: none;
     background-color: rgba(0, 0, 0, 0.5);
@@ -105,10 +79,10 @@ body {
     margin-left: auto;
     margin-right: auto;
     height: 100%;
+    max-height: 300px;//TODO make this variable
   }
   .caption-holder {
-    position: absolute;
-    bottom: 0px;
+    .fix-to-bottom();
     left: 50%;
     .caption {
       font-size: 18px;
@@ -138,43 +112,26 @@ body {
 }
 
 .control-bar {
-  position: absolute;
-  right: 0px;
-  top: 30%;
+  .control-bar-base();
   text-align: right;
 }
 
 .control-bar-left {
-  position: absolute;
-  left: 0px;
-  top: 30%;
+  .control-bar-base();
   text-align: left;
 }
 
 .image-button-left {
-  position: absolute;
-  right: 0px;
-  top: 20%;
+  .generate-button(20%, 0px, 0px, inherit, 20%, 1px);
   margin-right: -25px; //TODO check this
-  border: none;
-  &:active {
-    top: 20% !important;
-    right: 1px;
-    left: inherit !important;
-  }
 }
 
 .image-button-right {
-  position: absolute;
-  right: 0px;
-  top: 0px;
+  .generate-button(0px, 20px, 20px, inherit, 0px, 20px);
   margin-right: -25px; //TODO check this
+  z-index: 100;
+  background-color: transparent !important;
   border: none;
-  &:active {
-    top: 0px;
-    right: 1px;
-    left: inherit !important;
-  }
 }
 
 .image-buttons {
@@ -189,7 +146,7 @@ body {
   top: 50%;
   margin-top: -100px;
   height: 200px;
-  width: 40px;
+  width: 80px;
   border: none;
   position: absolute;
   text-shadow: none !important;
@@ -219,177 +176,35 @@ body {
 }
 
 .button-delete {
-  position: absolute;
-  top: 75px;
-  right: -92px; //TODO
-  border: none;
-  /*
-    *{
-      vertical-align:baseline;
-    }
-  */
-  &:hover {
-    right: 0px;
-  }
-  &:active {
-    left: inherit !important;
-    top: 76px !important;
-    right: 0px !important;
-  }
+  .generate-button(100px, -92px, 0px, inherit, 76px, 0px);
+  border: none; 
 }
 
-.button-app {
-  position: absolute;
-  top: 100px;
-  right: 100px; //TODO
-  border: none;
-  &:active {
-    left: inherit !important;
-    top: 100px !important;
-    right: 100px !important;
-  }
-}
+
 
 .button-record {
-  position: absolute;
-  top: 4px;
-  right: -142px; //TODO
-  /*
-    border:none;
-    *{
-      vertical-align:baseline;
-    }
-  */
-  /*
-    &:hover{
-      &:after{
-        content:"Go to record mode";
-      }
-    }
-  */
-  &:hover {
-    right: 0px;
-  }
-  &:active {
-    left: inherit !important;
-    top: 5px !important;
-    right: 0px !important;
-  }
+  .generate-button(4px, -142px, 0px, inherit, 5px, 0px);
 }
 
 .button-complete {
-  position: absolute;
-  top: 4px;
-  right: -63px; //TODO
-  /*
-    border:none;
-    *{
-      vertical-align:baseline;
-    }
-  */
-  /*
-    &:hover{
-      &:after{
-        content:"Go to record mode";
-      }
-    }
-  */
-  &:hover {
-    right: 0px;
-  }
-  &:active {
-    left: inherit !important;
-    top: 5px !important;
-    right: 0px !important;
-  }
+  .generate-button(4px, -63px, 0px, inherit, 5px, 0px);
 }
 
 .button-top-left-0 {
-  position: absolute;
-  top: 4px;
-  left: 50px; //TODO
+  .generate-button(4px, 50px, 0px, 49px, 5px, inherit);
   border: none;
-  * {
-    vertical-align: baseline;
-  }
-  /*
-    &:hover{
-      &:after{
-        content:"Go to record mode";
-      }
-    }
-  */
-  &:active {
-    left: 49px !important;
-    top: 5px !important;
-    //    right: 51px !important;
-  }
 }
 
 .button-top-left-1 {
-  position: absolute;
-  top: 4px;
-  left: 105px; //TODO
-  border: none;
-  * {
-    vertical-align: baseline;
-  }
-  /*
-    &:hover{
-      &:after{
-        content:"Go to record mode";
-      }
-    }
-  */
-  &:active {
-    left: 104px !important;
-    top: 5px !important;
-    //    right: 51px !important;
-  }
+  .generate-button-alternate(4px, 105px, 104px, 5px);
 }
 
 .button-top-left-2 {
-  position: absolute;
-  top: 4px;
-  left: 153px; //TODO
-  border: none;
-  * {
-    vertical-align: baseline;
-  }
-  /*
-    &:hover{
-      &:after{
-        content:"Go to record mode";
-      }
-    }
-  */
-  &:active {
-    left: 152px !important;
-    top: 5px !important;
-    //    right: 51px !important;
-  }
+  .generate-button-alternate(4px, 153px, 152px, 5px);
 }
 
 .button-bottom-left {
-  position: absolute;
-  top: 4px;
-  left: 104px; //TODO
-  border: none;
-  * {
-    vertical-align: baseline;
-  }
-  /*
-    &:hover{
-      &:after{
-        content:"Go to record mode";
-      }
-    }
-  */
-  &:active {
-    left: 103px !important;
-    top: 5px !important;
-    //    right: 51px !important;
-  }
+  .generate-button-alternate(4px, 104px, 103px, 5px);
 }
 
 div[contenteditable=true], span[contenteditable=true] {
@@ -548,4 +363,69 @@ div[contenteditable=true], span[contenteditable=true] {
 
 video {
   margin-top:-50px;
+}
+
+.img-modal-close{
+  float:right;
+  color: #000;
+  cursor: pointer;
+}
+
+
+// Blink radio button
+.blink_me {
+  -webkit-animation-name: blinker;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+
+  -moz-animation-name: blinker;
+  -moz-animation-duration: 1s;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: infinite;
+
+  animation-name: blinker;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@-moz-keyframes blinker {  
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+  0% { opacity: 1.0; }
+  50% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+.record-blink{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  color: #fa5f5f;
+  z-index: 1000;
+}
+
+.image-add-top{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  color: #000;
+  cursor: pointer;
+}
+
+.image-youtube{
+  &:extend(.image-add-top);
+  top:50px;
 }

@@ -25,7 +25,7 @@
                 playerVars: { 'autoplay': 1, 'controls': 0 },
                 height: '300',
                 width: '640',
-                videoId:videoId
+                videoId: videoId
             });
         });
 
@@ -52,12 +52,12 @@
                         //noinspection JSUnresolvedFunction
                         return parseInt($stateParams.page ? $stateParams.page : 0, 10);
                     }],
-                    answer: ["anduril", "$stateParams", function (anduril, $stateParams) {
+                    presentation: ["anduril", "$stateParams", function (anduril, $stateParams) {
                         return anduril.fetchPresentation($stateParams.presentationId);
                     }],
                     images: ["$stateParams", "anduril", function ($stateParams, anduril) {
                         return [];
-                       // return anduril.fetchImages($stateParams.questionId);
+                        // return anduril.fetchImages($stateParams.questionId);
                     }]
                 },
                 data: {
@@ -69,7 +69,7 @@
                         controller: 'EditController'
                     }
                 },
-                parent:'root'
+                parent: 'root'
             })
                 .state("edit.template", {
                     url: '/',
@@ -84,40 +84,41 @@
         }])
 
         .controller('EditController',
-            ["$scope", "page", "$stateParams", "answer", "anduril", "$state", "$modal", "$log",
-                function ($scope, page, $stateParams, answer, anduril, $state, $modal, $log) {
+            ["$scope", "page", "$stateParams", "presentation", "anduril", "$state", "$modal", "$log",
+                function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $log) {
                     //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;
                     $scope.presentationId = presentationId;
-                    var activePresentation = $scope.presentation = answer.presentationData[page] || ng.copy(answer.presentationData[page - 1]);
-                    $scope.totalPages = _.size(answer.presentationData);
+                    var activePresentation = $scope.presentation = presentation.presentationData[page] || ng.copy(presentation.presentationData[page - 1]);
+                    $scope.totalPages = _.size(presentation.presentationData);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
-                    anduril.put(answer, page, $scope.presentation);
+                    anduril.put(presentation, page, $scope.presentation);
                     var images = $stateParams.images || 1;
                     $scope.images = images;
                     $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
                     page = parseInt(page, 10);
                     $scope.record = function () {
-                        anduril.post(answer);
+                        anduril.post(presentation);
                         $state.go("record.master");
 
                     };
 
                     $scope.goToPage = function (page) {
                         "use strict";
-                        anduril.post(answer);
+                        anduril.post(presentation);
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
                     $scope.remove = function () {
                         "use strict";
-                        anduril.post(anduril.remove(answer, page));
+                        anduril.post(anduril.remove(presentation, page));
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     var changeTemplates = function (images) {
-                        anduril.changeTemplate(answer, page, images + "imageText");
-                        anduril.post(answer);
+                        anduril.changeTemplate(presentation, page, images + "imageText");
+                        anduril.post(presentation);
                         $state.go("edit.template", { images: images, templateName: "imageText"});
+
                     };
                     $scope.increaseImages = function () {
                         changeTemplates((++images) % 5);
@@ -128,8 +129,8 @@
                         }
                     };
                     $scope.add = function () {
-                        anduril.insert(answer, page + 1, {templateName: '1imageText'});
-                        anduril.post(answer);
+                        anduril.insert(presentation, page + 1, {templateName: '1imageText'});
+                        anduril.post(presentation);
                         $state.go("edit.template", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
@@ -150,15 +151,16 @@
                             activePresentation.apps = _.without(activePresentation.apps, existingVideo);
                             existingVideo.params = {"videoId": ytEmbedUrl};
                             activePresentation.apps = _.union(activePresentation.apps, existingVideo);
-                            answer = anduril.put(answer, page, activePresentation);
+                            presentation = anduril.put(presentation, page, activePresentation);
                         }, function () {
                             //noinspection JSUnresolvedFunction
                         });
                         return modalInstance;
                     };
                 }])
-        .controller('TemplateCtrl', ['$rootScope',function TemplateController($rootScope) {
+        .controller('TemplateCtrl', ['$rootScope', function TemplateController($rootScope) {
             $rootScope.showCase = false;
+            $rootScope.hideMenu = true;
         }]);
 })(angular, "sokratik.atelier.edit");
 

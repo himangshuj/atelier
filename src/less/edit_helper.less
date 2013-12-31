@@ -1,0 +1,76 @@
+@h1-font-size: 3.77em;
+@h2-font-size: 2.11em;
+@h3-font-size: 1.55em;
+@h4-font-size: 1em;
+@h1-font-color: #4799b6;
+@headingLineHeight: 1.2em;
+@regularLineHeight: 1em;
+
+@body-background: #fff;
+@body-text-color: #333333;
+@body-font-size: 36px;
+
+@simple-margin: 0.5em;
+
+.full-sized (){
+  height: 100%;
+  width: 100%;
+}
+
+.box-position(@position: center){
+  /* Internet Explorer 10 */
+  display: -ms-flexbox;
+  -ms-flex-pack: @position;
+  -ms-flex-align: @position;
+  /* Firefox */
+  display: -moz-box;
+  -moz-box-pack: @position;
+  -moz-box-align: @position;
+  /* Safari, Opera, and Chrome */
+  display: -webkit-box;
+  -webkit-box-pack: @position;
+  -webkit-box-align: @position;
+  /* W3C */
+  display: box;
+  box-pack: @position;
+  box-align: @position;
+}
+
+.fix-to-bottom(){
+  position: absolute;
+  bottom: 0px;
+}
+
+.control-bar-base(){
+  position: absolute;
+  right: 0px;
+  top: 30%;
+}
+
+.generate-button(@top, @right, @hover-right, @active-left, @active-top, @active-right){
+  position: absolute;
+  top: @top;
+  right: @right;
+  &:hover {
+    right: @hover-right;
+  }
+  &:active {
+    left: @active-left !important;
+    top: @active-top !important;
+    right: @active-right !important;
+  }
+}
+
+.generate-button-alternate(@top, @left, @active-left, @active-top){
+  position: absolute;
+  top: @top;
+  left: @left;
+  &:active {
+    left: @active-left !important;
+    top: @active-top !important;
+  }
+  border: none;
+  * {
+    vertical-align: baseline;
+  }
+}

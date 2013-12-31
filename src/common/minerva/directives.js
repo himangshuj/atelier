@@ -189,9 +189,7 @@
                     index: "@",
                     presentationId: "@",
                     addFragment: "&?",
-                    questionId: "@?",
-                    increaseImages: "=",//TODO remove this violation of design
-                    decreaseImages: "="
+                    questionId: "@?"
                 },
 
                 controller: "DialogueController",

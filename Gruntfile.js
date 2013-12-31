@@ -14,7 +14,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-conventional-changelog');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-coffeelint');
-    grunt.loadNpmTasks('grunt-recess');
+    //grunt.loadNpmTasks('grunt-recess');
+    grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-ngmin');
     grunt.loadNpmTasks('grunt-html2js');
@@ -229,7 +230,7 @@ module.exports = function (grunt) {
          * Only our `main.less` file is included in compilation; all other files
          * must be imported from this file.
          */
-        recess: {
+        /*recess: {
             build: {
                 src: [ '<%= app_files.less %>' ],
                 dest: '<%= build_dir %>/assets/<%= pkg.name %>.css',
@@ -250,6 +251,28 @@ module.exports = function (grunt) {
                     noUnderscores: false,
                     noIDs: false,
                     zeroUnits: false
+                }
+            }
+        },*/
+
+        /**
+         * `less is used to convert LESS files to CSS
+         */
+        less: {
+            build: {
+                src: [ '<%= app_files.less %>' ],
+                dest: '<%= build_dir %>/assets/<%= pkg.name %>.css',
+                options: {
+                    compile: true,
+                    compress: false
+                }
+            },
+            compile: {
+                src: [ '<%= less.build.dest %>' ],
+                dest: '<%= less.build.dest %>',
+                options: {
+                    compile: true,
+                    compress: true
                 }
             }
         },
@@ -368,7 +391,8 @@ module.exports = function (grunt) {
                     '<%= html2js.common.dest %>',
                     '<%= html2js.app.dest %>',
                     '<%= vendor_files.css %>',
-                    '<%= recess.build.dest %>'
+                    //'<%= recess.build.dest %>'
+                    '<%= less.build.dest %>'
                 ]
             },
 
@@ -382,7 +406,8 @@ module.exports = function (grunt) {
                 src: [
                     '<%= concat.compile_js.dest %>',
                     '<%= vendor_files.css %>',
-                    '<%= recess.compile.dest %>'
+                    //'<%= recess.compile.dest %>'
+                    '<%= less.compile.dest %>'
                 ]
             }
         },
@@ -493,7 +518,7 @@ module.exports = function (grunt) {
              */
             less: {
                 files: [ 'src/**/*.less' ],
-                tasks: [ 'recess:build' ]
+                tasks: [ 'less:build' ]
             },
 
             /**
@@ -547,8 +572,8 @@ module.exports = function (grunt) {
      * The `build` task gets your app ready to run for development and testing.
      */
     grunt.registerTask('build', [
-        'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'recess:build',
-        'copy:build_assets', 'copy:build_appjs', 'copy:build_vendor_js', 'copy:build_vendorcss',
+        'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', //'recess:build',
+        'less:build', 'copy:build_assets', 'copy:build_appjs', 'copy:build_vendor_js', 'copy:build_vendorcss',
         'index:build', 'karmaconfig', 'karma:continuous'
     ]);
 
@@ -556,8 +581,8 @@ module.exports = function (grunt) {
      * The `build` task gets your app ready to run for development and testing.
      */
     grunt.registerTask('build-ec2', [
-        'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'recess:build',
-        'copy:build_assets', 'copy:build_appjs', 'copy:build_vendor_js', 'copy:build_vendorcss',
+        'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', //'recess:build',
+        'less:build', 'copy:build_assets', 'copy:build_appjs', 'copy:build_vendor_js', 'copy:build_vendorcss',
         'index:build'
     ]);
 
@@ -566,7 +591,8 @@ module.exports = function (grunt) {
      * minifying your code.
      */
     grunt.registerTask('compile', [
-        'recess:compile', 'copy:compile_assets', 'ngmin', 'concat', 'uglify', 'index:compile'
+        //'recess:compile',
+        'less:compile', 'copy:compile_assets', 'ngmin', 'concat', 'uglify', 'index:compile'
     ]);
 
     /**

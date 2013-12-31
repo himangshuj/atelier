@@ -1,21 +1,32 @@
+<div class="blink_me record-blink" ng-show="recording">
+    <i class="icon-microphone"></i>
+</div>
+
+
+<div ng-click="increaseImages()" class="image-add-top" tooltip="Add another image" tooltip-placement="right">
+    <i class="fa fa-picture-o"></i>
+</div>
+
+<div class="image-youtube" ng-click="addVideo()" tooltip="Embed a youtube video" tooltip-placement="right">
+    <i class="fa  fa-youtube-square"></i>
+</div>
+
 <div class="edit full-height" ui-view="template"></div>
 
 
-<button class="btn btn-light nav-button nav-button-right" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">
-    <b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
-<button class="btn btn-light nav-button nav-button-right" ng-click="add()" ng-show="page >= (totalPages-1)">
-    <b class="stretch"><i class="icon-caret-right"></i></b></button><br/>
-<button class="btn btn-light nav-button nav-button-left" ng-click="goToPage(page-1)" ng-show="page > 0 ">
-    <b class="stretch"><i class="icon-caret-left"></i></b></button>
-<a class="button-app" ng-click="addVideo()" href="javascript:void(0)" tooltip=>
-    <img src="/img/yt.png"/>
-</a>
+<button class="btn nav-button nav-button-right btn-lg" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">
+    <b class="stretch"><i class="fa fa-caret-right fa-5x"></i></b></button><br/>
+<button class="btn nav-button nav-button-right btn-lg" ng-click="add()" ng-show="page >= (totalPages-1)">
+    <b class="stretch"><i class="fa fa-caret-right fa-5x"></i></b></button><br/>
+<button class="btn nav-button nav-button-left btn-lg" ng-click="goToPage(page-1)" ng-show="page > 0 ">
+    <b class="stretch"><i class="fa fa-caret-left fa-5x"></i></b></button>
 
 
-<button class="btn btn-light no-border button-delete" ng-click="remove()"><i class="icon-trash bigger-160"></i> Delete
+<button class="btn button-delete" ng-click="remove()"><i class="fa fa-trash-o fa-4x"></i> Delete
     slide
 </button>
-<button class="btn no-border btn-danger button-record" ng-click="record()"><i class="icon-circle bigger-275 red"></i> Go
+<button class="btn btn-danger button-record" ng-click="record()"><i class="fa fa-circle fa-5x"></i>
+    Go
     to record mode
 </button>
 
