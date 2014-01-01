@@ -11,8 +11,8 @@
 <button class="btn btn-light no-border button-app" ng-click="recordYTAction()" ng-show="videoPresent">
     <i class="fa fa-youtube-square fa-4x">Play Video</i>
 </button>
-<button  class="btn btn-light no-border button-top-left-3" ng-show="recording && !drawing" ng-click="enableCanvas(true)"><i
-        class="icon-step-forward bigger-160 red"></i>Draw</button>
-<button  class="btn btn-light no-border button-top-left-3" ng-show="recording && drawing" ng-click="enableCanvas(false)"><i
-        class="icon-undo bigger-160 red">Don't draw</i></button>        
+<button class="btn btn-light no-border button-top-left-3" ng-show="recording && !drawing" ng-click="enableCanvas(true)">
+    <i class="fa fa-pencil fa-3x"></i></button>
+<button class="btn btn-light no-border button-top-left-3" ng-show="recording && drawing" ng-click="enableCanvas(false)">
+    <i class="fa fa-eraser fa-3x"></i></button>
 
