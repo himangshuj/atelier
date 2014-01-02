@@ -4,7 +4,7 @@
     'use strict';
 
     var canvasService = function () {
-        var _methods;
+        var _methods = {enableCanvas: ng.noop, renderPointStream: ng.noop};
 
         this.$get = function () {
             return {
@@ -18,11 +18,15 @@
 
                 renderPointStream: function (args) {
                     console.log("renderPointStream called with ",
-                                args.pointStream.length, " points.");
+                        args.pointStream.length, " points.");
                     _methods.renderPointStream(args);
+                },
+                deRegisterMethods: function () {
+                    _methods = {enableCanvas: ng.noop, renderPointStream: ng.noop};
                 }
             };
         };
+
     };
 
     ng.module(app, [], ["$provide", function ($provide) {

@@ -45,6 +45,7 @@ describe('record section control ', function () {
 
     beforeEach(inject(function ($rootScope, anduril, $state) {
         scope = $rootScope.$new();
+        scope.enableCanvas = angular.noop;
         spyOn(anduril, "put");
         spyOn($state, "go").andCallFake(function () {
             _.defer(scope.pause);
@@ -225,6 +226,7 @@ describe("record active initialization", function () {
 
     beforeEach(inject(function ($rootScope, anduril, $state) {
         scope = $rootScope.$new();
+        scope.enableCanvas = angular.noop;
         spyOn(anduril, "put");
         spyOn($state, "go").andCallFake(function () {
             _.defer(scope.pause);
@@ -310,6 +312,7 @@ describe("record active control", function () {
 
     beforeEach(inject(function ($rootScope, anduril, $state, $controller, $modal, $log, dialogue, sokratube) {
         scope = $rootScope.$new();
+        scope.enableCanvas = angular.noop;
         spyOn(anduril, "put");
         spyOn($state, "go").andCallFake(function () {
             _.defer(scope.pause);

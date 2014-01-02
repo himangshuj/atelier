@@ -68,7 +68,8 @@
                         controller: 'RecordComplete',
                         templateUrl: 'record/complete.tpl.html'
                     }
-                }
+                },
+                parent:'root'
             });
 
         }])
@@ -136,8 +137,8 @@
             }])
 
         .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction",
-            "$q", "sokratube",
-            function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q, sokratube) {
+            "$q", "sokratube","canvas",
+            function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q, sokratube,canvas) {
                 var page = parseInt($stateParams.page, 10);
                 $scope.page = page;
                 var activePresentation = $scope.presentation = answer.presentationData[page];
@@ -172,6 +173,7 @@
 
                 $scope.nextSlide = _.throttle(function () {
                     $scope.enableCanvas(false);
+                    canvas.deRegisterMethods();
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 }, 1000);
 
