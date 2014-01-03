@@ -54,11 +54,8 @@
                     }],
                     presentation: ["anduril", "$stateParams", function (anduril, $stateParams) {
                         return anduril.fetchPresentation($stateParams.presentationId);
-                    }],
-                    images: ["$stateParams", "anduril", function ($stateParams, anduril) {
-                        return [];
-                        // return anduril.fetchImages($stateParams.questionId);
                     }]
+
                 },
                 data: {
                     mode: "edit"

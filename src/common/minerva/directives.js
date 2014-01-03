@@ -15,7 +15,9 @@
     var _imageSelectionModal = ["$scope", "$modalInstance", "images", "initImage", "initCaption",
         function ($scope, $modalInstance, images, initImage, initCaption) {
             $scope.selected = {
-                image: initImage || (((images || [{}])[0]) || {}) .url,
+                image: initImage || (((images || [
+                    {}
+                ])[0]) || {}).url,
                 caption: initCaption
             };
             $scope.imageGroups = _.chain(images).
@@ -111,7 +113,7 @@
         "record": {
             "text": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
-                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model) ;
+                scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
 
             },
             image: function (scope, element, attrs, sokratikDialogueCtrl) {
@@ -157,7 +159,9 @@
         var tension = 0.5; //controls the 'curviness' of the spline
         // refer: http://scaledinnovation.com/analytics/splines/splines.html
 
-        var isMouseDown=false;
+        var enabled = false;
+
+        var isMouseDown = false;
         var pointStream = [];
         var intervalId, //stores result of setInterval call
             lastPoint, lastToLastPoint, //last 2 points when drawing spline
@@ -166,7 +170,7 @@
             drawingStarted; //sent as actionInitiated to recordAction
 
         function _onMousedown(event) {
-            if(event.button === 0 && !isMouseDown) {
+            if (event.button === 0 && !isMouseDown && _injectors.$state.current.data.mode == "record") {
                 isMouseDown = true;
                 intervalId = setInterval(_extendSpline, 50);
                 lastPoint = _stage.getPointerPosition();
@@ -176,8 +180,8 @@
         }
 
         function _onMouseup(event) {
-            if(event.button === 0) {
-                isMouseDown=false;
+            if (event.button === 0 && _injectors.$state.current.data.mode == "record") {
+                isMouseDown = false;
                 clearInterval(intervalId);
                 _finishSpline(_stage.getPointerPosition());
             }
@@ -188,7 +192,7 @@
 
             var cp = _getControlPoints(lastPoint, lastToLastPoint, point);
 
-            if(pointCount == 3) {
+            if (pointCount == 3) {
                 context.beginPath();
                 context.moveTo(lastToLastPoint.x, lastToLastPoint.y);
                 context.quadraticCurveTo(cp[0].x, cp[0].y, lastPoint.x, lastPoint.y);
@@ -208,12 +212,12 @@
         }
 
         function _extendSpline() {
-            if(isMouseDown) {
+            if (isMouseDown) {
                 var point = _stage.getPointerPosition();
-                if(!!point) {
-                    if(++pointCount > 2) {
+                if (!!point) {
+                    if (++pointCount > 2) {
                         pointStream.push({time: new Date().getTime(),
-                                          point: lastToLastPoint});
+                            point: lastToLastPoint});
                         _addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
                     }
                     lastToLastPoint = lastPoint;
@@ -223,16 +227,15 @@
         }
 
         function _finishSpline(point) {
-            if(++pointCount > 2) {
+            if (++pointCount > 2) {
                 pointStream.push({time: new Date().getTime(),
-                                  point: lastPoint});
+                    point: lastPoint});
                 pointStream.push({time: new Date().getTime(),
-                                  point: point});
-                console.log("recording ", pointStream.length, " points");
+                    point: point});
                 scope.recordAction({"fnName": "renderPointStream",
-                                    "args": {pointStream: pointStream},
-                                    actionInitiated: drawingStarted,
-                                    module: "canvas"});
+                    "args": {pointStream: pointStream},
+                    actionInitiated: drawingStarted,
+                    module: "canvas"});
                 pointStream = [];
                 _addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
             }
@@ -244,14 +247,14 @@
             var lastToLastPoint = pointStream[0];
             var lastPoint = pointStream[1];
             var pointCount = 2;
-            var extendSpline = function(point) {
+            var extendSpline = function (point) {
                 ++pointCount;
                 _addPointToSpline(point, lastPoint, lastToLastPoint, pointCount);
                 lastToLastPoint = lastPoint;
                 lastPoint = point;
             };
 
-            _.each(_.rest(pointStream, 2), function(obj) {
+            _.each(_.rest(pointStream, 2), function (obj) {
                 _.delay(extendSpline, obj.time - actionInitiated, obj.point);
             });
         }
@@ -276,7 +279,10 @@
             var p2x = x1 - fb * (x0 - x2);
             var p2y = y1 - fb * (y0 - y2);
 
-            return [{x: p1x, y:p1y}, {x: p2x, y:p2y}];
+            return [
+                {x: p1x, y: p1y},
+                {x: p2x, y: p2y}
+            ];
         }
 
         element.addEventListener('contextmenu', function (event) {
@@ -303,27 +309,27 @@
         _splineLayer.add(_background);
         _splineLayer.draw();
 
-        _background.on('click', function(e){
-            if(e.button == 2) {
+        _background.on('click', function (e) {
+            if (!enabled && _injectors.$state.current.data.mode == "record") {
                 scope.makeVisible();
             }
         });
 
         _injectors.canvas.registerMethods(
             {enableCanvas: function (enable) {
-                 console.log('enableCanvas called with: ', enable);
-                 if(enable) {
-                     _background.on('mousedown', _onMousedown);
-                     _background.on('mouseup', _onMouseup);
-                 } else {
-                     _background.off('mousedown');
-                     _background.off('mouseup');
-                 }
-             },
+                enabled = enable;
+                if (enable) {
+                    _background.on('mousedown', _onMousedown);
+                    _background.on('mouseup', _onMouseup);
+                } else {
+                    _background.off('mousedown');
+                    _background.off('mouseup');
+                }
+            },
 
-             renderPointStream: function (args) {
-                 _renderSpline(args.pointStream, args.params.timeStamp);
-             }
+                renderPointStream: function (args) {
+                    _renderSpline(args.pointStream, args.params.timeStamp);
+                }
             });
     };
 
@@ -386,18 +392,19 @@
         }];
 
     var _sokratikCanvasDirective = ["$state", "canvas", function ($state, canvas) {
-            _injectors.canvas = canvas;
-            return {
-                restrict: "E",
-                templateUrl: function () {
-                    return $state.current.data.mode + "/canvas.tpl.html";
-                },
-                compile: function () {
-                    return _canvasLink[$state.current.data.mode];
-                }
-            };
+        _injectors.canvas = canvas;
+        _injectors.$state = $state;
+        return {
+            restrict: "E",
+            templateUrl: function () {
+                return $state.current.data.mode + "/canvas.tpl.html";
+            },
+            compile: function () {
+                return _canvasLink[$state.current.data.mode];
+            }
+        };
 
-        }];
+    }];
 
     ng.module(app, ['sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',

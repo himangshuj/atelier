@@ -17,8 +17,6 @@
                 },
 
                 renderPointStream: function (args) {
-                    console.log("renderPointStream called with ",
-                        args.pointStream.length, " points.");
                     _methods.renderPointStream(args);
                 },
                 deRegisterMethods: function () {

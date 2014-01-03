@@ -101,6 +101,8 @@
                 'use strict';
                 modules.apollo.initBGAudio();
                 $rootScope.audioLocation = $sce.trustAsResourceUrl(presentation.audioLocation);
+                $rootScope.hideMenu = true;
+                $rootScope.showCase = false;
                 _executeInstruction(presentation.script,
                     modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);

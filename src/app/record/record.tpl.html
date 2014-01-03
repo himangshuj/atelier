@@ -1,21 +1,23 @@
 <!--
 this is the place holder for all the templates which are being played
 -->
+<div class="record">
+    <div class="blink_me record-blink" ng-show="recording">
+        <i class="icon-microphone"></i>
+    </div>
+    <div class="full-height">
+        <div ui-view="workspace" class="workspace full-height"></div>
+    </div>
+    <button class="btn button-top-left-0 btn-danger" ng-click="record()" ng-hide="recording"><i
+            class="fa fa-circle fa-5x"></i></button>
+    <button class="btn button-top-left-0" ng-click="pause()" ng-show="recording"><i
+            class="fa fa-pause fa-5x"></i></button>
+    <button class="btn btn-danger  button-complete" ng-click="complete()">
+        <i class="fa fa-check-square fa-5x"></i>
 
-<div class="blink_me record-blink" ng-show="recording">
-    <i class="icon-microphone"></i>
+        Done!
+    </button>
+    <br/>
 </div>
-<div class="full-height">
-    <div ui-view="workspace" class="workspace full-height"></div>
-</div>
-<button style="z-index:1001" class="btn button-top-left-0 btn-danger" ng-click="record()" ng-hide="recording"><i
-        class="fa fa-circle fa-5x"></i></button>
-<button style="z-index:1001" class="btn button-top-left-0" ng-click="pause()" ng-show="recording"><i
-        class="fa fa-pause fa-5x"></i></button>
-<button  style="z-index:1001" class="btn btn-danger no-border button-complete" ng-click="complete()">
-    <i class="fa fa-check-square fa-5x"></i>
-
-    Done!
-</button><br/>
 
 
