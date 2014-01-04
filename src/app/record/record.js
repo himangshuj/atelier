@@ -1,10 +1,9 @@
 (function (ng, app) {
     ng.module(app, [
             'ui.router',
-            'titleService',
-            'plusOne',
             'sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
+            'sokratik.atelier.canvas.services',
             'sokratik.atelier.acoustics.services',
             'sokratik.atelier.sokratube.services',
             'sokratik.atelier.apollo.services',
@@ -16,7 +15,7 @@
                 url: '/record/:presentationId',
                 resolve: {
                     answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
-                        return anduril.fetchAnswer($stateParams.presentationId);
+                        return anduril.fetchPresentation($stateParams.presentationId);
                     }],
                     mediaRecorderOrAudioNode: ["acoustics", function (acoustics) {
                         return acoustics.mediaRecorderOrAudioNode();
@@ -49,18 +48,10 @@
                         controller: 'RecordCtrl',
                         templateUrl: 'record/record.tpl.html'
                     }
-                }
+                },
+                parent: 'root'
             });
-            //this state represents the master view of all the slides
-            $stateProvider.state('record.master', {
-                url: "/master",
-                views: {
-                    "workspace": {
-                        controller: 'RecordMaster',
-                        templateUrl: 'record/master.tpl.html'
-                    }
-                }
-            });
+
             $stateProvider.state('record.activate', {
                 url: "/activate/:page/:dummy",
                 views: {
@@ -77,17 +68,28 @@
                         controller: 'RecordComplete',
                         templateUrl: 'record/complete.tpl.html'
                     }
-                }
+                },
+                parent:'root'
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder",
-            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder", "$rootScope","canvas",
+            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder, $rootScope,canvas) {
                 answer.script = [];//reseting the script    //TODO This is crap
+                recordAction({fnName: "changeState",
+                    args: {subState: '.activate', params: {page: 0}},
+                    actionInitiated: new Date().getTime(), module: "dialogue"});
+
                 $scope.presentationId = answer._id;
                 answer.recordingStarted = new Date().getTime();    //TODO this is crap
+                $scope.drawing = false;
+                var enableCanvas = $scope.enableCanvas = function(arg) {
+                    canvas.enableCanvas(arg);
+                    $scope.drawing = arg;
+                };
 
                 var pause = $scope.pause = function () {
+                    enableCanvas(false);
                     acoustics.pause(recorder);
                     $scope.recording = false;
                     recordAction({"fnName": "pause", "args": {},
@@ -95,6 +97,7 @@
 
                 };
 
+                $scope.recordAction = recordAction;
                 $scope.record = function () {
                     $scope.recording = true;
                     acoustics.resume(recorder);
@@ -129,24 +132,13 @@
                         pause();
                         $scope.recording = false;
                     });
+                $rootScope.presentationMode = true;
+                $rootScope.navigationMode = false;
             }])
-        .controller('RecordMaster', ["$scope", "answer", "acoustics", "dialogue", "anduril", "recordAction",
-            function ($scope, answer, acoustics, dialogue, anduril, recordAction) {
-                //noinspection JSUnresolvedVariable
-                $scope.presentations = _.map(answer.presentationData, function (obj) { //todo move to clojure script
-                    obj.templateName = obj.templateName || "master";
-                    return obj;
-                });
-                $scope.activate = function (index) {
-                    var resp = dialogue.changeState({subState: ".activate", params: {page: index}});
-                    recordAction(resp);
-                };
-                $scope.presentationId = answer._id;
-                $scope.activate(0);
-            }])
+
         .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction",
-            "$q", "sokratube",
-            function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q, sokratube) {
+            "$q", "sokratube","canvas",
+            function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q, sokratube,canvas) {
                 var page = parseInt($stateParams.page, 10);
                 $scope.page = page;
                 var activePresentation = $scope.presentation = answer.presentationData[page];
@@ -180,6 +172,8 @@
                 };
 
                 $scope.nextSlide = _.throttle(function () {
+                    $scope.enableCanvas(false);
+                    canvas.deRegisterMethods();
                     recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
                 }, 1000);
 

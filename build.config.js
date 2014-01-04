@@ -51,6 +51,7 @@ module.exports = {
      */
     vendor_files: {
         "js": [
+            "vendor/kinetic-v4.7.4.min.js",
             "vendor/angular/angular.js",
             "vendor/angular-sanitize/angular-sanitize.min.js",
             "vendor/angular-cookies/angular-cookies.min.js",
@@ -59,8 +60,6 @@ module.exports = {
             "vendor/angular-ui-router/release/angular-ui-router.js",
             "vendor/angular-ui-utils/modules/route/route.js",
             "vendor/angular-ui-utils/modules/validate/validate.js",
-            "vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js",
-            "vendor/medium-editor/dist/js/medium.editor.min.js",
             "vendor/underscore/underscore-min.js",
             "vendor/underscore.string/dist/underscore.string.min.js",
             "vendor/angular-animate/angular-animate.min.js"

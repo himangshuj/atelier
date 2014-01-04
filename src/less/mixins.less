@@ -1,6 +1,54 @@
-.padme(@small-margin, @big-margin){
+.box-position(@position: center){
+  /* Internet Explorer 10 */
+  display: -ms-flexbox;
+  -ms-flex-pack: @position;
+  -ms-flex-align: @position;
+  /* Firefox */
+  display: -moz-box;
+  -moz-box-pack: @position;
+  -moz-box-align: @position;
+  /* Safari, Opera, and Chrome */
+  display: -webkit-box;
+  -webkit-box-pack: @position;
+  -webkit-box-align: @position;
+  /* W3C */
+  display: box;
+  box-pack: @position;
+  box-align: @position;
+}
+ //Paddings for boxes which should disappear for smaller devices
+.sokratikPadding(@small-margin, @big-margin){
   padding:0px @sm-margin 0px @sm-margin;
   @media (min-width: @screen-sm) {
     padding: 0px @lg-margin 0px @lg-margin;
+  }
+}
+
+.generate-button(@top, @right, @hover-right, @active-left, @active-top, @active-right){
+  position: absolute;
+  top: @top;
+  right: @right;
+  &:hover {
+    right: @hover-right;
+  }
+  &:active {
+    left: @active-left !important;
+    top: @active-top !important;
+    right: @active-right !important;
+  }
+}
+
+
+.generate-button-alternate(@top, @left, @active-left, @active-top){
+  position: absolute;
+  top: @top;
+  left: @left;
+  &:active {
+    left: @active-left !important;
+    top: @active-top !important;
+  }
+  border: none;
+  * {
+    vertical-align: baseline;
   }
 }

@@ -1,0 +1,125 @@
+@import "../../less/mixins";
+@import "../../../vendor/bootstrap/less/mixins";
+@import "../../../vendor/bootstrap/less/variables";
+
+.presentation {
+  .button-delete {
+    .generate-button(100px, -92px, 0px, inherit, 76px, 0px);
+    border: none;
+  }
+
+  .button-record {
+    .generate-button(4px, -142px, 0px, inherit, 5px, 0px);
+  }
+
+  .stretch {
+    display: inline-block;
+    transform: scale(2, 3); /* W3C */
+    -webkit-transform: scale(2, 3); /* Safari and Chrome */
+    -moz-transform: scale(2, 3); /* Firefox */
+    -ms-transform: scale(2, 3); /* IE 9 */
+    -o-transform: scale(2, 3); /* Opera */
+  }
+
+  .edit {
+    p {
+      margin: 0px;
+    }
+    .text-fragment-holder {
+      margin-top: 0px;
+    }
+    .slide-image-fragment {
+      margin-top: 0px;
+    }
+  }
+
+  .spinner-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: (@zindex-modal-background - 10);
+    background-color: @modal-backdrop-bg;
+    // Fade for backdrop
+    &.fade { .opacity(0);
+    }
+    &.in { .opacity(.5);
+    }
+  }
+
+  #spinner {
+    opacity: 1;
+    z-index: 1050;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -100px 0 0 -100px;
+    height: 200px;
+    width: 200px;
+    text-indent: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    -webkit-mask-image: url(/img/spinner.png);
+    background-color: @h1-font-color;
+    -webkit-animation-name: spinnerRotate;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+
+    animation-name: spinnerRotate;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+
+  @-webkit-keyframes spinnerRotate {
+    from {
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
+  .image-placeholder {
+    -webkit-transition: all ease-in-out 0.30s;
+    transition: all ease-in-out 0.30s;
+    -webkit-filter: drop-shadow(12px 12px 7px rgba(0, 0, 0, 0));
+    filter: drop-shadow(12px 12px 7px rgba(0, 0, 0, 0));
+    filter: url(/img/image-icon.png);
+    &:hover {
+      -webkit-filter: drop-shadow(12px 12px 7px rgba(0, 0, 0, 0.5));
+      filter: drop-shadow(12px 12px 7px rgba(0, 0, 0, 0.5));
+      filter: url(/img/image-icon.png);
+    }
+  }
+
+  .img-modal-close {
+    float: right;
+    color: #000;
+    cursor: pointer;
+  }
+
+  .image-add-top {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    color: #000;
+    cursor: pointer;
+  }
+
+  .image-youtube {
+    .image-add-top;
+    top: 60px;
+  }
+}

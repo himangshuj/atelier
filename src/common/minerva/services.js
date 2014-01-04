@@ -86,8 +86,7 @@
         }];
     };
     ng.module(app,
-        ['ui.router',
-        'ui.route'],
+        ['ui.router'],
         ["$provide", function ($provide) {
         $provide.provider("dialogue", dialogueService);
 

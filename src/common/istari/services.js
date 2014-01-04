@@ -8,7 +8,7 @@
 
     var andurilForger = function () {
         var injectors = {};
-        //given a question fetches the images for the answer
+        //given a question fetches the images for the presentation
         var _fetchImages = function (questionId) {
             var deferred = injectors.$q.defer();
             injectors.$http.get("/related-images/" + questionId, {cache: true})
@@ -22,26 +22,27 @@
             return deferred.promise;
         };
 
-        var _recordScript = function (answer, tuple) {
-            answer.script.push(tuple);
+        var _recordScript = function (presentation, tuple) {
+            presentation.script.push(tuple);
         };
 
-        var _insertScript = function (answer, script) {
-            answer.script = script;
-            return answer;
+        var _insertScript = function (presentation, script) {
+            presentation.script = script;
+            return presentation;
         };
-        var _postScript = function (answer) {
+        var _postScript = function (presentation) {
             //noinspection JSUnresolvedFunction
-            return answer.$update();
+            return presentation.$update();
         };
         this.$get = ["$http", "$log", "$q", "$resource", function ($http, $log, $q, $resource) {
             injectors.$http = $http;
             injectors.$log = $log;
             injectors.$q = $q;
             injectors.$resource = $resource;
+            var _cache = {};
             //declaring the resource
-            var Answer = $resource('/answer/:answerId', {
-                answerId: '@_id'
+            var presentation = $resource('/presentation/:presentationId', {
+                presentationId: '@_id'
             }, {
                 update: {
                     method: 'PUT'
@@ -49,41 +50,47 @@
             });
 
             return {
-                put: function (answer, page, presentationMap) {
+                put: function (presentation, page, presentationMap) {
                     //noinspection JSUnresolvedVariable
-                    var templateFragment = answer.presentationData;
+                    var templateFragment = presentation.presentationData;
                     templateFragment[page] = presentationMap;
-                    return answer;
+                    return presentation;
                 },
-                insert: function (answer, page, presentationMap) {
+                insert: function (presentation, page, presentationMap) {
                     "use strict";
-                    var templateFragment = answer.presentationData;
+                    var templateFragment = presentation.presentationData;
                     templateFragment.splice(page, 0, presentationMap);
-                    return answer;
+                    return presentation;
 
                 },
-                changeTemplate: function (answer, page, templateName) {
+                changeTemplate: function (presentation, page, templateName) {
                     "use strict";
-                    var templateFragment = answer.presentationData;
+                    var templateFragment = presentation.presentationData;
                     templateFragment[page].templateName = templateName;
                 },
-                remove: function (answer, page) {
+                remove: function (presentation, page) {
                     "use strict";
-                    var templateFragment = answer.presentationData;
+                    var templateFragment = presentation.presentationData;
                     templateFragment.splice(page, 1);
-                    return answer;
+                    return presentation;
                 },
-                post: function (answer) {
+                post: function (presentation) {
                     //noinspection JSUnresolvedFunction
-                    return answer.$update();
+                    _cache[presentation._id] = null;
+                    return presentation.$update();
                 },
                 fetchImages: _fetchImages,
-                fetchAnswer: function (answerId) {
+                fetchPresentation: function (presentationId) {
 
                     var deferred = $q.defer();
-                    Answer.get({answerId: answerId}, function (answer) {
-                        deferred.resolve(answer);
-                    });
+                    if (_cache[presentationId]) {
+                        deferred.resolve(_cache[presentationId]);
+                    } else {
+                        presentation.get({presentationId: presentationId}, function (presentation) {
+                            _cache[presentationId] = presentation;
+                            deferred.resolve(presentation);
+                        });
+                    }
                     return deferred.promise;
 
                 },

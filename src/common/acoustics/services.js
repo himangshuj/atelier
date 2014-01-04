@@ -69,7 +69,7 @@
         if (_streams[answerId]) {
             return _streams[answerId];
         }
-        var client = new BinaryClient("ws://socket.closed-beta.sokratik.com:" + $location.port() + "/ogg-writer");
+        var client = new BinaryClient("ws://socket." + $location.host + ":" + $location.port() + "/ogg-writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
@@ -104,7 +104,7 @@
             var audioInput = context.createMediaStreamSource(audioStream);
             deferred.resolve(audioInput);
         }, function (err) {
-           // console.log("getUserMedia error: " + err);
+            // console.log("getUserMedia error: " + err);
         });
         return deferred.promise;
     };
@@ -119,7 +119,7 @@
             var mediaRecorder = new MediaRecorder(mediaStream);
             deferred.resolve(mediaRecorder);
         }, function (err) {
-          //  console.log("getUserMedia error: " + err);
+            //  console.log("getUserMedia error: " + err);
         });
         return deferred.promise;
     };

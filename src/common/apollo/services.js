@@ -23,7 +23,7 @@
                 var deltaTime = (_mainAudio.currentTime * 1000) - reqdPosition;
                 if (Math.abs((reqdPosition / 1000) - playedTillNow) < 0.2) {
                     _mainAudio.play();
-                    _mainAudio.currentTime = reqdPosition/1000;
+                    _mainAudio.currentTime = reqdPosition / 1000;
                     _mainAudio.volume = 1;
                     deferred.resolve("Audio seeked " + _mainAudio.currentTime);
                 } else if (deltaTime > 0) {
@@ -61,10 +61,10 @@
                 getBGAudio: function () {
                     return _backGroundAudio;
                 },
-                redo: function(context,deferred){
+                redo: function (context, deferred) {
                     var args = context.params;
                     var pausedInterval = parseInt(args.pausedInterval, 10);
-                    var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval)/1000;
+                    var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval) / 1000;
                     deferred.notify("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
                     _mainAudio.currentTime = reqdPosition;
                     _mainAudio.pause();
@@ -78,7 +78,7 @@
                         }
                         _mainAudio.pause();
                     } else {
-                      //  $log.info("trying to pause null audio");
+                        //  $log.info("trying to pause null audio");
                     }
                     return context;
                 },
@@ -91,7 +91,7 @@
                     backGroundAudio.play();
                     backGroundAudio.volume = 0;
                     backGroundAudio.loop = true;
-                   // $log.info("[Play ] BackGround Audio played");
+                    // $log.info("[Play ] BackGround Audio played");
                 },
                 initBGAudio: function (index, volume) {
 

@@ -45,6 +45,7 @@ describe('record section control ', function () {
 
     beforeEach(inject(function ($rootScope, anduril, $state) {
         scope = $rootScope.$new();
+        scope.enableCanvas = angular.noop;
         spyOn(anduril, "put");
         spyOn($state, "go").andCallFake(function () {
             _.defer(scope.pause);
@@ -63,7 +64,7 @@ describe('record section control ', function () {
             anduril: anduril,
             $q: q,
             answer: answer,
-            recordAction: {},
+            recordAction: angular.noop,
             recorder: {}
         });
         expect(answer.script).toBeDefined();
@@ -116,21 +117,21 @@ describe('record section control ', function () {
         expect(scope.redoSlide).toBe(definedRedo);
         scope.record();
         expect(scope.redoSlide).not.toBe(definedRedo);
-        expect(answer.script.length).toBe(3);
+        expect(answer.script.length).toBe(4);
         answer.script.push("to Remove");
         answer.script.push("to Remove");
-        expect(answer.script.length).toBe(5);
-        expect(answer.script[3]).toBe("to Remove");
+        expect(answer.script.length).toBe(6);
+        expect(answer.script[4]).toBe("to Remove");
         expect(scope.redoSlide).toBeDefined();
-        expect(answer.script[2].fnName).toBe("resume");
+        expect(answer.script[3].fnName).toBe("resume");
         var resumeTime = answer.script[2].actionInitiated;
         scope.redoSlide();
-        expect(answer.script.length).toBe(5);
-        expect(answer.script[2].fnName).toBe("resume");
-        expect(answer.script[2].actionInitiated).toBe(resumeTime);
-        expect(answer.script[3].fnName).toBe("redo");
-        expect(answer.script[4].fnName).toBe("pause"); //this is added by redo
-        expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 5 });
+        expect(answer.script.length).toBe(6);
+        expect(answer.script[3].fnName).toBe("resume");
+        expect(answer.script[3].actionInitiated/10).toBeCloseTo(resumeTime/10,0);
+        expect(answer.script[4].fnName).toBe("redo");
+        expect(answer.script[5].fnName).toBe("pause"); //this is added by redo
+        expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 6 });
         var timedOut = false;
         runs(function () {
             setTimeout(function () {
@@ -141,25 +142,25 @@ describe('record section control ', function () {
             return timedOut;
         }, "force delay bombed", 500);
         runs(function () {
-            expect(answer.script.length).toBe(6);
+            expect(answer.script.length).toBe(7);
             expect(answer.script[5].fnName).toBe("pause"); //this is added by state change
             scope.record();
             expect(scope.redoSlide).not.toBe(definedRedo);
-            expect(answer.script.length).toBe(7);
+            expect(answer.script.length).toBe(8);
             answer.script.push("to Remove");
             answer.script.push("to Remove");
-            expect(answer.script.length).toBe(9);
-            expect(answer.script[7]).toBe("to Remove");
+            expect(answer.script.length).toBe(10);
+            expect(answer.script[9]).toBe("to Remove");
             expect(scope.redoSlide).toBeDefined();
-            expect(answer.script[6].fnName).toBe("resume");
+            expect(answer.script[7].fnName).toBe("resume");
             var resumeTime = answer.script[6].actionInitiated;
             scope.redoSlide();
-            expect(answer.script.length).toBe(9);
-            expect(answer.script[6].fnName).toBe("resume");
+            expect(answer.script.length).toBe(10);
+            expect(answer.script[7].fnName).toBe("resume");
             expect(answer.script[6].actionInitiated).toBe(resumeTime);
-            expect(answer.script[7].fnName).toBe("redo");
-            expect(answer.script[8].fnName).toBe("pause"); //this is added by redo
-            expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 5 });
+            expect(answer.script[8].fnName).toBe("redo");
+            expect(answer.script[9].fnName).toBe("pause"); //this is added by redo
+            expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 6 });
             var timedOut = false;
             runs(function () {
                 setTimeout(function () {
@@ -170,7 +171,7 @@ describe('record section control ', function () {
                 return timedOut;
             }, "force delay bombed", 500);
             runs(function () {
-                expect(answer.script.length).toBe(10);
+                expect(answer.script.length).toBe(11);
                 expect(answer.script[9].fnName).toBe("pause"); //this is added by state change
             });
 
@@ -225,6 +226,7 @@ describe("record active initialization", function () {
 
     beforeEach(inject(function ($rootScope, anduril, $state) {
         scope = $rootScope.$new();
+        scope.enableCanvas = angular.noop;
         spyOn(anduril, "put");
         spyOn($state, "go").andCallFake(function () {
             _.defer(scope.pause);
@@ -310,6 +312,7 @@ describe("record active control", function () {
 
     beforeEach(inject(function ($rootScope, anduril, $state, $controller, $modal, $log, dialogue, sokratube) {
         scope = $rootScope.$new();
+        scope.enableCanvas = angular.noop;
         spyOn(anduril, "put");
         spyOn($state, "go").andCallFake(function () {
             _.defer(scope.pause);

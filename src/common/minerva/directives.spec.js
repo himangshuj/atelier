@@ -14,9 +14,9 @@ describe('minerva edit mode text', function () {
         scope = $rootScope;
         compile = $compile;
         $state.current.data = {"mode": "edit"};
-        $templateCache.put("/views/templates/textOnly.html", "<sokratik-fragment type=\"text\" model=\"text3\" default=\"default text\"" +
+        $templateCache.put("templates/textOnly.tpl.html", "<sokratik-fragment type=\"text\" model=\"text3\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment>");
-        $templateCache.put("/views/templates/2textOnly.html", "<sokratik-fragment type=\"text\" model=\"text1\" default=\"default text\"" +
+        $templateCache.put("templates/2textOnly.tpl.html", "<sokratik-fragment type=\"text\" model=\"text1\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment><sokratik-fragment type=\"text\" model=\"text2\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment>");
 
@@ -132,9 +132,9 @@ describe('minerva record mode text', function () {
         scope = $rootScope;
         compile = $compile;
         $state.current.data = {"mode": "record"};
-        $templateCache.put("/views/templates/textOnly.html", "<sokratik-fragment type=\"text\" model=\"text3\" default=\"default text\"" +
+        $templateCache.put("templates/textOnly.tpl.html", "<sokratik-fragment type=\"text\" model=\"text3\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment>");
-        $templateCache.put("/views/templates/2textOnly.html", "<sokratik-fragment type=\"text\" model=\"text1\" default=\"default text\"" +
+        $templateCache.put("templates/2textOnly.tpl.html", "<sokratik-fragment type=\"text\" model=\"text1\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment><sokratik-fragment type=\"text\" model=\"text2\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment>");
 
@@ -204,9 +204,9 @@ describe('minerva play mode text', function () {
         scope = $rootScope;
         compile = $compile;
         $state.current.data = {"mode": "play"};
-        $templateCache.put("/views/templates/textOnly.html", "<sokratik-fragment type=\"text\" model=\"text3\" default=\"default text\"" +
+        $templateCache.put("templates/textOnly.tpl.html", "<sokratik-fragment type=\"text\" model=\"text3\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment>");
-        $templateCache.put("/views/templates/2textOnly.html", "<sokratik-fragment type=\"text\" model=\"text1\" default=\"default text\"" +
+        $templateCache.put("templates/2textOnly.tpl.html", "<sokratik-fragment type=\"text\" model=\"text1\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment><sokratik-fragment type=\"text\" model=\"text2\" default=\"default text\"" +
             " placeholder=\"Click to edit line 3\"></sokratik-fragment>");
 
@@ -282,8 +282,8 @@ describe('minerva edit mode image', function () {
         scope = $rootScope;
         compile = $compile;
         $state.current.data = {"mode": "edit"};
-        $templateCache.put("/views/templates/1Image.html", fragment);
-        $templateCache.put("/views/templates/2Image.html", "<sokratik-fragment type=\"image\" caption=\"\" model=\"image1\" " +
+        $templateCache.put("templates/1Image.tpl.html", fragment);
+        $templateCache.put("templates/2Image.tpl.html", "<sokratik-fragment type=\"image\" caption=\"\" model=\"image1\" " +
             "default=\"http://blog.latterdaylearning.org/wp-content/uploads/2013/04/importance_of_education_1.jpg\"" +
             " caption=\"leaves\">" +
             "</sokratik-fragment>" +
@@ -495,8 +495,8 @@ describe('minerva record mode image', function () {
         scope = $rootScope;
         compile = $compile;
         $state.current.data = {"mode": "record"};
-        $templateCache.put("/views/templates/1Image.html", fragment);
-        $templateCache.put("/views/templates/2Image.html", "<sokratik-fragment type=\"image\" caption=\"\" model=\"image1\" " +
+        $templateCache.put("templates/1Image.tpl.html", fragment);
+        $templateCache.put("templates/2Image.tpl.html", "<sokratik-fragment type=\"image\" caption=\"\" model=\"image1\" " +
             "default=\"http://blog.latterdaylearning.org/wp-content/uploads/2013/04/importance_of_education_1.jpg\"" +
             " caption=\"leaves\">" +
             "</sokratik-fragment>" +
@@ -592,8 +592,8 @@ describe('minerva play mode image', function () {
         scope = $rootScope;
         compile = $compile;
         $state.current.data = {"mode": "play"};
-        $templateCache.put("/views/templates/1Image.html", fragment);
-        $templateCache.put("/views/templates/2Image.html", "<sokratik-fragment type=\"image\" caption=\"\" model=\"image1\" " +
+        $templateCache.put("templates/1Image.tpl.html", fragment);
+        $templateCache.put("templates/2Image.tpl.html", "<sokratik-fragment type=\"image\" caption=\"\" model=\"image1\" " +
             "default=\"http://blog.latterdaylearning.org/wp-content/uploads/2013/04/importance_of_education_1.jpg\"" +
             " caption=\"leaves\">" +
             "</sokratik-fragment>" +

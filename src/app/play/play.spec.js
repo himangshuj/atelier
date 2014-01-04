@@ -1,12 +1,12 @@
 var startTime = (new Date()).getTime();
 var presentationData = [
-    {templateName: "templateName", keyVals: {k1: "v1", k2: "v2"}}
+    {templateName: 'templateName', keyVals: {k1: 'v1', k2: 'v2'}}
 ];
 var successFn = {mock: function (params) {
 
 }};
 var deferred = {promise: {then: angular.noop},
-    resolve: "resolve"
+    resolve: 'resolve'
 };
 var q = {
     defer: function () {
@@ -21,46 +21,47 @@ var q = {
     }
 };
 
-var answer = {_id: "answerId",
+var presentation = {_id: 'answerId',
+    audioLocation: 'audioLocation',
     script: [
-        {fnName: "changeState",
-            args: {subState: ".activate", params: {page: 0}},
-            actionInitiated: startTime + 1000, module: "dialogue"} ,
-        {fnName: "pause",
+        {fnName: 'changeState',
+            args: {subState: '.activate', params: {page: 0}},
+            actionInitiated: startTime + 1000, module: 'dialogue'} ,
+        {fnName: 'pause',
             args: { params: {page: 0}},
-            actionInitiated: startTime + 2000, module: "apollo"} ,
-        {fnName: "resume",
+            actionInitiated: startTime + 2000, module: 'apollo'} ,
+        {fnName: 'resume',
             args: { params: {page: 0}},
-            actionInitiated: startTime + 3000, module: "apollo"} ,
-        {fnName: "makeVisible",
+            actionInitiated: startTime + 3000, module: 'apollo'} ,
+        {fnName: 'makeVisible',
             args: { params: {page: 0}},
-            actionInitiated: startTime + 4000, module: "dialogue"},
-        {fnName: "redo",
+            actionInitiated: startTime + 4000, module: 'dialogue'},
+        {fnName: 'redo',
             args: { params: {page: 0}},
-            actionInitiated: startTime + 9000, module: "apollo"},
-        {fnName: "pause",
+            actionInitiated: startTime + 9000, module: 'apollo'},
+        {fnName: 'pause',
             args: { params: {page: 0}},
-            actionInitiated: startTime + 10000, module: "apollo"} ,
-        {fnName: "resume",
+            actionInitiated: startTime + 10000, module: 'apollo'} ,
+        {fnName: 'resume',
             args: { params: {page: 0}},
-            actionInitiated: startTime + 11000, module: "apollo"} ,
-        {fnName: "changeState",
-            args: {subState: ".activate", params: {page: 1}},
-            actionInitiated: startTime + 14000, module: "dialogue"}
+            actionInitiated: startTime + 11000, module: 'apollo'} ,
+        {fnName: 'changeState',
+            args: {subState: '.activate', params: {page: 1}},
+            actionInitiated: startTime + 14000, module: 'dialogue'}
     ],
     presentationData: presentationData};
-atelierPlayer(angular, "sokratik.atelier.player", answer);
 describe('Player Ctrl', function () {
     beforeEach(module('sokratik.atelier.player'));
     var scope;
     beforeEach(inject(function ($rootScope) {
         scope = $rootScope.$new();
     }));
-    it("test initialization", inject(function ($controller) {
-        $controller("PlayCtrl", {
-            $scope: scope
+    it('test initialization', inject(function ($controller) {
+        $controller('PlayCtrl', {
+            $scope: scope,
+            presentation: presentation
         });
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(scope.presentations).toBe(presentationData);
     }));
 });
@@ -72,29 +73,42 @@ describe('Player Audio', function () {
         modules.apollo = apollo;
         modules.dialogue = dialogue;
         modules.sokratube = sokratube;
-        spyOn(successFn, "mock");
-        spyOn(_, "delay").andCallThrough();
-        spyOn(apollo, "initBGAudio");
-        spyOn(q, "when").andCallThrough();
-        spyOn(dialogue, "changeState").andCallFake(function () {
+        spyOn(successFn, 'mock');
+        spyOn(_, 'delay').andCallThrough();
+        spyOn(apollo, 'initBGAudio');
+        spyOn(q, 'when').andCallThrough();
+        spyOn(dialogue, 'changeState').andCallFake(function () {
             return arguments;
         });
     }));
-    it("test Bg audio", inject(function ($controller, $state, apollo) {
+    it('test Bg audio', inject(function ($controller, $state, apollo) {
         jasmine.Clock.useMock();
-        $controller("PlayAudio", {
+        $controller('PlayInit', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime, pausedInterval: 0, scriptIndex: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
         });
-
         expect(apollo.initBGAudio).toHaveBeenCalled();
         expect(_.delay).toHaveBeenCalledWith(jasmine.any(Function), 1000);
         jasmine.Clock.tick(1001);
         expect(q.when).toHaveBeenCalled();
         expect(successFn.mock).toHaveBeenCalledWith(angular.noop);
+    }));
+    it('audioLocation Set test', inject(function ($controller, $state, apollo) {
+        jasmine.Clock.useMock();
+        $controller('PlayInit', {
+            $scope: scope,
+            $state: $state,
+            modules: modules,
+            $stateParams: {timeStamp: startTime, pausedInterval: 0, scriptIndex: 0},
+            $q: q,
+            presentation: presentation
+        });
+        expect(scope.audioLocation).toBeDefined();
+
     }));
 });
 describe('Player Activate', function () {
@@ -105,39 +119,40 @@ describe('Player Activate', function () {
         modules.apollo = apollo;
         modules.dialogue = dialogue;
         modules.sokratube = sokratube;
-        spyOn(successFn, "mock");
-        spyOn(_, "delay").andCallThrough();
-        spyOn(apollo, "initBGAudio");
-        spyOn(q, "when").andCallThrough();
-        spyOn(dialogue, "changeState").andCallFake(function () {
+        spyOn(successFn, 'mock');
+        spyOn(_, 'delay').andCallThrough();
+        spyOn(apollo, 'initBGAudio');
+        spyOn(q, 'when').andCallThrough();
+        spyOn(dialogue, 'changeState').andCallFake(function () {
             return arguments;
         });
-        spyOn(dialogue, "makeVisible").andCallFake(function () {
+        spyOn(dialogue, 'makeVisible').andCallFake(function () {
             return arguments;
         });
-        spyOn(apollo, "resume").andCallFake(function () {
+        spyOn(apollo, 'resume').andCallFake(function () {
             return arguments;
         });
-        spyOn(apollo, "pause").andCallFake(function () {
+        spyOn(apollo, 'pause').andCallFake(function () {
             return arguments;
         });
-        spyOn(dialogue, "resetFragments").andCallFake(function () {
+        spyOn(dialogue, 'resetFragments').andCallFake(function () {
             return {then: function (callback) {
                 callback();
             }};
         });
     }));
-    it("real timer pause", inject(function ($controller, $state, dialogue) {
+    it('real timer pause', inject(function ($controller, $state, dialogue) {
         var timeOutEnded = false;
-        $controller("PlayActive", {
+        $controller('PlayActive', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime, pausedInterval: 0, scriptIndex: 1, page: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
         });
         expect(scope.presentation).toBe(presentationData[0]);
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(_.delay).not.toHaveBeenCalled();
         scope.addFragment(function () {
             return [];
@@ -152,7 +167,7 @@ describe('Player Activate', function () {
 
         waitsFor(function () {
             return timeOutEnded;
-        }, "force delay bailed", 1000);
+        }, 'force delay bailed', 1000);
 
 
         runs(function () {
@@ -161,20 +176,22 @@ describe('Player Activate', function () {
         });
 
     }));
-    it("fake timer pause", inject(function ($controller, $state, dialogue, apollo) {
+    it('fake timer pause', inject(function ($controller, $state, dialogue, apollo) {
         jasmine.Clock.useMock();
-        $controller("PlayActive", {
+        $controller('PlayActive', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime, pausedInterval: 0, scriptIndex: 1, page: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
+
         });
-        spyOn(_, "defer").andCallFake(function (fn) {
+        spyOn(_, 'defer').andCallFake(function (fn) {
             fn();
         });
         expect(scope.presentation).toBe(presentationData[0]);
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(_.delay).not.toHaveBeenCalled();
         scope.addFragment(function () {
             return [];
@@ -187,20 +204,21 @@ describe('Player Activate', function () {
         expect(apollo.pause).toHaveBeenCalled();
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);
     }));
-    it("resume", inject(function ($controller, $state, dialogue, apollo) {
+    it('resume', inject(function ($controller, $state, dialogue, apollo) {
         jasmine.Clock.useMock();
-        $controller("PlayActive", {
+        $controller('PlayActive', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime, pausedInterval: 0, scriptIndex: 2, page: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
         });
-        spyOn(_, "defer").andCallFake(function (fn) {
+        spyOn(_, 'defer').andCallFake(function (fn) {
             fn();
         });
         expect(scope.presentation).toBe(presentationData[0]);
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(_.delay).not.toHaveBeenCalled();
         scope.addFragment(function () {
             return [];
@@ -214,20 +232,21 @@ describe('Player Activate', function () {
         expect(apollo.resume).toHaveBeenCalledWith({ params: { scriptIndex: 3, timeStamp: jasmine.any(Number), page: 0, pausedInterval: 3000 }, fragments: [  ] }, deferred);
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);
     }));
-    it("make Visible", inject(function ($controller, $state, dialogue, apollo) {
+    it('make Visible', inject(function ($controller, $state, dialogue, apollo) {
         jasmine.Clock.useMock();
-        $controller("PlayActive", {
+        $controller('PlayActive', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime + 2000, pausedInterval: 0, scriptIndex: 3, page: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
         });
-        spyOn(_, "defer").andCallFake(function (fn) {
+        spyOn(_, 'defer').andCallFake(function (fn) {
             fn();
         });
         expect(scope.presentation).toBe(presentationData[0]);
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(_.delay).not.toHaveBeenCalled();
         scope.addFragment(function () {
             return [];
@@ -240,21 +259,23 @@ describe('Player Activate', function () {
         expect(dialogue.makeVisible).toHaveBeenCalled();
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);
     }));
-    it("redo", inject(function ($controller, $state, dialogue, apollo) {
+    it('redo', inject(function ($controller, $state, dialogue, apollo) {
         jasmine.Clock.useMock();
-        $controller("PlayActive", {
+        $controller('PlayActive', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime + 2000, pausedInterval: 0, scriptIndex: 4, page: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
+
         });
-        spyOn(_, "defer").andCallFake(function (fn) {
+        spyOn(_, 'defer').andCallFake(function (fn) {
             fn();
         });
-        spyOn(apollo, "redo");
+        spyOn(apollo, 'redo');
         expect(scope.presentation).toBe(presentationData[0]);
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(_.delay).not.toHaveBeenCalled();
         scope.addFragment(function () {
             return [];
@@ -269,20 +290,21 @@ describe('Player Activate', function () {
             deferred);
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);
     }));
-    it("resume last", inject(function ($controller, $state, dialogue, apollo) {
+    it('resume last', inject(function ($controller, $state, dialogue, apollo) {
         jasmine.Clock.useMock();
-        $controller("PlayActive", {
+        $controller('PlayActive', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime + 6000, pausedInterval: 4000, scriptIndex: 6, page: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
         });
-        spyOn(_, "defer").andCallFake(function (fn) {
+        spyOn(_, 'defer').andCallFake(function (fn) {
             fn();
         });
         expect(scope.presentation).toBe(presentationData[0]);
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(_.delay).not.toHaveBeenCalled();
         scope.addFragment(function () {
             return [];
@@ -296,20 +318,22 @@ describe('Player Activate', function () {
         expect(apollo.resume).toHaveBeenCalledWith({ params: { scriptIndex: 7, timeStamp: jasmine.any(Number), page: 0, pausedInterval: 9000 }, fragments: [  ] }, deferred);
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);
     }));
-    it("resume no initial pausedInterval", inject(function ($controller, $state, dialogue, apollo) {
+    it('resume no initial pausedInterval', inject(function ($controller, $state, dialogue, apollo) {
         jasmine.Clock.useMock();
-        $controller("PlayActive", {
+        $controller('PlayActive', {
             $scope: scope,
             $state: $state,
             modules: modules,
             $stateParams: {timeStamp: startTime + 7000, pausedInterval: 0, scriptIndex: 6, page: 0},
-            $q: q
+            $q: q,
+            presentation: presentation
+
         });
-        spyOn(_, "defer").andCallFake(function (fn) {
+        spyOn(_, 'defer').andCallFake(function (fn) {
             fn();
         });
         expect(scope.presentation).toBe(presentationData[0]);
-        expect(scope.presentationId).toBe("answerId");
+        expect(scope.presentationId).toBe('answerId');
         expect(_.delay).not.toHaveBeenCalled();
         scope.addFragment(function () {
             return [];
@@ -323,6 +347,5 @@ describe('Player Activate', function () {
         expect(apollo.resume).toHaveBeenCalledWith({ params: { scriptIndex: 7, timeStamp: jasmine.any(Number), page: 0, pausedInterval: 4000}, fragments: [  ] }, deferred);
         expect(successFn.mock).not.toHaveBeenCalledWith(angular.noop);
     }));
-
 
 });
