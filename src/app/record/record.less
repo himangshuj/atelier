@@ -1,52 +1,55 @@
 @import "../../less/mixins";
 
-.button-record {
-  .generate-button(4px, -142px, 0px, inherit, 5px, 0px);
-}
-
-
-.button-complete {
-  .generate-button(4px, -10px, 0px, inherit, 5px, 0px);
-}
-
-.button-top-left-0 {
-  .generate-button-alternate(4px, 90px, 104px, 5px);
-}
-
-.button-top-left-1 {
-  .generate-button-alternate(4px, 10px, 10px, 5px);
-}
-
-.button-top-left-2 {
-  .generate-button-alternate(4px, 200px, 200px, 5px);
-}
-
-.button-top-left-3 {
-  .generate-button-alternate(4px, 260px, 260px, 5px);
-}
-
-.blinkerConfig () {
-  0% {
-    opacity: 1.0;
-  }
-  50% {
-    opacity: 0.0;
-  }
-  100% {
-    opacity: 1.0;
+.presentation {
+  .button-record {
+    .generate-button(4px, -142px, 0px, inherit, 5px, 0px);
   }
 
-}
+  .button-complete {
+    .generate-button(4px, -10px, 0px, inherit, 5px, 0px);
+  }
 
-@-moz-keyframes blinker {
+  .button-top-left-0 {
+    .generate-button-alternate(4px, 90px, 104px, 5px);
+  }
+
+  .button-top-left-1 {
+    .generate-button-alternate(4px, 10px, 10px, 5px);
+  }
+
+  .button-top-left-2 {
+    .generate-button-alternate(4px, 200px, 200px, 5px);
+  }
+
+  .button-top-left-3 {
+    .generate-button-alternate(4px, 260px, 260px, 5px);
+  }
+
+  .blinkerConfig () {
+    0% {
+      opacity: 1.0;
+    }
+    50% {
+      opacity: 0.0;
+    }
+    100% {
+      opacity: 1.0;
+    }
+
+  }
+
+  @-moz-keyframes blinker {
 
   .blinkerConfig
 
 ;
-  }
+}
 
 @-webkit-keyframes blinker {
-  .blinkerConfig;
+
+  .blinkerConfig
+
+;
   }
 
 @keyframes blinker {
@@ -56,8 +59,7 @@
 ;
   }
 
-
-.record-blink{
+.record-blink {
   position: fixed;
   top: 10px;
   left: 10px;
@@ -82,6 +84,8 @@
   animation-iteration-count: infinite;
 }
 
-.record .btn{
+.record .btn {
   z-index: 10001;
 }
+
+  }

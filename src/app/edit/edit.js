@@ -81,8 +81,11 @@
         }])
 
         .controller('EditController',
-            ["$scope", "page", "$stateParams", "presentation", "anduril", "$state", "$modal", "$log",
-                function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $log) {
+            ["$scope", "page", "$stateParams", "presentation", "anduril", "$state", "$modal", "$rootScope",
+                function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $rootScope) {
+
+                    $rootScope.presentationMode = true;
+                    $rootScope.navigationMode = false;
                     //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;
@@ -97,7 +100,7 @@
                     page = parseInt(page, 10);
                     $scope.record = function () {
                         anduril.post(presentation);
-                        $state.go("record.activate",{page:0});
+                        $state.go("record.activate", {page: 0});
 
                     };
 
@@ -155,10 +158,8 @@
                         return modalInstance;
                     };
                 }])
-        .controller('TemplateCtrl', ['$rootScope', function TemplateController($rootScope) {
-            $rootScope.showCase = false;
-            $rootScope.hideMenu = true;
-        }]);
+        .controller('TemplateCtrl', function TemplateController() {
+        });
 })(angular, "sokratik.atelier.edit");
 
 

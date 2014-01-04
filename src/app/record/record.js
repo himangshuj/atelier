@@ -132,8 +132,8 @@
                         pause();
                         $scope.recording = false;
                     });
-                $rootScope.hideMenu = true;
-                $rootScope.showCase = false;
+                $rootScope.presentationMode = true;
+                $rootScope.navigationMode = false;
             }])
 
         .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction",

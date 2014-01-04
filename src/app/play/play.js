@@ -89,15 +89,17 @@
                 })
             ;
         }])
-        .controller('PlayCtrl', ['$scope', 'presentation',
-            function ($scope, presentation) {
+        .controller('PlayCtrl', ['$scope', 'presentation', '$rootScope',
+            function ($scope, presentation, $rootScope) {
                 //noinspection JSUnresolvedVariable
                 $scope.presentations = presentation.presentationData;
                 $scope.presentationId = presentation._id;
+                $rootScope.presentationMode = true;
+                $rootScope.navigationMode = false;
 
             }])
-        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope','$sce',
-            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope,$sce) {
+        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce',
+            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope, $sce) {
                 'use strict';
                 modules.apollo.initBGAudio();
                 $rootScope.audioLocation = $sce.trustAsResourceUrl(presentation.audioLocation);
