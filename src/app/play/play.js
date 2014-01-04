@@ -41,7 +41,7 @@
             'ngSanitize',
             'ngAnimate'])
         .config(['$stateProvider', function config($stateProvider) {
-            $stateProvider.state('play', {
+            $stateProvider.state('sokratik.play', {
                 url: '/play/:presentationId/:scriptIndex/:timeStamp/:pausedInterval',
                 abstract: true,
                 resolve: {
@@ -67,10 +67,9 @@
                         controller: 'PlayCtrl',
                         templateUrl: 'play/play.tpl.html'
                     }
-                },
-                parent: 'root'
+                }
             })
-                .state('play.activate', {
+                .state('sokratik.play.activate', {
                     url: '/activate/:page',
                     views: {
                         'screen': {
@@ -79,7 +78,7 @@
                         }
                     }
                 })
-                .state('play.init', {
+                .state('sokratik.play.init', {
                     url: '/init',
                     views: {
                         'audio': {
