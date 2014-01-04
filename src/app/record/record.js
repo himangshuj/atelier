@@ -14,7 +14,7 @@
             $stateProvider.state('record', {
                 url: '/record/:presentationId',
                 resolve: {
-                    answer: ["$stateParams", "anduril", function ($stateParams, anduril) {
+                    presentation: ["$stateParams", "anduril", function ($stateParams, anduril) {
                         return anduril.fetchPresentation($stateParams.presentationId);
                     }],
                     mediaRecorderOrAudioNode: ["acoustics", function (acoustics) {
@@ -33,10 +33,10 @@
                                 stream: stream};
                         }
                     }],
-                    recordAction: ["anduril", "answer", function (anduril, answer) {
+                    recordAction: ["anduril", "presentation", function (anduril, presentation) {
                         "use strict";
                         return function (resp) {
-                            return anduril.recordAction(answer, resp);
+                            return anduril.recordAction(presentation, resp);
                         };
                     }]
                 },
@@ -62,7 +62,7 @@
                 }
             });
             $stateProvider.state('complete', {
-                url: "/complete/:answerId",
+                url: "/complete/:presentationId",
                 views: {
                     "main": {
                         controller: 'RecordComplete',
@@ -73,15 +73,15 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "answer", "recordAction", "recorder", "$rootScope","canvas",
-            function ($scope, acoustics, $state, anduril, $q, answer, recordAction, recorder, $rootScope,canvas) {
-                answer.script = [];//reseting the script    //TODO This is crap
+        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "presentation", "recordAction", "recorder", "$rootScope","canvas",
+            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope,canvas) {
+                presentation.script = [];//reseting the script    //TODO This is crap
                 recordAction({fnName: "changeState",
                     args: {subState: '.activate', params: {page: 0}},
                     actionInitiated: new Date().getTime(), module: "dialogue"});
 
-                $scope.presentationId = answer._id;
-                answer.recordingStarted = new Date().getTime();    //TODO this is crap
+                $scope.presentationId = presentation._id;
+                presentation.recordingStarted = new Date().getTime();    //TODO this is crap
                 $scope.drawing = false;
                 var enableCanvas = $scope.enableCanvas = function(arg) {
                     canvas.enableCanvas(arg);
@@ -103,24 +103,24 @@
                     acoustics.resume(recorder);
                     recordAction({"fnName": "resume", "args": {},
                         actionInitiated: new Date().getTime(), module: "apollo"});
-                    var instructionsToKeep = _.clone(answer.script);
+                    var instructionsToKeep = _.clone(presentation.script);
                     $scope.redoSlide = function () {
                         "use strict";
-                        anduril.insertScript(answer, instructionsToKeep);
+                        anduril.insertScript(presentation, instructionsToKeep);
                         recordAction({"fnName": "redo", "args": {}, module: "dialogue",
                             actionInitiated: new Date().getTime() });
                         pause();
-                        $state.go("record.activate", {dummy: _.size(answer.script)});
+                        $state.go("record.activate", {dummy: _.size(presentation.script)});
                     };
                 };
-                var answerId = answer._id;//this is a HACK replace with restangular why this is hack log the answer in
+                var presentationId = presentation._id;//this is a HACK replace with restangular why this is hack log the presentation in
                 //then clause
                 $scope.complete = function () {
-                    acoustics.stopRecording(recorder, answer._id).then(function (resp) {
-                        $q.when(anduril.completeRecord(answer))
+                    acoustics.stopRecording(recorder, presentation._id).then(function (resp) {
+                        $q.when(anduril.completeRecord(presentation))
                             .then(function () {
                                 "use strict";
-                                $state.go("complete", {answerId: answerId});
+                                $state.go("complete", {presentationId: presentationId});
                             });
                     });
                 };
@@ -136,14 +136,14 @@
                 $rootScope.navigationMode = false;
             }])
 
-        .controller('RecordDialogue', ["$scope", "answer", "anduril", "dialogue", "$stateParams", "recordAction",
+        .controller('RecordDialogue', ["$scope", "presentation", "anduril", "dialogue", "$stateParams", "recordAction",
             "$q", "sokratube","canvas",
-            function ($scope, answer, anduril, dialogue, $stateParams, recordAction, $q, sokratube,canvas) {
+            function ($scope, presentation, anduril, dialogue, $stateParams, recordAction, $q, sokratube,canvas) {
                 var page = parseInt($stateParams.page, 10);
                 $scope.page = page;
-                var activePresentation = $scope.presentation = answer.presentationData[page];
+                var activePresentation = $scope.presentation = presentation.presentationData[page];
                 var fragmentFn = null;
-                $scope.totalPages = _.size(answer.presentationData);
+                $scope.totalPages = _.size(presentation.presentationData);
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
 
@@ -181,6 +181,6 @@
         ])
         .controller('RecordComplete', ["$scope", "$stateParams", function ($scope, $stateParams) {
             "use strict";
-            $scope.answerId = $stateParams.answerId;
+            $scope.presentationId = $stateParams.presentationId;
         }]);
 })(angular, "sokratik.atelier.record");
