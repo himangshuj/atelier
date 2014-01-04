@@ -1,0 +1,91 @@
+@import "../../less/mixins";
+
+.presentation {
+  .button-record {
+    .generate-button(4px, -142px, 0px, inherit, 5px, 0px);
+  }
+
+  .button-complete {
+    .generate-button(4px, -10px, 0px, inherit, 5px, 0px);
+  }
+
+  .button-top-left-0 {
+    .generate-button-alternate(4px, 90px, 104px, 5px);
+  }
+
+  .button-top-left-1 {
+    .generate-button-alternate(4px, 10px, 10px, 5px);
+  }
+
+  .button-top-left-2 {
+    .generate-button-alternate(4px, 200px, 200px, 5px);
+  }
+
+  .button-top-left-3 {
+    .generate-button-alternate(4px, 260px, 260px, 5px);
+  }
+
+  .blinkerConfig () {
+    0% {
+      opacity: 1.0;
+    }
+    50% {
+      opacity: 0.0;
+    }
+    100% {
+      opacity: 1.0;
+    }
+
+  }
+
+  @-moz-keyframes blinker {
+
+  .blinkerConfig
+
+;
+}
+
+@-webkit-keyframes blinker {
+
+  .blinkerConfig
+
+;
+  }
+
+@keyframes blinker {
+
+  .blinkerConfig
+
+;
+  }
+
+.record-blink {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  color: #fa5f5f;
+  z-index: 1000;
+}
+
+.blink_me {
+  -webkit-animation-name: blinker;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+
+  -moz-animation-name: blinker;
+  -moz-animation-duration: 1s;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: infinite;
+
+  animation-name: blinker;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.record .btn {
+  z-index: 10001;
+}
+
+  }

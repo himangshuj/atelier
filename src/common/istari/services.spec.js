@@ -93,11 +93,11 @@ describe('istari , the one where we do not talk to the server', function () {
 
 });
 describe("istari, the one where we talk to server", function () {
-    var answer, httpBackend;
+    var presentation, httpBackend;
     beforeEach(module('sokratik.atelier.istari.services'));
     beforeEach(inject(function ($httpBackend, anduril) {
-        $httpBackend.when('GET', '/answer/answerId').respond(
-            {_id: "answerId",
+        $httpBackend.when('GET', '/presentation/presentationId').respond(
+            {_id: "presentationId",
                 presentationData: [
                     {templateName: "template",
                         keyVals: {key1: "val1"}},
@@ -108,20 +108,20 @@ describe("istari, the one where we talk to server", function () {
         );
 
         httpBackend = $httpBackend;
-        anduril.fetchAnswer("answerId").then(function (_answer_) {
-            answer = _answer_;
+        anduril.fetchPresentation("presentationId").then(function (_presentation_) {
+            presentation = _presentation_;
         });
         $httpBackend.flush();
     }));
     it("saveAnswer", inject(function (anduril) {
-        httpBackend.when('PUT', '/answer/answerId').respond(function (method, url, data) {
+        httpBackend.when('PUT', '/presentation/presentationId').respond(function (method, url, data) {
                 return [200, data];
             }
         );
         var posted = false;
-        anduril.post(answer).then(function (resp) {
+        anduril.post(presentation).then(function (resp) {
             posted = true;
-            expect(resp._id).toBe("answerId");
+            expect(resp._id).toBe("presentationId");
         });
         httpBackend.flush();
         waitsFor(function () {
@@ -129,14 +129,14 @@ describe("istari, the one where we talk to server", function () {
         }, "put call did not succeed", 1000);
     }));
     it("complete Record", inject(function (anduril) {
-        httpBackend.when('PUT', '/answer/answerId').respond(function (method, url, data) {
+        httpBackend.when('PUT', '/presentation/presentationId').respond(function (method, url, data) {
                 return [200, data];
             }
         );
         var posted = false;
-        anduril.completeRecord(answer).then(function (resp) {
+        anduril.completeRecord(presentation).then(function (resp) {
             posted = true;
-            expect(resp._id).toBe("answerId");
+            expect(resp._id).toBe("presentationId");
         });
         httpBackend.flush();
         waitsFor(function () {

@@ -1,0 +1,173 @@
+@import "variables";
+@import "mixins";
+
+body.presentation {
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;;
+  background: @body-background;
+  color: @body-text-color;
+  font-weight: lighter;
+  overflow: hidden;
+  font-size: @body-font-size;
+  height: 100%;
+}
+.presentation {
+  .full-sized {
+    height: 100%;
+    width: 100%;
+  }
+
+  .parent-height {
+    height: inherit;
+    width: inherit;
+  }
+
+  .presentation-text() {
+    line-height: @regularLineHeight;
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Bree Serif', Georgia, serif;
+      line-height: @headingLineHeight;
+      color: @h1-font-color;
+      margin: 0px;
+      font-weight: lighter;
+    }
+    h1 {
+      font-size: @h1-font-size;
+    }
+    h2 {
+      font-size: @h2-font-size;
+    }
+    h3 {
+      font-size: @h3-font-size;
+    }
+    h4 {
+      font-size: @h4-font-size;
+    }
+    p {
+      margin: @simple-margin 0;
+    }
+  }
+
+  .slide {
+    .full-sized;
+    .sokratikPadding(@sm-margin,@lg-margin);
+    .presentation-text;
+    text-align: center;
+    .box-position;
+    height: 100%;
+  }
+
+  .vertical-center {
+    text-align: center;
+
+  }
+
+  .fix-to-bottom {
+    position: absolute;
+    bottom: 0px;
+  }
+
+  .full-height {
+    height: 100%;
+  }
+
+  .slide-image-fragment {
+    margin-top: 0.5em;
+    display: inline-block;
+    img {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 97%;
+      max-height: 300px;//TODO make this a @media
+    }
+    .caption-holder {
+      .fix-to-bottom;
+      left: 50%;
+      .caption {
+        font-size: 18px;
+        position: relative;
+        left: -50%;
+        background-image: none;
+        background-color: rgba(0, 0, 0, 0.2);
+        color: #FFF;
+      }
+      width: 97.5%;
+      input {
+        background-color: transparent;
+      }
+    }
+    width: 95%;
+  }
+
+  .text-fragment-holder {
+    margin-top: 0.5em;
+  }
+
+  .nav-button {
+    top: 50%;
+    margin-top: -100px;
+    height: 200px;
+    width: 80px;
+    border: none;
+    position: absolute;
+    text-shadow: none !important;
+
+    background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(231, 231, 231, 1) 50%, rgba(255, 255, 255, 0) 100%) !important; /* FF3.6+ */
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(50%, rgba(231, 231, 231, 1)), color-stop(100%, rgba(255, 255, 255, 0))) !important; /* Chrome,Safari4+ */
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(231, 231, 231, 1) 50%, rgba(255, 255, 255, 0) 100%) !important; /* Chrome10+,Safari5.1+ */
+    background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(231, 231, 231, 1) 50%, rgba(255, 255, 255, 0) 100%) !important; /* Opera 11.10+ */
+    background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(231, 231, 231, 1) 50%, rgba(255, 255, 255, 0) 100%) !important; /* IE10+ */
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(231, 231, 231, 1) 50%, rgba(255, 255, 255, 0) 100%) !important; /* W3C */
+
+    &:active {
+      top: 50% !important;
+    }
+  }
+
+  .nav-button-left {
+    left: 0px;
+  }
+
+  .nav-button-right {
+    right: 0px;
+    &:active {
+      left: inherit !important;
+      right: 1px;
+    }
+  }
+
+  .fragment > input[type="textarea"], .fragment > input[type="text"] {
+    width: 95%;
+    padding: 0px !important;
+    margin: 2px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom-color: @input-color-placeholder;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    &:focus, &:hover, &:active {
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      padding: 0px !important;
+      margin: 2px;
+    }
+
+    &:focus::-webkit-input-placeholder, &:focus::-moz-placeholder {
+      opacity: 0;
+      transition: opacity ease 0.15s;
+      -webkit-transition: opacity ease 0.15s;
+    }
+  }
+
+  ::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder {
+    text-align: left;
+    padding-bottom: 0px !important;
+    vertical-align: baseline;
+  }
+
+  ::-webkit-input-placeholder {
+    text-align: left;
+  }
+}
