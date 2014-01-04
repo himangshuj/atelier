@@ -95,12 +95,12 @@ describe('edit section post initialization ', function () {
     }));
     it("record navigation test", inject(function ($state, anduril) {
         scope.record();
-        expect($state.go).toHaveBeenCalledWith("record.activate",{page:0});
+        expect($state.go).toHaveBeenCalledWith("sokratik.record.activate",{page:0});
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("page navigation test", inject(function ($state, anduril) {
         scope.goToPage(5);
-        expect($state.go).toHaveBeenCalledWith('edit.template', { templateName: "template",
+        expect($state.go).toHaveBeenCalledWith('sokratik.edit.activate', { templateName: "template",
             presentationId: 'presentationId', page: 5 });
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
@@ -108,7 +108,7 @@ describe('edit section post initialization ', function () {
         expect(presentation.presentationData.length).toBe(13);
         scope.remove();
         expect(presentation.presentationData.length).toBe(12);
-        expect($state.go).toHaveBeenCalledWith('edit.template', { templateName: "template",
+        expect($state.go).toHaveBeenCalledWith('sokratik.edit.activate', { templateName: "template",
             presentationId: 'presentationId', page: 0 });
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
@@ -116,14 +116,14 @@ describe('edit section post initialization ', function () {
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         scope.increaseImages();
         expect(presentation.presentationData[scope.page].templateName).toBe("1imageText");
-        expect($state.go).toHaveBeenCalledWith('edit.template', { templateName: "imageText", images: 1});
+        expect($state.go).toHaveBeenCalledWith('sokratik.edit.activate', { templateName: "imageText", images: 1});
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("decrease images", inject(function ($state, anduril) {
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         scope.decreaseImages();
         expect(presentation.presentationData[scope.page].templateName).toBe("4imageText");
-        expect($state.go).toHaveBeenCalledWith('edit.template', { templateName: "imageText", images: 4});
+        expect($state.go).toHaveBeenCalledWith('sokratik.edit.activate', { templateName: "imageText", images: 4});
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("add slide", inject(function ($state, anduril) {
@@ -132,7 +132,7 @@ describe('edit section post initialization ', function () {
         expect(presentation.presentationData.length).toBe(14);
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         expect(presentation.presentationData[scope.page + 1].templateName).toBe("1imageText");
-        expect($state.go).toHaveBeenCalledWith('edit.template', { page: 2, templateName: 'imageText', images: 1 });
+        expect($state.go).toHaveBeenCalledWith('sokratik.edit.activate', { page: 2, templateName: 'imageText', images: 1 });
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("add video", inject(function ($state, anduril, $rootScope) {
