@@ -11,7 +11,7 @@
             'ngAnimate'])
 
         .config(["$stateProvider", function config($stateProvider) {
-            $stateProvider.state('record', {
+            $stateProvider.state('sokratik.record', {
                 url: '/record/:presentationId',
                 resolve: {
                     presentation: ["$stateParams", "anduril", function ($stateParams, anduril) {
@@ -48,11 +48,10 @@
                         controller: 'RecordCtrl',
                         templateUrl: 'record/record.tpl.html'
                     }
-                },
-                parent: 'root'
+                }
             });
 
-            $stateProvider.state('record.activate', {
+            $stateProvider.state('sokratik.record.activate', {
                 url: "/activate/:page/:dummy",
                 views: {
                     "workspace": {
@@ -110,7 +109,7 @@
                         recordAction({"fnName": "redo", "args": {}, module: "dialogue",
                             actionInitiated: new Date().getTime() });
                         pause();
-                        $state.go("record.activate", {dummy: _.size(presentation.script)});
+                        $state.go("sokratik.record.activate", {dummy: _.size(presentation.script)});
                     };
                 };
                 var presentationId = presentation._id;//this is a HACK replace with restangular why this is hack log the presentation in
