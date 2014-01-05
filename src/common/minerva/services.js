@@ -77,7 +77,7 @@
                         args: {subState: context.subState, params: context.params},
                         actionInitiated: new Date().getTime(), module: "dialogue"};
                     _.defer(function () {
-                        $state.go('sokratik.'+$state.current.data.mode + context.subState, context.params);
+                        $state.go($state.current.data.mode + context.subState, context.params);
                     });
                     return  result;
                 }
