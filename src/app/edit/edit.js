@@ -44,7 +44,7 @@
         ])
 
         .config(["$stateProvider", function config($stateProvider) {
-            $stateProvider.state('sokratik.edit', {
+            $stateProvider.state('edit', {
                 url: '/edit/:questionId/:templateName/:presentationId/:page/:images',
                 resolve: {
 
@@ -65,9 +65,10 @@
                         templateUrl: "edit/edit.tpl.html",
                         controller: 'EditController'
                     }
-                }
+                },
+                parent: 'root'
             })
-                .state("sokratik.edit.template", {
+                .state("edit.template", {
                     url: '/',
                     views: {
                         "template": {
@@ -99,24 +100,24 @@
                     page = parseInt(page, 10);
                     $scope.record = function () {
                         anduril.post(presentation);
-                        $state.go("sokratik.record.activate", {page: 0});
+                        $state.go("record.activate", {page: 0});
 
                     };
 
                     $scope.goToPage = function (page) {
                         "use strict";
                         anduril.post(presentation);
-                        $state.go("sokratik.edit.activate", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
+                        $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
                     $scope.remove = function () {
                         "use strict";
                         anduril.post(anduril.remove(presentation, page));
-                        $state.go("sokratik.edit.activate", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
+                        $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     var changeTemplates = function (images) {
                         anduril.changeTemplate(presentation, page, images + "imageText");
                         anduril.post(presentation);
-                        $state.go("sokratik.edit.activate", { images: images, templateName: "imageText"});
+                        $state.go("edit.template", { images: images, templateName: "imageText"});
 
                     };
                     $scope.increaseImages = function () {
@@ -130,7 +131,7 @@
                     $scope.add = function () {
                         anduril.insert(presentation, page + 1, {templateName: '1imageText'});
                         anduril.post(presentation);
-                        $state.go("sokratik.edit.activate", { "page": page + 1, templateName: 'imageText', images: 1});
+                        $state.go("edit.template", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
                     $scope.addVideo = function () {
