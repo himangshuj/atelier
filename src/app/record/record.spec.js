@@ -131,7 +131,7 @@ describe('record section control ', function () {
         expect(answer.script[3].actionInitiated/10).toBeCloseTo(resumeTime/10,0);
         expect(answer.script[4].fnName).toBe("redo");
         expect(answer.script[5].fnName).toBe("pause"); //this is added by redo
-        expect($state.go).toHaveBeenCalledWith('sokratik.record.activate', { dummy: 6 });
+        expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 6 });
         var timedOut = false;
         runs(function () {
             setTimeout(function () {
@@ -160,7 +160,7 @@ describe('record section control ', function () {
             expect(answer.script[6].actionInitiated).toBe(resumeTime);
             expect(answer.script[8].fnName).toBe("redo");
             expect(answer.script[9].fnName).toBe("pause"); //this is added by redo
-            expect($state.go).toHaveBeenCalledWith('sokratik.record.activate', { dummy: 6 });
+            expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 6 });
             var timedOut = false;
             runs(function () {
                 setTimeout(function () {
