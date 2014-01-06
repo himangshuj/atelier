@@ -13,6 +13,7 @@
                     apollo.addMainAudio(ng.element(tElement)[0]);
                     tElement[0].addEventListener('ended', function () {
                         apollo.stopBGAudio();
+                        $state.go('home');
                     });
                 }
 

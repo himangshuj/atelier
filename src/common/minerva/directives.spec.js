@@ -148,14 +148,14 @@ describe('minerva record mode text', function () {
         expect(element.children().scope().dialogueCtrl.getFragments()[0].value).toBe("default text");
         expect(element.children().scope().dialogueCtrl.getFragments().length).toBe(1);
         expect(element.attr("class")).toBe("ng-scope ng-isolate-scope");
-        expect(angular.element(element.children()[0]).attr("class")).toBe("full-height");
+        expect(angular.element(element.children()[1]).attr("class")).toBe("full-height");
         expect(_.str.strip(angular.element(element.find("span")[0]).text())).toBe("default text");
     }));
     it('Sokratik fragment html Test with 1 fragment', inject(function () {
         scope.presentation = {"templateName": "textOnly", keyVals: {text3: "test text"}};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        var dialogueElement = angular.element(angular.element(element.children()[1]).children(0));
         var fragmentElement = angular.element(dialogueElement.children()[0]);
         expect(fragmentElement.children().scope().model.css.length).toBe(1);
         expect(fragmentElement.children().scope().model.css[0]).toBe("fragment");
@@ -172,7 +172,7 @@ describe('minerva record mode text', function () {
         scope.presentation = {"templateName": "2textOnly", keyVals: {text2: "text2init"}};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        var dialogueElement = angular.element(angular.element(element.children()[1]).children(0));
         expect(element.children().scope().dialogueCtrl.getProperty("text1")).toBeUndefined();
         expect(element.children().scope().dialogueCtrl.getProperty("text2")).toBe("text2init");
         var fragmentElement = angular.element(dialogueElement.children()[0]);
@@ -220,14 +220,14 @@ describe('minerva play mode text', function () {
         expect(element.children().scope().dialogueCtrl.getFragments()[0].value).toBe("default text");
         expect(element.children().scope().dialogueCtrl.getFragments().length).toBe(1);
         expect(element.attr("class")).toBe("ng-scope ng-isolate-scope");
-        expect(angular.element(element.children()[0]).attr("class")).toBe("full-height");
+        expect(angular.element(element.children()[1]).attr("class")).toBe("full-height");
         expect(_.str.strip(angular.element(element.find("span")[0]).text())).toBe("default text");
     }));
     it('Sokratik fragment html Test with 1 fragment', inject(function () {
         scope.presentation = {"templateName": "textOnly", keyVals: {text3: "test text"}};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(element.children()[0]).children()[0]);
+        var dialogueElement = angular.element(angular.element(element.children()[1]).children()[0]);
         var fragmentElement = angular.element(angular.element(angular.element(dialogueElement.children()[0])).children()[0]);
         expect(fragmentElement.children().scope().model.css.length).toBe(1);
         expect(fragmentElement.children().scope().model.css[0]).toBe("fragment");
@@ -244,7 +244,7 @@ describe('minerva play mode text', function () {
         scope.presentation = {"templateName": "2textOnly", keyVals: {text2: "text2init"}};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        var dialogueElement = angular.element(angular.element(element.children()[1]).children(0));
         expect(element.children().scope().dialogueCtrl.getProperty("text1")).toBeUndefined();
         expect(element.children().scope().dialogueCtrl.getProperty("text2")).toBe("text2init");
         var fragmentElement = angular.element(angular.element(dialogueElement.children()[0]).children()[0]);
@@ -514,7 +514,7 @@ describe('minerva record mode image', function () {
         expect(element.children().scope().dialogueCtrl.getFragments()[0].value).toBe(defaultImage);
         expect(element.children().scope().dialogueCtrl.getFragments().length).toBe(1);
         expect(element.attr("class")).toBe("ng-scope ng-isolate-scope");
-        expect(angular.element(element.children()[0]).attr("class")).toBe("full-height");
+        expect(angular.element(element.children()[1]).attr("class")).toBe("full-height");
         var images = element.find("img");
         expect(images.length).toBe(1);
         expect(angular.element(images[0]).attr("ng-src")).toBe(defaultImage);
@@ -529,19 +529,19 @@ describe('minerva record mode image', function () {
         expect(element.children().scope().dialogueCtrl.getFragments()[0].value).toBe(defaultImage);
         expect(element.children().scope().dialogueCtrl.getFragments().length).toBe(1);
         expect(element.attr("class")).toBe("ng-scope ng-isolate-scope");
-        expect(angular.element(element.children()[0]).attr("class")).toBe("full-height");
+        expect(angular.element(element.children()[1]).attr("class")).toBe("full-height");
         var images = element.find("img");
         expect(images.length).toBe(1);
         expect(angular.element(images[0]).attr("ng-click")).toBeUndefined();
         expect(angular.element(images[0]).attr("ng-src")).toBe(defaultImage);
-        expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("caption");
+        expect(_.str.strip(angular.element(angular.element(element.find("div")[2]).find("div")[2]).text())).toBe("caption");
     }));
 
     it('Sokratik image fragment html Test with 1 fragment initialization', inject(function () {
         scope.presentation = {"templateName": "1Image", keyVals: {}};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        var dialogueElement = angular.element(angular.element(element.children()[1]).children(0));
         expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
         var fragmentElement = angular.element(dialogueElement.children()[0]);
         expect(fragmentElement.children().scope().model.css[0]).toBe("fragment");
@@ -554,7 +554,7 @@ describe('minerva record mode image', function () {
         }};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(element.children()[0]).children(0));
+        var dialogueElement = angular.element(angular.element(element.children()[1]).children(0));
         expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
         expect(element.children().scope().dialogueCtrl.getProperty("image2")).toBe(defaultImage);
         var fragmentElement = angular.element(dialogueElement.children()[0]);
@@ -613,7 +613,7 @@ describe('minerva play mode image', function () {
         expect(element.children().scope().dialogueCtrl.getFragments()[0].value).toBe(defaultImage);
         expect(element.children().scope().dialogueCtrl.getFragments().length).toBe(1);
         expect(element.attr("class")).toBe("ng-scope ng-isolate-scope");
-        expect(angular.element(element.children()[0]).attr("class")).toBe("full-height");
+        expect(angular.element(element.children()[1]).attr("class")).toBe("full-height");
         var images = element.find("img");
         expect(images.length).toBe(1);
         expect(angular.element(images[0]).attr("ng-src")).toBe(defaultImage);
@@ -628,19 +628,19 @@ describe('minerva play mode image', function () {
         expect(element.children().scope().dialogueCtrl.getFragments()[0].value).toBe(defaultImage);
         expect(element.children().scope().dialogueCtrl.getFragments().length).toBe(1);
         expect(element.attr("class")).toBe("ng-scope ng-isolate-scope");
-        expect(angular.element(element.children()[0]).attr("class")).toBe("full-height");
+        expect(angular.element(element.children()[1]).attr("class")).toBe("full-height");
         var images = element.find("img");
         expect(images.length).toBe(1);
         expect(angular.element(images[0]).attr("ng-click")).toBeUndefined();
         expect(angular.element(images[0]).attr("ng-src")).toBe(defaultImage);
-        expect(_.str.strip(angular.element(angular.element(element.find("div")[0]).find("div")[2]).text())).toBe("caption");
+        expect(_.str.strip(angular.element(angular.element(element.find("div")[2]).find("div")[2]).text())).toBe("caption");
     }));
 
     it('Sokratik image fragment html Test with 1 fragment initialization', inject(function () {
         scope.presentation = {"templateName": "1Image", keyVals: {}};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(angular.element(element.children()[0]).children()[0]).children()[0]);
+        var dialogueElement = angular.element(angular.element(angular.element(element.children()[1]).children()[0]).children()[0]);
         expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
         var fragmentElement = angular.element(dialogueElement.children()[0]);
         expect(fragmentElement.children().scope().model.css[0]).toBe("fragment");
@@ -653,7 +653,7 @@ describe('minerva play mode image', function () {
         }};
         element = compile(dialogue)(scope);
         scope.$digest();
-        var dialogueElement = angular.element(angular.element(angular.element(element.children()[0]).children()[0]).children()[0]);
+        var dialogueElement = angular.element(angular.element(angular.element(element.children()[1]).children()[0]).children()[0]);
         expect(element.children().scope().dialogueCtrl.getProperty("image1")).toBeUndefined();
         expect(element.children().scope().dialogueCtrl.getProperty("image2")).toBe(defaultImage);
         var fragmentElement = angular.element(dialogueElement.children()[0]);
