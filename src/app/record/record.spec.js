@@ -16,7 +16,7 @@ var q = {
 describe('record section control ', function () {
     beforeEach(module('sokratik.atelier.record'));
     var scope;
-    var answer = {_id: "answerId", presentationData: [
+    var presentation = {_id: "presentationId", presentationData: [
         {templateName: "t1", keyVals: {k1: "v1"}},
         {templateName: "t2", keyVals: {k1: "v1"}},
         {templateName: "t3", keyVals: {k1: "v1"}},
@@ -32,7 +32,7 @@ describe('record section control ', function () {
         {templateName: "t13", keyVals: {k1: "v1"}}
     ]};
     var fakeMethods = {recordAction: function (resp) {
-        answer.script.push(resp);
+        presentation.script.push(resp);
     }};
     var acoustics = {
         resume: angular.noop,
@@ -56,20 +56,20 @@ describe('record section control ', function () {
         spyOn(acoustics, "stopRecording").andCallThrough();
     }));
     it("initialization checks", inject(function (anduril, $controller, $modal, $log, $state) {
-        expect(answer.script).toBeUndefined();
+        expect(presentation.script).toBeUndefined();
         $controller("RecordCtrl", {
             $scope: scope,
             acoustics: acoustics,
             $state: $state,
             anduril: anduril,
             $q: q,
-            answer: answer,
+            presentation: presentation,
             recordAction: angular.noop,
             recorder: {}
         });
-        expect(answer.script).toBeDefined();
-        expect(answer.script.length).toBe(0);
-        expect(answer.recordingStarted / 1000).toBeCloseTo((new Date()).getTime() / 1000);
+        expect(presentation.script).toBeDefined();
+        expect(presentation.script.length).toBe(0);
+        expect(presentation.recordingStarted / 1000).toBeCloseTo((new Date()).getTime() / 1000);
         expect(scope.record).toBeDefined();
         expect(scope.redoSlide).toBeUndefined();
 
@@ -81,7 +81,7 @@ describe('record section control ', function () {
             $state: $state,
             anduril: anduril,
             $q: q,
-            answer: answer,
+            presentation: presentation,
             recordAction: fakeMethods.recordAction,
             recorder: {}
         });
@@ -103,7 +103,7 @@ describe('record section control ', function () {
             $state: $state,
             anduril: anduril,
             $q: q,
-            answer: answer,
+            presentation: presentation,
             recordAction: fakeMethods.recordAction,
             recorder: {}
         });
@@ -117,20 +117,20 @@ describe('record section control ', function () {
         expect(scope.redoSlide).toBe(definedRedo);
         scope.record();
         expect(scope.redoSlide).not.toBe(definedRedo);
-        expect(answer.script.length).toBe(4);
-        answer.script.push("to Remove");
-        answer.script.push("to Remove");
-        expect(answer.script.length).toBe(6);
-        expect(answer.script[4]).toBe("to Remove");
+        expect(presentation.script.length).toBe(4);
+        presentation.script.push("to Remove");
+        presentation.script.push("to Remove");
+        expect(presentation.script.length).toBe(6);
+        expect(presentation.script[4]).toBe("to Remove");
         expect(scope.redoSlide).toBeDefined();
-        expect(answer.script[3].fnName).toBe("resume");
-        var resumeTime = answer.script[2].actionInitiated;
+        expect(presentation.script[3].fnName).toBe("resume");
+        var resumeTime = presentation.script[2].actionInitiated;
         scope.redoSlide();
-        expect(answer.script.length).toBe(6);
-        expect(answer.script[3].fnName).toBe("resume");
-        expect(answer.script[3].actionInitiated/10).toBeCloseTo(resumeTime/10,0);
-        expect(answer.script[4].fnName).toBe("redo");
-        expect(answer.script[5].fnName).toBe("pause"); //this is added by redo
+        expect(presentation.script.length).toBe(6);
+        expect(presentation.script[3].fnName).toBe("resume");
+        expect(presentation.script[3].actionInitiated/10).toBeCloseTo(resumeTime/10,0);
+        expect(presentation.script[4].fnName).toBe("redo");
+        expect(presentation.script[5].fnName).toBe("pause"); //this is added by redo
         expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 6 });
         var timedOut = false;
         runs(function () {
@@ -142,24 +142,24 @@ describe('record section control ', function () {
             return timedOut;
         }, "force delay bombed", 500);
         runs(function () {
-            expect(answer.script.length).toBe(7);
-            expect(answer.script[5].fnName).toBe("pause"); //this is added by state change
+            expect(presentation.script.length).toBe(7);
+            expect(presentation.script[5].fnName).toBe("pause"); //this is added by state change
             scope.record();
             expect(scope.redoSlide).not.toBe(definedRedo);
-            expect(answer.script.length).toBe(8);
-            answer.script.push("to Remove");
-            answer.script.push("to Remove");
-            expect(answer.script.length).toBe(10);
-            expect(answer.script[9]).toBe("to Remove");
+            expect(presentation.script.length).toBe(8);
+            presentation.script.push("to Remove");
+            presentation.script.push("to Remove");
+            expect(presentation.script.length).toBe(10);
+            expect(presentation.script[9]).toBe("to Remove");
             expect(scope.redoSlide).toBeDefined();
-            expect(answer.script[7].fnName).toBe("resume");
-            var resumeTime = answer.script[6].actionInitiated;
+            expect(presentation.script[7].fnName).toBe("resume");
+            var resumeTime = presentation.script[6].actionInitiated;
             scope.redoSlide();
-            expect(answer.script.length).toBe(10);
-            expect(answer.script[7].fnName).toBe("resume");
-            expect(answer.script[6].actionInitiated).toBe(resumeTime);
-            expect(answer.script[8].fnName).toBe("redo");
-            expect(answer.script[9].fnName).toBe("pause"); //this is added by redo
+            expect(presentation.script.length).toBe(10);
+            expect(presentation.script[7].fnName).toBe("resume");
+            expect(presentation.script[6].actionInitiated).toBe(resumeTime);
+            expect(presentation.script[8].fnName).toBe("redo");
+            expect(presentation.script[9].fnName).toBe("pause"); //this is added by redo
             expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 6 });
             var timedOut = false;
             runs(function () {
@@ -171,8 +171,8 @@ describe('record section control ', function () {
                 return timedOut;
             }, "force delay bombed", 500);
             runs(function () {
-                expect(answer.script.length).toBe(11);
-                expect(answer.script[9].fnName).toBe("pause"); //this is added by state change
+                expect(presentation.script.length).toBe(11);
+                expect(presentation.script[9].fnName).toBe("pause"); //this is added by state change
             });
 
 
@@ -186,18 +186,18 @@ describe('record section control ', function () {
             $state: $state,
             anduril: anduril,
             $q: q,
-            answer: answer,
+            presentation: presentation,
             recordAction: fakeMethods.recordAction,
             recorder: {}
         });
         scope.complete();
-        expect(acoustics.stopRecording).toHaveBeenCalledWith({}, "answerId");
+        expect(acoustics.stopRecording).toHaveBeenCalledWith({}, "presentationId");
     }));
 });
 describe("record active initialization", function () {
     beforeEach(module('sokratik.atelier.record'));
     var scope;
-    var answer = {_id: "answerId", presentationData: [
+    var presentation = {_id: "presentationId", presentationData: [
         {templateName: "t1", keyVals: {k1: "v1"}},
         {templateName: "t2", keyVals: {k1: "v1"}},
         {templateName: "t3", keyVals: {k1: "v1"}},
@@ -213,7 +213,7 @@ describe("record active initialization", function () {
         {templateName: "t13", keyVals: {k1: "v1"}}
     ]};
     var fakeMethods = {recordAction: function (resp) {
-        answer.script.push(resp);
+        presentation.script.push(resp);
     }};
     var acoustics = {
         resume: angular.noop,
@@ -240,8 +240,8 @@ describe("record active initialization", function () {
     it("initialization tests", inject(function (anduril, $controller, $modal, $log, $state, dialogue, sokratube) {
         $controller("RecordDialogue", {
             "$scope": scope,
-            "answer": answer,
-            "anduril": answer,
+            "presentation": presentation,
+            "anduril": presentation,
             "dialogue": dialogue,
             "$stateParams": {page: "0"},
             "recordAction": fakeMethods.recordAction,
@@ -250,21 +250,21 @@ describe("record active initialization", function () {
         });
         expect(scope.totalPages).toBe(13);
         expect(scope.page).toBe(0);
-        expect(scope.presentation).toBe(answer.presentationData[0]);
+        expect(scope.presentation).toBe(presentation.presentationData[0]);
         expect(scope.index).toBe(0);
         expect(scope.videoPresent).toBeFalsy();
     }));
     it("initialization tests with YT", inject(function (anduril, $controller, $modal, $log, $state, dialogue, sokratube) {
-        var newAnswer = _.clone(answer);
-        newAnswer.presentationData = _.clone(answer.presentationData);
+        var newpresentation = _.clone(presentation);
+        newpresentation.presentationData = _.clone(presentation.presentationData);
         //noinspection JSValidateTypes
-        newAnswer.presentationData[0].apps = [
+        newpresentation.presentationData[0].apps = [
             {name: "YT"}
         ];
         $controller("RecordDialogue", {
             "$scope": scope,
-            "answer": answer,
-            "anduril": newAnswer,
+            "presentation": presentation,
+            "anduril": newpresentation,
             "dialogue": dialogue,
             "$stateParams": {page: "0"},
             "recordAction": fakeMethods.recordAction,
@@ -273,7 +273,7 @@ describe("record active initialization", function () {
         });
         expect(scope.totalPages).toBe(13);
         expect(scope.page).toBe(0);
-        expect(scope.presentation).toBe(answer.presentationData[0]);
+        expect(scope.presentation).toBe(presentation.presentationData[0]);
         expect(scope.index).toBe(0);
         expect(scope.videoPresent).toBeTruthy();
     }));
@@ -282,7 +282,7 @@ describe("record active initialization", function () {
 describe("record active control", function () {
     beforeEach(module('sokratik.atelier.record'));
     var scope;
-    var answer = {_id: "answerId", presentationData: [
+    var presentation = {_id: "presentationId", presentationData: [
         {templateName: "t1", keyVals: {k1: "v1"}},
         {templateName: "t2", keyVals: {k1: "v1"}},
         {templateName: "t3", keyVals: {k1: "v1"}},
@@ -298,7 +298,7 @@ describe("record active control", function () {
         {templateName: "t13", keyVals: {k1: "v1"}}
     ], script: []};
     var fakeMethods = {recordAction: function (resp) {
-        answer.script.push(resp);
+        presentation.script.push(resp);
     }, pause: angular.noop};
     var acoustics = {
         resume: angular.noop,
@@ -321,16 +321,16 @@ describe("record active control", function () {
         spyOn(acoustics, "resume").andCallThrough();
         spyOn(acoustics, "pause").andCallThrough();
         spyOn(acoustics, "stopRecording").andCallThrough();
-        var newAnswer = _.clone(answer);
-        newAnswer.presentationData = _.clone(answer.presentationData);
+        var newpresentation = _.clone(presentation);
+        newpresentation.presentationData = _.clone(presentation.presentationData);
         //noinspection JSValidateTypes
-        newAnswer.presentationData[0].apps = [
+        newpresentation.presentationData[0].apps = [
             {name: "YT", params: {videoId: "dummy"}}
         ];
         $controller("RecordDialogue", {
             "$scope": scope,
-            "answer": answer,
-            "anduril": newAnswer,
+            "presentation": presentation,
+            "anduril": newpresentation,
             "dialogue": dialogue,
             "$stateParams": {page: "0"},
             "recordAction": fakeMethods.recordAction,
@@ -339,7 +339,7 @@ describe("record active control", function () {
         });
         expect(scope.totalPages).toBe(13);
         expect(scope.page).toBe(0);
-        expect(scope.presentation).toBe(answer.presentationData[0]);
+        expect(scope.presentation).toBe(presentation.presentationData[0]);
         expect(scope.index).toBe(0);
         spyOn(dialogue, "resetFragments").andCallFake(function () {
             return {then: angular.noop, resolve: angular.noop};
