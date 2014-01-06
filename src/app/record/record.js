@@ -107,7 +107,7 @@
                     $scope.redoSlide = function () {
                         "use strict";
                         anduril.insertScript(presentation, instructionsToKeep);
-                        recordAction({"fnName": "redo", "args": {}, module: "dialogue",
+                        recordAction({"fnName": "redo", "args": {}, module: "apollo",
                             actionInitiated: new Date().getTime() });
                         pause();
                         $state.go("record.activate", {dummy: _.size(presentation.script)});
@@ -116,6 +116,7 @@
                 var presentationId = presentation._id;//this is a HACK replace with restangular why this is hack log the presentation in
                 //then clause
                 $scope.complete = function () {
+                    $rootScope.loading = true;
                     acoustics.stopRecording(recorder, presentation._id).then(function (resp) {
                         $q.when(anduril.completeRecord(presentation))
                             .then(function () {

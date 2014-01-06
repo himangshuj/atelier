@@ -130,6 +130,7 @@ describe('record section control ', function () {
         expect(presentation.script[3].fnName).toBe("resume");
         expect(presentation.script[3].actionInitiated/10).toBeCloseTo(resumeTime/10,0);
         expect(presentation.script[4].fnName).toBe("redo");
+        expect(presentation.script[4].module).toBe("apollo");
         expect(presentation.script[5].fnName).toBe("pause"); //this is added by redo
         expect($state.go).toHaveBeenCalledWith('record.activate', { dummy: 6 });
         var timedOut = false;
