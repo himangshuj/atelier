@@ -45,7 +45,7 @@
             }
 
         };
-        this.$get = ["$log", function ($log) {
+        this.$get = ["$log", "$state", function ($log, $state) {
             return {
                 addMainAudio: function (mainAudio) {
                     mainAudio.play();
@@ -95,7 +95,9 @@
                 },
                 initBGAudio: function (index, volume) {
 
-                    (_backGroundAudio[index || 0] || {}).volume = volume || 0.10;
+                    if (_.isEqual($state.current.data.mode, "play")) {
+                        (_backGroundAudio[index || 0] || {}).volume = volume || 0.10;
+                    }
                 },
                 stopBGAudio: function () {
                     _.each(_backGroundAudio, function (audio) {
