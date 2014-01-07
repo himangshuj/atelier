@@ -1,8 +1,8 @@
 describe('istari , the one where we do not talk to the server', function () {
     beforeEach(module('sokratik.atelier.istari.services'));
-    var answer;
+    var presentation;
     beforeEach(function () {
-        answer = {presentationData: [
+        presentation = {presentationData: [
             {templateName: "template",
                 keyVals: {key1: "val1"}},
             {templateName: "template2",
@@ -10,47 +10,47 @@ describe('istari , the one where we do not talk to the server', function () {
         ], script: []};
     });
     it("put", inject(function (anduril) {
-        expect(answer.presentationData[1].keyVals.key2).toBe("val2");
-        expect(answer.presentationData[1].keyVals.key3).toBeUndefined();
-        var modifiedAnswer = anduril.put(answer, 1, {templateName: "template2",
+        expect(presentation.presentationData[1].keyVals.key2).toBe("val2");
+        expect(presentation.presentationData[1].keyVals.key3).toBeUndefined();
+        var modifiedpresentation = anduril.put(presentation, 1, {templateName: "template2",
             keyVals: {key2: "val2", key3: "val3"}});
-        expect(modifiedAnswer.presentationData[1].keyVals.key3).toBe("val3");
-        expect(answer.presentationData[1].keyVals.key3).toBe("val3");
+        expect(modifiedpresentation.presentationData[1].keyVals.key3).toBe("val3");
+        expect(presentation.presentationData[1].keyVals.key3).toBe("val3");
 
     }));
     it("insert at start", inject(function (anduril) {
-        expect(answer.presentationData[1].keyVals.key2).toBe("val2");
-        expect(answer.presentationData[1].keyVals.key1).toBeUndefined();
-        expect(answer.presentationData[0].templateName).toBe("template");
+        expect(presentation.presentationData[1].keyVals.key2).toBe("val2");
+        expect(presentation.presentationData[1].keyVals.key1).toBeUndefined();
+        expect(presentation.presentationData[0].templateName).toBe("template");
 
-        expect(answer.presentationData.length).toBe(2);
-        var modifiedAnswer = anduril.insert(answer, 0, {templateName: "newTemplate",
+        expect(presentation.presentationData.length).toBe(2);
+        var modifiedpresentation = anduril.insert(presentation, 0, {templateName: "newTemplate",
             keyVals: {key0: "val0"}});
-        expect(answer.presentationData[0].templateName).toBe("newTemplate");
-        expect(modifiedAnswer.presentationData.length).toBe(3);
-        expect(modifiedAnswer.presentationData[1].keyVals.key2).toBeUndefined();
-        expect(modifiedAnswer.presentationData[1].keyVals.key1).toBe("val1");
+        expect(presentation.presentationData[0].templateName).toBe("newTemplate");
+        expect(modifiedpresentation.presentationData.length).toBe(3);
+        expect(modifiedpresentation.presentationData[1].keyVals.key2).toBeUndefined();
+        expect(modifiedpresentation.presentationData[1].keyVals.key1).toBe("val1");
     }));
     it("insert at middle", inject(function (anduril) {
-        expect(answer.presentationData[1].keyVals.key2).toBe("val2");
-        expect(answer.presentationData[1].keyVals.key1).toBeUndefined();
-        expect(answer.presentationData[0].templateName).toBe("template");
-        expect(answer.presentationData.length).toBe(2);
-        var modifiedAnswer = anduril.insert(answer, 1, {templateName: "newTemplate",
+        expect(presentation.presentationData[1].keyVals.key2).toBe("val2");
+        expect(presentation.presentationData[1].keyVals.key1).toBeUndefined();
+        expect(presentation.presentationData[0].templateName).toBe("template");
+        expect(presentation.presentationData.length).toBe(2);
+        var modifiedpresentation = anduril.insert(presentation, 1, {templateName: "newTemplate",
             keyVals: {key0: "val0"}});
-        expect(answer.presentationData[1].templateName).toBe("newTemplate");
-        expect(modifiedAnswer.presentationData.length).toBe(3);
-        expect(modifiedAnswer.presentationData[1].keyVals.key2).toBeUndefined();
-        expect(modifiedAnswer.presentationData[1].keyVals.key0).toBe("val0");
-        expect(modifiedAnswer.presentationData[2].keyVals.key2).toBe("val2");
-        expect(answer.presentationData[2].keyVals.key2).toBe("val2");
+        expect(presentation.presentationData[1].templateName).toBe("newTemplate");
+        expect(modifiedpresentation.presentationData.length).toBe(3);
+        expect(modifiedpresentation.presentationData[1].keyVals.key2).toBeUndefined();
+        expect(modifiedpresentation.presentationData[1].keyVals.key0).toBe("val0");
+        expect(modifiedpresentation.presentationData[2].keyVals.key2).toBe("val2");
+        expect(presentation.presentationData[2].keyVals.key2).toBe("val2");
     }));
     it("change template", inject(function (anduril) {
-        expect(answer.presentationData[0].templateName).toBe("template");
-        anduril.changeTemplate(answer, 0, "etalpmet");
-        expect(answer.presentationData[0].templateName).toBe("etalpmet");
+        expect(presentation.presentationData[0].templateName).toBe("template");
+        anduril.changeTemplate(presentation, 0, "etalpmet");
+        expect(presentation.presentationData[0].templateName).toBe("etalpmet");
         try {
-            anduril.changeTemplate(answer, 5, "etalpmet");
+            anduril.changeTemplate(presentation, 5, "etalpmet");
             expect(false).toBeTruthy();//we should not reach here
         } catch (t) {
             expect(true).toBeTruthy();
@@ -59,36 +59,37 @@ describe('istari , the one where we do not talk to the server', function () {
 
     }));
     it("remove", inject(function (anduril) {
-        answer.presentationData.push({templateName: "template3",
+        presentation.presentationData.push({templateName: "template3",
             keyVals: {key3: "val3"}});
-        expect(answer.presentationData.length).toBe(3);
-        expect(answer.presentationData[1].keyVals.key2).toBe("val2");
-        expect(answer.presentationData[1].keyVals.key3).toBeUndefined();
-        anduril.remove(answer, 1);
-        expect(answer.presentationData.length).toBe(2);
-        expect(answer.presentationData[1].keyVals.key2).toBeUndefined();
-        expect(answer.presentationData[1].keyVals.key3).toBe("val3");
+        expect(presentation.presentationData.length).toBe(3);
+        expect(presentation.presentationData[1].keyVals.key2).toBe("val2");
+        expect(presentation.presentationData[1].keyVals.key3).toBeUndefined();
+        anduril.remove(presentation, 1);
+        expect(presentation.presentationData.length).toBe(2);
+        expect(presentation.presentationData[1].keyVals.key2).toBeUndefined();
+        expect(presentation.presentationData[1].keyVals.key3).toBe("val3");
 
 
     }));
     it("record script", inject(function (anduril) {
-        expect(answer.script.length).toBe(0);
-        anduril.recordAction(answer,{fnName:"x"});
-        expect(answer.script.length).toBe(1);
-        anduril.recordAction(answer,{fnName:"y"});
-        expect(answer.script.length).toBe(2);
-        expect(answer.script[0].fnName).toBe("x");
+        expect(presentation.script.length).toBe(0);
+        anduril.recordAction(presentation,{fnName:"x"});
+        expect(presentation.script.length).toBe(1);
+        anduril.recordAction(presentation,{fnName:"y"});
+        expect(anduril.fetchPresentation(presentation._id).then).toEqual(jasmine.any(Function));
+        expect(presentation.script.length).toBe(2);
+        expect(presentation.script[0].fnName).toBe("x");
     }));
     it("insert script", inject(function (anduril) {
-        expect(answer.script.length).toBe(0);
-        anduril.recordAction(answer,{fnName:"x"});
-        expect(answer.script.length).toBe(1);
-        anduril.recordAction(answer,{fnName:"y"});
-        expect(answer.script.length).toBe(2);
-        expect(answer.script[0].fnName).toBe("x");
-        anduril.insertScript(answer,[{fnName:"z"}]);
-        expect(answer.script.length).toBe(1);
-        expect(answer.script[0].fnName).toBe("z");
+        expect(presentation.script.length).toBe(0);
+        anduril.recordAction(presentation,{fnName:"x"});
+        expect(presentation.script.length).toBe(1);
+        anduril.recordAction(presentation,{fnName:"y"});
+        expect(presentation.script.length).toBe(2);
+        expect(presentation.script[0].fnName).toBe("x");
+        anduril.insertScript(presentation,[{fnName:"z"}]);
+        expect(presentation.script.length).toBe(1);
+        expect(presentation.script[0].fnName).toBe("z");
     }));
 
 });
@@ -113,7 +114,7 @@ describe("istari, the one where we talk to server", function () {
         });
         $httpBackend.flush();
     }));
-    it("saveAnswer", inject(function (anduril) {
+    it("savepresentation", inject(function (anduril) {
         httpBackend.when('PUT', '/presentation/presentationId').respond(function (method, url, data) {
                 return [200, data];
             }
