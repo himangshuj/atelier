@@ -63,7 +63,6 @@
                 views: {
                     "main": {
                         templateUrl: "edit/edit.tpl.html",
-                        controller: 'EditController'
                     }
                 },
                 parent: 'root'
@@ -73,7 +72,7 @@
                     views: {
                         "template": {
                             templateUrl: "edit/template.tpl.html",
-                            controller: 'TemplateCtrl'
+                            controller: 'EditController'
                         }
                     }
                 });
@@ -159,8 +158,7 @@
                         return modalInstance;
                     };
                 }])
-        .controller('TemplateCtrl', function TemplateController() {
-        });
+
 })(angular, "sokratik.atelier.edit");
 
 
