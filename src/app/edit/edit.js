@@ -99,14 +99,14 @@
                     $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
                     page = parseInt(page, 10);
                     $scope.record = function () {
-                        presentation.presentationData[page] = $scope.presentation;
+                        presentation.presentationData[page] = _.clone($scope.presentation);
                         anduril.post(presentation);
                         $state.go("record.activate", {page: 0});
                     };
 
                     $scope.goToPage = function (page) {
                         "use strict";
-                        presentation.presentationData[page] = $scope.presentation;
+                        presentation.presentationData[page] = _.clone($scope.presentation);
                         anduril.post(presentation);
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
@@ -152,7 +152,7 @@
                             activePresentation.apps = _.without(activePresentation.apps, existingVideo);
                             existingVideo.params = {"videoId": ytEmbedUrl};
                             activePresentation.apps = _.union(activePresentation.apps, existingVideo);
-                            presentation.presentationData[page] = activePresentation;
+                            presentation.presentationData[page] = _.clone(activePresentation);
                         }, function () {
                             //noinspection JSUnresolvedFunction
                         });
