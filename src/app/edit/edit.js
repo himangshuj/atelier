@@ -99,14 +99,14 @@
                     $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
                     page = parseInt(page, 10);
                     $scope.record = function () {
-                        presentation[page] = $scope.presentation;
+                        presentation.presentationData[page] = $scope.presentation;
                         anduril.post(presentation);
                         $state.go("record.activate", {page: 0});
                     };
 
                     $scope.goToPage = function (page) {
                         "use strict";
-                        presentation[page] = $scope.presentation;
+                        presentation.presentationData[page] = $scope.presentation;
                         anduril.post(presentation);
                         $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
@@ -152,7 +152,7 @@
                             activePresentation.apps = _.without(activePresentation.apps, existingVideo);
                             existingVideo.params = {"videoId": ytEmbedUrl};
                             activePresentation.apps = _.union(activePresentation.apps, existingVideo);
-                            presentation[page] = activePresentation;
+                            presentation.presentationData[page] = activePresentation;
                         }, function () {
                             //noinspection JSUnresolvedFunction
                         });
