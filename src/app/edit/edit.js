@@ -99,9 +99,9 @@
                     $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
                     page = parseInt(page, 10);
                     $scope.record = function () {
+                        anduril.put(presentation, page, $scope.presentation);
                         anduril.post(presentation);
                         $state.go("record.activate", {page: 0});
-
                     };
 
                     $scope.goToPage = function (page) {

@@ -5,6 +5,7 @@
         $provide.provider("anduril", andurilForger);
 
     }]);
+    var _cache = {};
 
     var andurilForger = function () {
         var injectors = {};
@@ -32,6 +33,7 @@
         };
         var _postScript = function (presentation) {
             //noinspection JSUnresolvedFunction
+            _cache[presentation._id] = null;
             return presentation.$update();
         };
         this.$get = ["$http", "$log", "$q", "$resource", function ($http, $log, $q, $resource) {
@@ -39,7 +41,6 @@
             injectors.$log = $log;
             injectors.$q = $q;
             injectors.$resource = $resource;
-            var _cache = {};
             //declaring the resource
             var presentation = $resource('/presentation/:presentationId', {
                 presentationId: '@_id'
@@ -76,8 +77,13 @@
                 },
                 post: function (presentation) {
                     //noinspection JSUnresolvedFunction
-                    _cache[presentation._id] = null;
-                    return presentation.$update();
+                    var deferred = $q.defer();
+                    _cache[presentation._id] = presentation;
+                    return presentation.$update(function(resp){
+                        deferred.resolve(presentation);
+
+                    });
+                    return deferred.promise;
                 },
                 fetchImages: _fetchImages,
                 fetchPresentation: function (presentationId) {
