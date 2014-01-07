@@ -54,7 +54,7 @@
                 put: function (presentation, page, presentationMap) {
                     //noinspection JSUnresolvedVariable
                     var templateFragment = presentation.presentationData;
-                    templateFragment[page] = presentationMap;
+                    templateFragment[page] = ng.copy(presentationMap);
                     return presentation;
                 },
                 insert: function (presentation, page, presentationMap) {
