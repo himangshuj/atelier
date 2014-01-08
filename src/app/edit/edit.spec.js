@@ -117,6 +117,7 @@ describe('edit section post initialization ', function () {
         scope.increaseImages();
         expect(presentation.presentationData[scope.page].templateName).toBe("1imageText");
         expect($state.go).toHaveBeenCalledWith('edit', { templateName: "imageText", images: 1});
+        expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("decrease images", inject(function ($state, anduril) {
@@ -124,6 +125,7 @@ describe('edit section post initialization ', function () {
         scope.decreaseImages();
         expect(presentation.presentationData[scope.page].templateName).toBe("4imageText");
         expect($state.go).toHaveBeenCalledWith('edit', { templateName: "imageText", images: 4});
+        expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("add slide", inject(function ($state, anduril) {
@@ -133,6 +135,7 @@ describe('edit section post initialization ', function () {
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         expect(presentation.presentationData[scope.page + 1].templateName).toBe("1imageText");
         expect($state.go).toHaveBeenCalledWith('edit', { page: 2, templateName: 'imageText', images: 1 });
+        expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("add video", inject(function ($state, anduril, $rootScope) {

@@ -54,7 +54,7 @@
                 put: function (presentation, page, presentationMap) {
                     //noinspection JSUnresolvedVariable
                     var templateFragment = presentation.presentationData;
-                    templateFragment[page] = ng.copy(presentationMap);
+                    templateFragment[page] = _.clone(presentationMap);
                     return presentation;
                 },
                 insert: function (presentation, page, presentationMap) {
@@ -79,7 +79,7 @@
                     //noinspection JSUnresolvedFunction
                     var deferred = $q.defer();
                     _cache[presentation._id] = presentation;
-                    return presentation.$update(function (resp) {
+                    presentation.$update(function (resp) {
                         deferred.resolve(presentation);
 
                     });

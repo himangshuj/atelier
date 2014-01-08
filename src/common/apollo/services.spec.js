@@ -77,7 +77,7 @@ describe('apollo service main audio', function () {
         });
         apollo.addMainAudio(element);
 
-        $state.current = {data: {mode: 'play'}}
+        $state.current = {data: {mode: 'play'}};
 
     }));
     it("add Main Audio", function () {
@@ -113,7 +113,7 @@ describe('apollo service main audio', function () {
             expect(element.currentTime / 10).not.toBeCloseTo((new Date()).getTime() / 10000, 0);
         });
     });
-    it("resume main audio", inject(function ($rootScope) {
+    it("resume main audio", inject(function () {
 
         var timeStamp = (new Date()).getTime();
         jasmine.Clock.useMock();
@@ -157,12 +157,12 @@ describe('apollo service main audio', function () {
         jasmine.Clock.tick(9901);
         expect(element.paused).toBeFalsy();
         element.currentTime = 20;
-        promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 19100}}, q.defer());
+        apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp + 19100}}, q.defer());
         expect(element.currentTime).toBeCloseTo(20, 0);// a lot of set time outs
 
     }));
 
-    it("redo main audio", inject(function ($rootScope) {
+    it("redo main audio", inject(function () {
         var timeStamp = (new Date()).getTime();
         jasmine.Clock.useMock();
         var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp}}, q.defer());
@@ -182,7 +182,6 @@ describe('apollo service main audio', function () {
         expect(element.currentTime).toBeCloseTo(0, 0);
         deferred.cb = null;
         deferred.nb = null;
-        deferredQ = {};
         resolved = false;
         notified = false;
         promise = apollo.redo({params: {pausedInterval: 2000, timeStamp: timeStamp + 2000}}, q.defer());
@@ -193,7 +192,7 @@ describe('apollo service main audio', function () {
             element.seekable.push(1);//dummy entry to enable resume
         });
         expect(element.currentTime).toBeCloseTo(1, 0);
-        promise = apollo.resume({params: {pausedInterval: 2000, timeStamp: timeStamp + 2100}}, q.defer());
+        apollo.resume({params: {pausedInterval: 2000, timeStamp: timeStamp + 2100}}, q.defer());
         expect(element.currentTime).toBeCloseTo(1.1, 1);
         expect(element.paused).toBeFalsy();
         expect(resolved).toBeTruthy();
@@ -238,7 +237,7 @@ describe('apollo service background audio', function () {
         this.seekable = [];
     };
 
-    beforeEach(inject(function (_apollo_, $state) {
+    beforeEach(inject(function (_apollo_) {
         element = new FakeAudio();
 
         element.onplay = function () {
