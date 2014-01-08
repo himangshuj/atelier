@@ -67,7 +67,7 @@
                     }
                 },
                 parent: 'root'
-            })
+            });
 
 
         }])
@@ -109,6 +109,7 @@
                         $state.go("edit", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     var changeTemplates = function (images) {
+                        presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.changeTemplate(presentation, page, images + "imageText");
                         anduril.post(presentation);
                         $state.go("edit", { images: images, templateName: "imageText"});
@@ -123,6 +124,7 @@
                         }
                     };
                     $scope.add = function () {
+                        presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.insert(presentation, page + 1, {templateName: '1imageText'});
                         anduril.post(presentation);
                         $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
