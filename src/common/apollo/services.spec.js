@@ -61,7 +61,7 @@ describe('apollo service main audio', function () {
         }
     };
 
-    beforeEach(inject(function (_apollo_) {
+    beforeEach(inject(function (_apollo_, $state) {
         element = new FakeAudio();
 
         element.onplay = function () {
@@ -77,6 +77,7 @@ describe('apollo service main audio', function () {
         });
         apollo.addMainAudio(element);
 
+        $state.current = {data: {mode: 'play'}}
 
     }));
     it("add Main Audio", function () {
@@ -237,7 +238,7 @@ describe('apollo service background audio', function () {
         this.seekable = [];
     };
 
-    beforeEach(inject(function (_apollo_) {
+    beforeEach(inject(function (_apollo_, $state) {
         element = new FakeAudio();
 
         element.onplay = function () {
@@ -251,6 +252,59 @@ describe('apollo service background audio', function () {
                 }
             }, 1000);
         });
+
+    }));
+    it("test BG init", inject(function () {
+        expect(element.loop).toBeUndefined();
+        apollo.addBGAudio(element);
+        expect(element.volume).toBe(0);
+        expect(element.loop).toBeTruthy();
+
+    }));
+    it("test BG Audio init", inject(function () {
+        apollo.initBGAudio();
+        expect(element.volume).toBe(0);
+        apollo.addBGAudio(element);
+        apollo.initBGAudio();
+        expect(element.volume).toBe(0);
+    }));
+});
+
+describe('apollo service background audio play mode', function () {
+    beforeEach(module('sokratik.atelier.apollo.services'));
+    var element, apollo;
+    var played = false;
+    var FakeAudio = function () {
+        this.play = function () {
+            this.onplay();
+            this.paused = false;
+        };
+        this.src = "audioLocation";
+        this.volume = 0;
+        this.currentTime = 0.0;
+        this.paused = true;
+        this.pause = function () {
+            this.paused = true;
+        };
+        this.seekable = [];
+    };
+
+    beforeEach(inject(function (_apollo_, $state) {
+        element = new FakeAudio();
+
+        element.onplay = function () {
+            played = true;
+        };
+        apollo = _apollo_;
+        runs(function () {
+            setInterval(function () {
+                if (!element.paused) {
+                    element.currentTime += 1;
+                }
+            }, 1000);
+        });
+        $state.current = {data: {mode: 'play'}};
+
     }));
     it("test BG init", inject(function () {
         expect(element.loop).toBeUndefined();

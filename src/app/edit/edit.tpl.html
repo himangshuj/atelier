@@ -1,3 +1,4 @@
+
 <div ng-click="increaseImages()" class="image-add-top" tooltip="Add another image" tooltip-placement="right">
     <i class="fa fa-picture-o"></i>
 </div>
@@ -6,7 +7,11 @@
     <i class="fa  fa-youtube-square"></i>
 </div>
 
-<div class="edit full-height" ui-view="template"></div>
+<div class="edit full-height">
+    <sokratik-dialogue presentation="presentation"
+                       increase-images="increaseImages"
+                       decrease-images="decreaseImages"></sokratik-dialogue>
+</div>
 
 
 <button class="btn nav-button nav-button-right btn-lg" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">
@@ -29,6 +34,7 @@
     <div class="spinner-backdrop" style="opacity:0.5"></div>
     <div id="spinner"></div>
 </div>
+
 
 
 

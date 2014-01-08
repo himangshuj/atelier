@@ -79,7 +79,7 @@
                     //noinspection JSUnresolvedFunction
                     var deferred = $q.defer();
                     _cache[presentation._id] = presentation;
-                    return presentation.$update(function(resp){
+                    return presentation.$update(function (resp) {
                         deferred.resolve(presentation);
 
                     });
@@ -87,7 +87,6 @@
                 },
                 fetchImages: _fetchImages,
                 fetchPresentation: function (presentationId) {
-
                     var deferred = $q.defer();
                     if (_cache[presentationId]) {
                         deferred.resolve(_cache[presentationId]);
@@ -102,7 +101,10 @@
                 },
                 recordAction: _recordScript,
                 completeRecord: _postScript,
-                insertScript: _insertScript
+                insertScript: _insertScript,
+                clearCache: function () {
+                    _cache = {};
+                }
             };
         }
         ]

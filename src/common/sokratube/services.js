@@ -3,15 +3,15 @@
 (function (ng, app) {
 
 
-    var _videoModalCtrl = ["$scope", "$modalInstance", "$sce", "videoId", "deferred", "timeOut", "apollo",
+    var _videoModalCtrl = ['$scope', '$modalInstance', '$sce', 'videoId', 'deferred', 'timeOut', 'apollo',
         function ($scope, $modalInstance, $sce, videoId, deferred, timeOut, apollo) {
             var actionInitiated = new Date().getTime();
             apollo.muteBGAudio();
-            deferred.notify("modal has been initialized");
+            deferred.notify('modal has been initialized');
             var player;
             _.defer(function () {
-                player = new YT.Player("player", {
-                    playerVars: { 'autoplay': 1, "origin": "closed-beta.sokratik.com:3000" },
+                player = new YT.Player('player', {
+                    playerVars: { 'autoplay': 1, 'origin': 'lab.sokratik.com' },
                     videoId: videoId,
                     events: {
                         'onStateChange': onStateChange
@@ -21,8 +21,8 @@
 
             var done = $scope.done = function () {
                 apollo.initBGAudio();
-                deferred.resolve({"fnName": "initYTVideo", module: "sokratube",
-                    "args": {timeOut: player.getCurrentTime() * 1000, videoId: videoId},
+                deferred.resolve({'fnName': 'initYTVideo', module: 'sokratube',
+                    'args': {timeOut: player.getCurrentTime() * 1000, videoId: videoId},
                     actionInitiated: actionInitiated });
                 $modalInstance.close();
             };
@@ -30,7 +30,7 @@
 
             var countDownStarted = false;
 
-            $scope.closeLabel = !!timeOut ? "skip" : "done";
+            $scope.closeLabel = !!timeOut ? 'skip' : 'done';
 
 
             function onStateChange(event) {//asumes no buffering need to fix this
@@ -45,7 +45,7 @@
 
         }];
     var _saas = function () {//sokratube as a service
-        this.$get = ["$modal", "apollo", function ($modal) {
+        this.$get = ['$modal', 'apollo', function ($modal) {
             return {
                 initYTVideo: function (context, deferred) {
                     _.defer(function () {
@@ -78,10 +78,11 @@
         }];
     };
 
-    ng.module(app, ["sokratik.atelier.apollo.services",
-        "templates-common",
-        "ui.bootstrap"], ["$provide", function ($provide) {
-        $provide.provider("sokratube", _saas);
+    ng.module(app, ['sokratik.atelier.apollo.services',
+        'templates-common',
+        'ui.bootstrap',
+    'ui.router'], ['$provide', function ($provide) {
+        $provide.provider('sokratube', _saas);
 
     }]);
 })(angular, 'sokratik.atelier.sokratube.services');
