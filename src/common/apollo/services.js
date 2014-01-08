@@ -94,8 +94,7 @@
                     // $log.info("[Play ] BackGround Audio played");
                 },
                 initBGAudio: function (index, volume) {
-
-                    if (_.isEqual($state.current.data.mode, "play")) {
+                    if (_.isEqual(($state.current.data ||  {mode: ''}).mode, "play")) {
                         (_backGroundAudio[index || 0] || {}).volume = volume || 0.10;
                     }
                 },
@@ -113,7 +112,7 @@
         }];
     };
 
-    ng.module(app, [], ["$provide", function ($provide) {
+    ng.module(app, ['ui.router'], ["$provide", function ($provide) {
 
         $provide.provider("apollo", apollo);
     }]);

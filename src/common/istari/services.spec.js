@@ -97,6 +97,7 @@ describe("istari, the one where we talk to server", function () {
     var presentation, httpBackend;
     beforeEach(module('sokratik.atelier.istari.services'));
     beforeEach(inject(function ($httpBackend, anduril) {
+        anduril.clearCache();
         $httpBackend.when('GET', '/presentation/presentationId').respond(
             {_id: "presentationId",
                 presentationData: [

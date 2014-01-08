@@ -45,7 +45,7 @@
 
         .config(["$stateProvider", function config($stateProvider) {
             $stateProvider.state('edit', {
-                url: '/edit/:questionId/:templateName/:presentationId/:page/:images',
+                url: '/edit/:templateName/:presentationId/:page/:images',
                 resolve: {
 
                     page: ["$stateParams", function ($stateParams) {
@@ -63,19 +63,12 @@
                 views: {
                     "main": {
                         templateUrl: "edit/edit.tpl.html",
+                        controller: 'EditController'
                     }
                 },
                 parent: 'root'
             })
-                .state("edit.template", {
-                    url: '/',
-                    views: {
-                        "template": {
-                            templateUrl: "edit/template.tpl.html",
-                            controller: 'EditController'
-                        }
-                    }
-                });
+
 
         }])
 
@@ -89,7 +82,7 @@
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;
                     $scope.presentationId = presentationId;
-                    var activePresentation = $scope.presentation = presentation.presentationData[page] || ng.copy(presentation.presentationData[page - 1]);
+                    var activePresentation = $scope.presentation = presentation.presentationData[page];
                     $scope.totalPages = _.size(presentation.presentationData);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(presentation, page, $scope.presentation);
@@ -97,27 +90,28 @@
                     $scope.images = images;
                     $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
                     page = parseInt(page, 10);
+
                     $scope.record = function () {
-                        presentation = anduril.put(presentation, page, $scope.presentation);
+                        anduril.put(presentation, page, activePresentation);
                         anduril.post(presentation);
                         $state.go("record.activate", {page: 0});
                     };
 
                     $scope.goToPage = function (page) {
                         "use strict";
-                        presentation = anduril.put(presentation, page, $scope.presentation);
+                        presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.post(presentation);
-                        $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
+                        $state.go("edit", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
                     $scope.remove = function () {
                         "use strict";
                         anduril.post(anduril.remove(presentation, page));
-                        $state.go("edit.template", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
+                        $state.go("edit", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
                     var changeTemplates = function (images) {
                         anduril.changeTemplate(presentation, page, images + "imageText");
                         anduril.post(presentation);
-                        $state.go("edit.template", { images: images, templateName: "imageText"});
+                        $state.go("edit", { images: images, templateName: "imageText"});
 
                     };
                     $scope.increaseImages = function () {
@@ -131,7 +125,7 @@
                     $scope.add = function () {
                         anduril.insert(presentation, page + 1, {templateName: '1imageText'});
                         anduril.post(presentation);
-                        $state.go("edit.template", { "page": page + 1, templateName: 'imageText', images: 1});
+                        $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
                     };
 
                     $scope.addVideo = function () {
@@ -146,6 +140,7 @@
                             }
                         });
                         activePresentation.apps = activePresentation.apps || {};
+                        presentation = anduril.put(presentation, page, activePresentation);
                         var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"}) || {name: "YT"};
                         modalInstance.result.then(function (ytEmbedUrl) {
                             activePresentation.apps = _.without(activePresentation.apps, existingVideo);
@@ -157,8 +152,7 @@
                         });
                         return modalInstance;
                     };
-                }])
-
+                }]);
 })(angular, "sokratik.atelier.edit");
 
 
