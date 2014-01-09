@@ -79,6 +79,7 @@
                 post: function (presentation) {
                     //noinspection JSUnresolvedFunction
                     var deferred = $q.defer();
+                    ++presentation['__v'];
                     _cache[presentation._id] = presentation;
                     presentation.$update(function (resp) {
                         deferred.resolve(presentation);
