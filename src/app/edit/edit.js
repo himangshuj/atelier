@@ -108,13 +108,15 @@
                         anduril.post(anduril.remove(presentation, page));
                         $state.go("edit", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
-                    var changeTemplates = function (images) {
+
+                    var _changeTemplates = function (images) {
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.changeTemplate(presentation, page, images + "imageText");
                         anduril.post(presentation);
                         $state.go("edit", { images: images, templateName: "imageText"});
 
                     };
+                    var changeTemplates = _.once(_changeTemplates);
                     $scope.increaseImages = function () {
                         changeTemplates((++images) % 5);
                     };
