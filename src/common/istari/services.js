@@ -68,6 +68,7 @@
                     "use strict";
                     var templateFragment = presentation.presentationData;
                     templateFragment[page].templateName = templateName;
+                    return presentation;
                 },
                 remove: function (presentation, page) {
                     "use strict";
