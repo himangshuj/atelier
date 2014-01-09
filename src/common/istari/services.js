@@ -79,7 +79,7 @@
                 post: function (presentation) {
                     //noinspection JSUnresolvedFunction
                     var deferred = $q.defer();
-                    _cache[presentation._id] = presentation;
+                    _cache[presentation._id] = null;
                     presentation.$update(function (resp) {
                         deferred.resolve(presentation);
 
@@ -87,9 +87,9 @@
                     return deferred.promise;
                 },
                 fetchImages: _fetchImages,
-                fetchPresentation: function (presentationId) {
+                fetchPresentation: function (presentationId,cache) {
                     var deferred = $q.defer();
-                    if (_cache[presentationId]) {
+                    if (_cache[presentationId] && cache) {
                         deferred.resolve(_cache[presentationId]);
                     } else {
                         presentation.get({presentationId: presentationId}, function (presentation) {

@@ -46,7 +46,7 @@
                 abstract: true,
                 resolve: {
                     presentation: ['anduril', '$stateParams', function (anduril, $stateParams) {
-                        return anduril.fetchPresentation($stateParams.presentationId);
+                        return anduril.fetchPresentation($stateParams.presentationId,true);
                     }],
                     instructionDetails: [ '$stateParams', 'presentation', function ($stateParams, presentation) {
                         'use strict';
