@@ -1,21 +1,16 @@
-<div class="modal-dialog">
-    <div class="modal-content">
         <div class="modal-header">
-            <div class="img-modal-close" ng-click="ok(selected.image, selected.caption)">
-                <i class="fa fa-plus"></i>
-            </div>
-        </div>
-        <div class="modal-body">
-
-
-
-            <span style="font-size:initial">Enter image URL </span>&nbsp; &nbsp;<input type="text"
+            <button class="btn-close" ng-click="cancel()"><i class="fa fa-times-circle fa-2x"></i></button>
+            <span>Enter image URL </span>&nbsp; &nbsp;<input type="text"
                                                                                        ng-model="selected.image"
-                                                                                       style="width:70%"><br/>
-            <span style="font-size:initial">Enter caption </span>&nbsp; &nbsp;&nbsp;&nbsp;<input type="text"
+                                                                                       ><br/>
+            <span>Enter caption </span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"
                                                                                                  ng-model="selected.caption"
-                                                                                                 style="width:70%"
+
                                                                                                  ui-keyup="{'enter':'storeImage($event)'}">
+            <button class="btn btn-primary no-border" ng-click="ok(selected.image, selected.caption)">Ok</button>
+        </div>
+<!--
+        <div class="modal-body">
 
             <div class="img-modal-close" ng-click="cancel()">
                 <i class="icon-minus"></i>
@@ -37,6 +32,4 @@
             <button class="btn btn-warning no-border" ng-click="cancel()">Close</button>
             <button class="btn btn-primary no-border" ng-click="ok(selected.image, selected.caption)">Ok</button>
         </div>
-    </div>
-</div>
-</div>
+    </div>-->

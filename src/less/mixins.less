@@ -24,10 +24,30 @@
   }
 }
 
+.height-calc(@total-height,@em-deduct,@px-deduct, @height-proxy){
+  height:@height-proxy;
+  height:~"calc(@{total-height} - @{em-deduct}em - @{px-deduct}px)";
+  height:~"-webkit-calc(@{total-height} - @{em-deduct}em - @{px-deduct}px)";
+  height:~"-moz-calc(@{total-height} - @{em-deduct}em - @{px-deduct}px)";
+  height:~"-o-calc(@{total-height} - @{em-deduct}em - @{px-deduct}px)";
+}
+
+.width-calc(@total-width,@em-deduct,@px-deduct, @width-proxy){
+  width:@width-proxy;
+  width:~"calc(@{total-width} - @{em-deduct}em - @{px-deduct}px)";
+  width:~"-webkit-calc(@{total-width} - @{em-deduct}em - @{px-deduct}px)";
+  width:~"-moz-calc(@{total-width} - @{em-deduct}em - @{px-deduct}px)";
+  width:~"-o-calc(@{total-width} - @{em-deduct}em - @{px-deduct}px)";
+}
+
 .generate-button(@top, @right, @hover-right, @active-left, @active-top, @active-right){
   position: absolute;
   top: @top;
   right: @right;
+  -o-transition: all ease-in-out 0.15s;
+  -ms-transition: all ease-in-out 0.15s;
+  -webkit-transition: all ease-in-out 0.15s;
+  transition: all ease-in-out 0.15s;
   &:hover {
     right: @hover-right;
   }
