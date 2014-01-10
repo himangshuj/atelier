@@ -3,15 +3,15 @@
 (function (ng, app) {
 
 
-    var _videoModalCtrl = ['$scope', '$modalInstance', '$sce', 'videoId', 'deferred', 'timeOut', 'apollo',
-        function ($scope, $modalInstance, $sce, videoId, deferred, timeOut, apollo) {
+    var _videoModalCtrl = ['$scope', '$modalInstance', '$sce', 'videoId', 'deferred', 'timeOut', 'apollo', 'startTime',
+        function ($scope, $modalInstance, $sce, videoId, deferred, timeOut, apollo, startTime) {
             var actionInitiated = new Date().getTime();
             apollo.muteBGAudio();
             deferred.notify('modal has been initialized');
             var player;
             _.defer(function () {
                 player = new YT.Player('player', {
-                    playerVars: { 'autoplay': 1, 'origin': 'lab.sokratik.com' },
+                    playerVars: { 'autoplay': 1, 'origin': 'lab.sokratik.com', start: startTime},
                     videoId: videoId,
                     events: {
                         'onStateChange': onStateChange
@@ -49,6 +49,7 @@
             return {
                 initYTVideo: function (context, deferred) {
                     _.defer(function () {
+
                         var modalInstance = $modal.open({
                             templateUrl: 'sokratube/yt.modal.tpl.html',
                             controller: _videoModalCtrl,
@@ -62,6 +63,9 @@
                                 deferred: function () {
 
                                     return deferred;
+                                },
+                                startTime: function () {
+                                    return  context.startTime;
                                 }
                             }
                         });
@@ -81,7 +85,7 @@
     ng.module(app, ['sokratik.atelier.apollo.services',
         'templates-common',
         'ui.bootstrap',
-    'ui.router'], ['$provide', function ($provide) {
+        'ui.router'], ['$provide', function ($provide) {
         $provide.provider('sokratube', _saas);
 
     }]);

@@ -165,11 +165,13 @@ describe('edit section post initialization ', function () {
         runs(function(){
             expect(videoId).toBe("myVid");
         });
-        $rootScope.$$childTail.ok("ohohoho/watch?v=dummyVideo");
+        $rootScope.$$childTail.ok("ohohoho/watch?v=dummyVideo",678);
         $rootScope.$digest();
         expect(presentation.presentationData[scope.page].apps.length).toBe(1);
         expect(presentation.presentationData[scope.page].apps[0].name).toBe("YT");
         expect(presentation.presentationData[scope.page].apps[0].params.videoId).toBe("dummyVideo");
+        expect(presentation.presentationData[scope.page].apps[0].params.startTime).toBe(678);
+
 
     }));
 });
