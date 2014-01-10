@@ -208,8 +208,8 @@ body.presentation {
         max-width: 100%;
         width: 100%;
         height: initial;
-        animation: animatedFullImage 67s linear 3s 1 normal forwards;
-        -webkit-animation: animatedFullImage 67s linear 3s 1 normal forwards;
+        animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
+        -webkit-animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
       }
     }
     .text-fragment-holder{
@@ -228,10 +228,10 @@ body.presentation {
 
 @keyframes animatedFullImage {
   from { transform:translateY(0%); }
-  to { transform:translateY(-75%); }     //TODO replace with -100% + screenhight calc
+  to { transform:translateY(-80%); }     //TODO replace with -100% + screenhight calc
 }
 
 @-webkit-keyframes animatedFullImage {
   from { -webkit-transform:translateY(0%); }
-  to { -webkit-transform:translateY(-75%); }
+  to { -webkit-transform:translateY(-80%); }
 }
