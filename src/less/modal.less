@@ -1,45 +1,51 @@
-@modal-width:90%;
-@modal-height:90%;
+@modal-width:640px;
+@modal-height:300px;
 @modal-header-height: 60px;
 @modal-footer-height: 65px;
 @modal-image-height: 200px;
+@video-modal-height:300px;
+@video-modal-width:640px;
 
+/*
 .modal{
   display: block;
   overflow: auto;
-  width:@modal-width;
+//  width:@modal-width;
   margin-right:auto;
   margin-left:auto;
-  height:@modal-height;
-  margin-top:@modal-width/16;
+//  height:@modal-height;
+//  margin-top:@modal-width/16;
+  top:50%;
+  left:50%;
+  margin-left:-@modal-width/2;
+  margin-top:-@modal-height/2;
 }
 
 .modal-dialog{
   position: initial;
   margin:0px;
-  width:100%;
-  height:100%;
+//  width:100%;
+//  height:100%;
   padding:0px;
 }
 
 .modal-content{
-  margin:0px;
   border: none;
-  height:100%;
+//  height:100%;
 }
 
 .modal-header{
-  height:@modal-header-height;
+//  height:@modal-header-height;
   margin:0 px;
   padding:0px 0px 0px 35px;
 }
 
 .modal-body{
-  overflow-y: scroll;
+//  overflow-y: scroll;
 }
 
 .modal-footer{
-  height:@modal-footer-height;
+//  height:@modal-footer-height;
   margin:0px;
   padding:0px 0px 8px 0px;
 }
@@ -75,4 +81,48 @@
 
 .selected {
   border:5px solid @panel-info-border;
+}
+
+.record, .playback{
+  .video-YT{
+    .modal-header{
+      display:none;
+    }
+    .modal-footer{
+      display:none;
+    }
+  }
+}
+
+.edit.video-YT{
+  .modal-content{
+    border-radius:0px;
+    margin-left:-@video-modal-width/2;
+    margin-top:-@video-modal-height/2;
+  }
+  .modal-body{
+    padding:0px;
+  }
+}
+*/
+
+.modal-header{
+  font-size:small;
+  input{
+    width:70%;
+  }
+}
+
+.modal-content{
+  border:none;
+  border-radius:0px;
+}
+
+.modal-dialog{
+  width:@modal-width;      //TODO replace with @media
+}
+
+.modal-body{
+  padding:0px;
+  height: @modal-height;   //TODO replace with @media
 }
