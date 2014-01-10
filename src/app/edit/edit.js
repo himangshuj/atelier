@@ -1,12 +1,12 @@
 (function (ng, app) {
 
 
-    var _videoModalCtrl = ["$scope", "$modalInstance", "$sce", "existingVideo", function ($scope, $modalInstance, $sce, existingVideo) {
+    var _videoModalCtrl = ['$scope', '$modalInstance', '$sce', 'existingVideo', function ($scope, $modalInstance, $sce, existingVideo) {
 
 
-        $scope.ok = function (selectedMedia) {
-            var videoId = (selectedMedia || "watch?v=").split("watch?v=")[1];
-            $modalInstance.close(videoId);
+        $scope.ok = function (selectedMedia, selectedMediaStart) {
+            var videoId = (selectedMedia || 'watch?v=').split('watch?v=')[1];
+            $modalInstance.close({videoId: videoId, startTime: selectedMediaStart});
         };
 
 
@@ -18,10 +18,11 @@
         var player;
         var videoId = ((existingVideo || {}).params || {}).videoId;
 
-        $scope.selectedMedia = "http://www.youtube.com/watch?v=" + videoId;
+        $scope.selectedMedia = 'http://www.youtube.com/watch?v=' + videoId;
+        $scope.selectedMediaStart = ((existingVideo || {}).params || {}).startTime;
 
         _.defer(function () {
-            player = new YT.Player("player", {
+            player = new YT.Player('player', {
                 playerVars: { 'autoplay': 1, 'controls': 0 },
                 height: '300',
                 width: '640',
@@ -30,9 +31,9 @@
         });
 
         $scope.renderYT = function (selectedMedia) {
-            var videoId = (selectedMedia || "watch?v=").split("watch?v=")[1];
+            var videoId = (selectedMedia || 'watch?v=').split('watch?v=')[1];
             _.defer(function () {
-                player.loadVideoById(videoId, 0, "large");
+                player.loadVideoById(videoId, 0, 'large');
             });
         };
 
@@ -43,26 +44,26 @@
             'ngSanitize'
         ])
 
-        .config(["$stateProvider", function config($stateProvider) {
+        .config(['$stateProvider', function config($stateProvider) {
             $stateProvider.state('edit', {
                 url: '/edit/:templateName/:presentationId/:page/:images',
                 resolve: {
 
-                    page: ["$stateParams", function ($stateParams) {
+                    page: ['$stateParams', function ($stateParams) {
                         //noinspection JSUnresolvedFunction
                         return parseInt($stateParams.page ? $stateParams.page : 0, 10);
                     }],
-                    presentation: ["anduril", "$stateParams", function (anduril, $stateParams) {
+                    presentation: ['anduril', '$stateParams', function (anduril, $stateParams) {
                         return anduril.fetchPresentation($stateParams.presentationId);
                     }]
 
                 },
                 data: {
-                    mode: "edit"
+                    mode: 'edit'
                 },
                 views: {
-                    "main": {
-                        templateUrl: "edit/edit.tpl.html",
+                    'main': {
+                        templateUrl: 'edit/edit.tpl.html',
                         controller: 'EditController'
                     }
                 },
@@ -73,7 +74,7 @@
         }])
 
         .controller('EditController',
-            ["$scope", "page", "$stateParams", "presentation", "anduril", "$state", "$modal", "$rootScope",
+            ['$scope', 'page', '$stateParams', 'presentation', 'anduril', '$state', '$modal', '$rootScope',
                 function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $rootScope) {
 
                     $rootScope.presentationMode = true;
@@ -94,26 +95,26 @@
                     $scope.record = function () {
                         anduril.put(presentation, page, activePresentation);
                         anduril.post(presentation);
-                        $state.go("record.activate", {page: 0});
+                        $state.go('record.activate', {page: 0});
                     };
 
                     $scope.goToPage = function (page) {
-                        "use strict";
+                        'use strict';
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.post(presentation);
-                        $state.go("edit", {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
+                        $state.go('edit', {templateName: $stateParams.templateName, presentationId: presentationId, page: page});
                     };
                     $scope.remove = function () {
-                        "use strict";
+                        'use strict';
                         anduril.post(anduril.remove(presentation, page));
-                        $state.go("edit", {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
+                        $state.go('edit', {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
 
                     var _changeTemplates = function (images) {
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
-                        anduril.changeTemplate(presentation, page, images + "imageText");
+                        anduril.changeTemplate(presentation, page, images + 'imageText');
                         anduril.post(presentation);
-                        $state.go("edit", { images: images, templateName: "imageText"});
+                        $state.go('edit', { images: images, templateName: 'imageText'});
 
                     };
                     var changeTemplates = _.once(_changeTemplates);
@@ -129,7 +130,7 @@
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.insert(presentation, page + 1, {templateName: '1imageText'});
                         anduril.post(presentation);
-                        $state.go("edit", { "page": page + 1, templateName: 'imageText', images: 1});
+                        $state.go('edit', { 'page': page + 1, templateName: 'imageText', images: 1});
                     };
 
                     $scope.addVideo = function () {
@@ -139,16 +140,16 @@
                             resolve: {
                                 existingVideo: function () {
                                     activePresentation.apps = activePresentation.apps || [];
-                                    return _.findWhere(activePresentation.apps, {name: "YT"});
+                                    return _.findWhere(activePresentation.apps, {name: 'YT'});
                                 }
                             }
                         });
                         activePresentation.apps = activePresentation.apps || {};
                         presentation = anduril.put(presentation, page, activePresentation);
-                        var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"}) || {name: "YT"};
-                        modalInstance.result.then(function (ytEmbedUrl) {
+                        var existingVideo = _.findWhere(activePresentation.apps, {name: 'YT'}) || {name: 'YT'};
+                        modalInstance.result.then(function (params) {
                             activePresentation.apps = _.without(activePresentation.apps, existingVideo);
-                            existingVideo.params = {"videoId": ytEmbedUrl};
+                            existingVideo.params = params;
                             activePresentation.apps = _.union(activePresentation.apps, existingVideo);
                             presentation = anduril.put(presentation, page, activePresentation);
                         }, function () {
@@ -157,7 +158,7 @@
                         return modalInstance;
                     };
                 }]);
-})(angular, "sokratik.atelier.edit");
+})(angular, 'sokratik.atelier.edit');
 
 
 
