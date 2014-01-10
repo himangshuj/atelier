@@ -168,7 +168,7 @@
                 $scope.recordYTAction = function () {
                     $scope.pause();//pausing the audio
                     var videoId = existingVideo.params.videoId;
-                    sokratube.initYTVideo({videoId: videoId}, $q.defer()).then(function (resp) {
+                    sokratube.initYTVideo({videoId: videoId,startTime:existingVideo.params.startTime}, $q.defer()).then(function (resp) {
                         recordAction(resp);
                     });
                 };
