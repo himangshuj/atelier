@@ -1,6 +1,15 @@
 @import "variables";
 @import "mixins";
 
+.full-sized {
+  height: 100%;
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
 body.presentation {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;;
   background: @body-background;
@@ -11,10 +20,6 @@ body.presentation {
   height: 100%;
 }
 .presentation {
-  .full-sized {
-    height: 100%;
-    width: 100%;
-  }
 
   .parent-height {
     height: inherit;
@@ -52,13 +57,11 @@ body.presentation {
     .sokratikPadding(@sm-margin,@lg-margin);
     .presentation-text;
     text-align: center;
-    .box-position;
     height: 100%;
   }
 
   .vertical-center {
-    text-align: center;
-
+    .box-position;
   }
 
   .fix-to-bottom {
@@ -73,11 +76,12 @@ body.presentation {
   .slide-image-fragment {
     margin-top: 0.5em;
     display: inline-block;
+    .height-calc(100%, 7.7, 1, 50%);
     img {
       margin-left: auto;
       margin-right: auto;
       max-width: 97%;
-      max-height: 300px;//TODO make this a @media
+      height:100%;      //TODO make this a @media
     }
     .caption-holder {
       .fix-to-bottom;
@@ -87,7 +91,7 @@ body.presentation {
         position: relative;
         left: -50%;
         background-image: none;
-        background-color: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.6);
         color: #FFF;
       }
       width: 97.5%;
@@ -100,6 +104,10 @@ body.presentation {
 
   .text-fragment-holder {
     margin-top: 0.5em;
+  }
+
+  .full-text{
+    .height-calc(100%, 3.1, 0, 80%);
   }
 
   .nav-button {
@@ -135,7 +143,7 @@ body.presentation {
     }
   }
 
-  .fragment > input[type="textarea"], .fragment > input[type="text"] {
+  .fragment > input[type="textarea"], .fragment > input[type="text"] , textarea{
     width: 95%;
     padding: 0px !important;
     margin: 2px;
@@ -146,6 +154,10 @@ body.presentation {
     font: inherit;
     color: inherit;
     text-align: inherit;
+    resize:none;
+    overflow: auto;
+    height: @headingLineHeight;
+    background-color: inherit;
     &:focus, &:hover, &:active {
       border-top: none;
       border-left: none;
@@ -153,8 +165,12 @@ body.presentation {
       padding: 0px !important;
       margin: 2px;
     }
-
-    &:focus::-webkit-input-placeholder, &:focus::-moz-placeholder {
+    &:focus::-webkit-input-placeholder{
+      opacity: 0;
+      transition: opacity ease 0.15s;
+      -webkit-transition: opacity ease 0.15s;
+    }
+    &:focus::-moz-placeholder {
       opacity: 0;
       transition: opacity ease 0.15s;
       -webkit-transition: opacity ease 0.15s;
@@ -170,4 +186,52 @@ body.presentation {
   ::-webkit-input-placeholder {
     text-align: left;
   }
+  .btn-close{
+    position:absolute;
+    right:-23px;    //TODO replace with equation linked to FA font size
+    top:-19px;
+    background: none;
+    border:none;
+  }
+  .full-background{
+    .slide-image-fragment{
+      .width-calc(100%, 0.0001, unit(-2*@sm-margin), 102%);
+      margin-left:-@sm-margin;
+      @media (min-width: @screen-sm) {
+        .width-calc(100%, 0.0001, unit(-2*@lg-margin), 102%);
+        margin-left:-@lg-margin;
+      }
+      height:100%;
+      img{
+        position:absolute;
+        left:0px;
+        max-width: 100%;
+        width: 100%;
+        height: initial;
+        animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
+        -webkit-animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
+      }
+    }
+    .text-fragment-holder{
+      position:absolute;
+      right:0px;
+      top:25%;
+      width:30%;
+      background-color: rgba(169,69,54, .85);
+      padding: 20px 0px;
+      textarea{
+        color:#FFF;
+      }
+    }
+  }
+}
+
+@keyframes animatedFullImage {
+  from { transform:translateY(0%); }
+  to { transform:translateY(-80%); }     //TODO replace with -100% + screenhight calc
+}
+
+@-webkit-keyframes animatedFullImage {
+  from { -webkit-transform:translateY(0%); }
+  to { -webkit-transform:translateY(-80%); }
 }
