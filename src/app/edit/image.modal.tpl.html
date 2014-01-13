@@ -1,42 +1,11 @@
-<div class="modal-dialog">
-    <div class="modal-content">
         <div class="modal-header">
-            <div class="img-modal-close" ng-click="ok(selected.image, selected.caption)">
-                <i class="fa fa-plus"></i>
-            </div>
-        </div>
-        <div class="modal-body">
-
-
-
-            <span style="font-size:initial">Enter image URL </span>&nbsp; &nbsp;<input type="text"
+            <button class="btn-close" ng-click="cancel()"><i class="fa fa-times-circle fa-2x"></i></button>
+            <span>Enter image URL </span>&nbsp; &nbsp;<input type="text"
                                                                                        ng-model="selected.image"
-                                                                                       style="width:70%"><br/>
-            <span style="font-size:initial">Enter caption </span>&nbsp; &nbsp;&nbsp;&nbsp;<input type="text"
+                                                                                       ><br/>
+            <span>Enter caption </span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text"
                                                                                                  ng-model="selected.caption"
-                                                                                                 style="width:70%"
+
                                                                                                  ui-keyup="{'enter':'storeImage($event)'}">
-
-            <div class="img-modal-close" ng-click="cancel()">
-                <i class="icon-minus"></i>
-            </div>
-
-
-            <div class="row-fluid image-container">
-                <div class="row-fluid image-group" ng-repeat="imageGroup in imageGroups">
-                    <div class="col-xs-12 col-sm-6 col-md-4" style="height: inherit" ng-repeat="image in imageGroup">
-                        <div class="image-holder" ng-class="{selected : selected.image == image.url}"
-                             style="background-image: url('{{image.thumbnail}}')" ng-click="selected.image = image.url"
-                             ng-dblclick="ok(image.url, selected.caption)">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-warning no-border" ng-click="cancel()">Close</button>
             <button class="btn btn-primary no-border" ng-click="ok(selected.image, selected.caption)">Ok</button>
         </div>
-    </div>
-</div>
-</div>
