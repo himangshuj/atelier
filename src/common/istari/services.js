@@ -33,7 +33,7 @@
         };
         var _postScript = function (presentation) {
             //noinspection JSUnresolvedFunction
-            _cache[presentation._id] = null;
+            _cache[presentation._id] = presentation;
             return presentation.$update();
         };
         this.$get = ["$http", "$log", "$q", "$resource", function ($http, $log, $q, $resource) {
@@ -80,7 +80,7 @@
                     //noinspection JSUnresolvedFunction
                     var deferred = $q.defer();
                     _cache[presentation._id] = presentation;
-                    presentation.$update(function (resp) {
+                    presentation.$update(function () {
                         deferred.resolve(presentation);
 
                     });
