@@ -17,7 +17,6 @@
                     deferred.resolve(data);
                 })
                 .error(function () {
-                    injectors.$log.info("call failed getting images");
                     deferred.resolve([]);
                 });
             return deferred.promise;
