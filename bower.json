@@ -14,7 +14,8 @@
         "angular-ui-utils": "~0.0.4",
         "underscore": "~1.5.2",
         "underscore.string": "~2.3.3",
-        "animate.css":"https://github.com/daneden/animate.css.git#master"
+        "animate.css":"https://github.com/daneden/animate.css.git#master",
+        "angular-elastic":"~2.3.0"
     },
     "dependencies": {}
 }

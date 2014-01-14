@@ -410,7 +410,8 @@
             'sokratik.atelier.minerva.services',
             'sokratik.atelier.canvas.services',
             'ui.bootstrap',
-            'templates-app'
+            'templates-app',
+            'monospaced.elastic'
         ])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
