@@ -112,7 +112,7 @@
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.changeTemplate(presentation, page, templateName);
                         anduril.post(presentation);
-                        $state.go('edit', { images: images, templateName: 'imageText'});
+                        $state.go('edit', { images: images, templateName: templateName});
 
                     };
                     var changeTemplates = _.once(_changeTemplates);

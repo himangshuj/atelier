@@ -116,7 +116,7 @@ describe('edit section post initialization ', function () {
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         scope.increaseImages();
         expect(presentation.presentationData[scope.page].templateName).toBe("4imageText");
-        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "imageText", images: 4});
+        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "4imageText", images: 4});
         expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
@@ -124,7 +124,7 @@ describe('edit section post initialization ', function () {
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         scope.decreaseImages();
         expect(presentation.presentationData[scope.page].templateName).toBe("2imageText");
-        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "imageText", images: 2});
+        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "2imageText", images: 2});
         expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
