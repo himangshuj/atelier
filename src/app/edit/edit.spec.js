@@ -86,7 +86,7 @@ describe('edit section post initialization ', function () {
         controller = $controller("EditController", {
             $scope: scope,
             page: "1",
-            $stateParams: {presentationId: "presentationId", images: 5, templateName: "template"},
+            $stateParams: {presentationId: "presentationId", images: 3, templateName: "template"},
             presentation: presentation,
             anduril: anduril,
             $modal: $modal,
@@ -115,16 +115,16 @@ describe('edit section post initialization ', function () {
     it("increase images", inject(function ($state, anduril) {
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         scope.increaseImages();
-        expect(presentation.presentationData[scope.page].templateName).toBe("1imageText");
-        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "imageText", images: 1});
+        expect(presentation.presentationData[scope.page].templateName).toBe("4imageText");
+        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "4imageText", images: 4});
         expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
     it("decrease images", inject(function ($state, anduril) {
         expect(presentation.presentationData[scope.page].templateName).toBe("t2");
         scope.decreaseImages();
-        expect(presentation.presentationData[scope.page].templateName).toBe("4imageText");
-        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "imageText", images: 4});
+        expect(presentation.presentationData[scope.page].templateName).toBe("2imageText");
+        expect($state.go).toHaveBeenCalledWith('edit', { templateName: "2imageText", images: 2});
         expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
@@ -138,6 +138,27 @@ describe('edit section post initialization ', function () {
         expect(anduril.put).toHaveBeenCalled();
         expect(anduril.post).toHaveBeenCalledWith(presentation);
     }));
+
+    it("toggle fullscreenimage", inject(function () {
+        expect(presentation.presentationData[scope.page].templateName).toBe("t2");
+        scope.toggleFullScreenImage();
+        expect(presentation.presentationData[scope.page].templateName).toBe("fullImage");
+        scope.presentation.templateName = 'fullImage';
+        scope.toggleFullScreenImage();
+        expect(presentation.presentationData[scope.page].templateName).toBe("fullImage");
+
+    }));
+    it("toggle fullscreenimage", inject(function () {
+        scope.isFullImageTemplate = true;
+        scope.toggleFullScreenImage();
+        expect(presentation.presentationData[scope.page].templateName).toBe("1imageText");
+        scope.presentation.templateName = 'tada';
+        scope.toggleFullScreenImage();
+        expect(presentation.presentationData[scope.page].templateName).toBe("1imageText");
+
+    }));
+
+
     it("add video", inject(function ($state, anduril, $rootScope) {
         var videoId = null;
         window.YT = {

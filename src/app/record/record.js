@@ -164,12 +164,17 @@
                     }
                 }, 1500);
                 var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"});
+                $scope.videoPlaying = false;
                 $scope.videoPresent = !!existingVideo;
                 $scope.recordYTAction = function () {
                     $scope.pause();//pausing the audio
+                    $scope.videoPlaying = true;
+
                     var videoId = existingVideo.params.videoId;
                     sokratube.initYTVideo({videoId: videoId,startTime:existingVideo.params.startTime}, $q.defer()).then(function (resp) {
                         recordAction(resp);
+                        $scope.videoPlaying = false;
+
                     });
                 };
 

@@ -1,8 +1,6 @@
 (function (ng, app) {
 
-
     var _videoModalCtrl = ['$scope', '$modalInstance', '$sce', 'existingVideo', function ($scope, $modalInstance, $sce, existingVideo) {
-
 
         $scope.ok = function (selectedMedia, selectedMediaStart) {
             var videoId = (selectedMedia || 'watch?v=').split('watch?v=')[1];
@@ -23,9 +21,9 @@
 
         _.defer(function () {
             player = new YT.Player('player', {
-                playerVars: { 'autoplay': 1, 'controls': 0 },
-                height: '300',
-                width: '640',
+                playerVars: { 'autoplay': 1, 'controls': 0},
+                height: '540',
+                width: '960',
                 videoId: videoId
             });
         });
@@ -89,7 +87,7 @@
                     anduril.put(presentation, page, $scope.presentation);
                     var images = $stateParams.images || 1;
                     $scope.images = images;
-                    $scope.presentation.templateName = $scope.presentation.templateName || (images + $stateParams.templateName);
+                    $scope.presentation.templateName = $scope.presentation.templateName || (images + 'imageText');
                     page = parseInt(page, 10);
 
                     $scope.record = function () {
@@ -110,20 +108,32 @@
                         $state.go('edit', {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
                     };
 
-                    var _changeTemplates = function (images) {
+                    var _changeTemplates = function (templateName) {
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
-                        anduril.changeTemplate(presentation, page, images + 'imageText');
+                        anduril.changeTemplate(presentation, page, templateName);
                         anduril.post(presentation);
-                        $state.go('edit', { images: images, templateName: 'imageText'});
+                        $state.go('edit', { images: images, templateName: templateName});
 
                     };
                     var changeTemplates = _.once(_changeTemplates);
                     $scope.increaseImages = function () {
-                        changeTemplates((++images) % 5);
+                        if (images < 5) {
+                            changeTemplates((++images) + 'imageText');
+                        }
                     };
                     $scope.decreaseImages = function () {
                         if (images > 0) {
-                            changeTemplates(--images);
+                            changeTemplates((--images) + 'imageText');
+                        }
+                    };
+                    $scope.isFullImageTemplate = _.isEqual('fullImage', $scope.presentation.templateName);
+
+                    $scope.toggleFullScreenImage = function () {
+                        if ($scope.isFullImageTemplate) {
+                            images = 1;
+                            changeTemplates('1imageText');
+                        } else {
+                            changeTemplates('fullImage');
                         }
                     };
                     $scope.add = function () {

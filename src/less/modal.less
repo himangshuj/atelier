@@ -1,10 +1,10 @@
-@modal-width:640px;
-@modal-height:300px;
 @modal-header-height: 60px;
 @modal-footer-height: 65px;
 @modal-image-height: 200px;
-@video-modal-height:300px;
-@video-modal-width:640px;
+@video-modal-height:540px;
+@video-modal-width:960px;
+@modal-width:@video-modal-width;
+@modal-height:@video-modal-height;
 
 
 .modal-header{
@@ -26,4 +26,16 @@
 .modal-body{
   padding:0px;
   height: @modal-height;   //TODO replace with @media
+}
+
+.edit.video-YT{
+  .btn-close{
+    color:#000;
+  }
+}
+
+.record.video-YT{
+  .btn-close{
+    color:#FFF;
+  }
 }

@@ -1,38 +1,64 @@
-<div ng-click="increaseImages()" class="image-add-top" tooltip="Add another image" tooltip-placement="right">
-    <i class="fa fa-picture-o"></i>
+<div class="toolbar toolbar-left">
+    <div class="color-green">
+        <a ng-click="increaseImages()" class="btn-pop-out">
+            <div class="toolbar-icon"><i class="fa fa-picture-o"></i></div>
+            <span class="tip">Add an image</span>
+        </a>
+        <a ng-click="addVideo()" class="btn-pop-out">
+            <div class="toolbar-icon"><i class="fa fa-youtube"></i></div>
+            <span class="tip">Add a video</span>
+        </a>
+    </div>
+    <div class="color-yellow">
+        <a ng-click="toggleFullScreenImage()" class="btn-pop-out">
+            <div class="toolbar-icon">
+                <i class="fa fa-compress" ng-show="{{isFullImageTemplate}}"></i>
+            </div>
+            <span class="tip">Full-screen</span>
+            <div ng-hide="{{isFullImageTemplate}}">
+                <div class="toolbar-icon">
+                    <i class="fa fa-expand"></i>
+                </div>
+                <span class="tip">Full-screen</span>
+            </div>
+        </a>
+    </div>
+    <div class="color-red">
+        <a ng-click="remove()" class="btn-pop-out">
+            <div class="toolbar-icon"><i class="fa fa-trash-o"></i></div>
+            <span class="tip">Delete slide</span>
+        </a>
+    </div>
+</div>
+<div class="toolbar toolbar-right">
+    <div class="color-red">
+        <a ng-click="record()" class="btn-pop-out">
+            <div class="toolbar-icon"><i class="fa fa-circle"></i></div>
+            <span class="tip">Start Recording</span>
+        </a>
+    </div>
 </div>
 
-<div class="image-youtube" ng-click="addVideo()" tooltip="Embed a youtube video" tooltip-placement="right">
-    <i class="fa fa-youtube-square"></i>
-</div>
+<a class="navigation-button btn-fill btn-fill-left" ng-click="goToPage(page-1)" ng-show="page > 0 ">
+    <i class="fa fa-long-arrow-left"></i>
+</a>
+<a class="navigation-button btn-fill btn-fill-right" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">
+    <i class="fa fa-long-arrow-right"></i>
+</a>
+<a class="navigation-button btn-fill btn-fill-right" ng-click="add()" ng-show="page >= (totalPages-1)">
+    <i class="fa fa-long-arrow-right"></i>
+</a>
+
+<button class="image-close btn-close image-close-{{presentation.templateName.substr(0,1)}}" ng-click="decreaseImages()" ng-class="">
+    <i class="fa fa-times-circle-o"></i>
+</button>
+
 <div class="edit full-height">
     <sokratik-dialogue presentation="presentation"
                        increase-images="increaseImages"
                        decrease-images="decreaseImages"></sokratik-dialogue>
 </div>
-
-
-<button class="btn nav-button nav-button-right btn-lg" ng-click="goToPage(page+1)" ng-show="page < (totalPages-1)">
-    <b class="stretch"><i class="fa fa-caret-right fa-5x"></i></b></button><br/>
-<button class="btn nav-button nav-button-right btn-lg" ng-click="add()" ng-show="page >= (totalPages-1)">
-    <b class="stretch"><i class="fa fa-caret-right fa-5x"></i></b></button><br/>
-<button class="btn nav-button nav-button-left btn-lg" ng-click="goToPage(page-1)" ng-show="page > 0 ">
-    <b class="stretch"><i class="fa fa-caret-left fa-5x"></i></b></button>
-
-
-<button class="btn button-delete" ng-click="remove()"><i class="fa fa-trash-o fa-4x"></i> Delete
-    slide
-</button>
-<button class="btn btn-danger button-record" ng-click="record()"><i class="fa fa-circle fa-5x"></i>
-    Go
-    to record mode
-</button>
-
 <div ng-show="loading">
     <div class="spinner-backdrop" style="opacity:0.5"></div>
     <div id="spinner"></div>
 </div>
-
-
-
-
