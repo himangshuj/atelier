@@ -34,7 +34,7 @@
 
             };
         }];
-    ng.module(app, ['sokratik.atelier.apollo.services', 'ui.router'])
+    ng.module(app, ['sokratik.atelier.apollo.services', 'ui.router','sokratik.atelier.istari.services'])
         .directive("sokratikAudioTrack", _sokratikAudioTrack)
         .directive("sokratikBackgroundAudioTrack", _sokratikBackgroundAudioTrack);
 })(angular, "sokratik.atelier.apollo.directives");
