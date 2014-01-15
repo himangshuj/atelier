@@ -23,9 +23,9 @@
 
         _.defer(function () {
             player = new YT.Player('player', {
-                playerVars: { 'autoplay': 1, 'controls': 0 },
-                height: '300',
-                width: '640',
+                playerVars: { 'autoplay': 1, 'controls': 0},
+                height: '540',
+                width: '960',
                 videoId: videoId
             });
         });

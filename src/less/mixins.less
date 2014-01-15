@@ -40,35 +40,10 @@
   width:~"-o-calc(@{total-width} - @{em-deduct}em - @{px-deduct}px)";
 }
 
-.generate-button(@top, @right, @hover-right, @active-left, @active-top, @active-right){
-  position: absolute;
-  top: @top;
-  right: @right;
-  -o-transition: all ease-in-out 0.15s;
-  -ms-transition: all ease-in-out 0.15s;
-  -webkit-transition: all ease-in-out 0.15s;
-  transition: all ease-in-out 0.15s;
-  &:hover {
-    right: @hover-right;
-  }
-  &:active {
-    left: @active-left !important;
-    top: @active-top !important;
-    right: @active-right !important;
-  }
-}
-
-
-.generate-button-alternate(@top, @left, @active-left, @active-top){
-  position: absolute;
-  top: @top;
-  left: @left;
-  &:active {
-    left: @active-left !important;
-    top: @active-top !important;
-  }
-  border: none;
-  * {
-    vertical-align: baseline;
-  }
+.left-calc(@total-left,@em-deduct,@px-deduct, @left-proxy){
+  left:@left-proxy;
+  left:~"calc(@{total-left} - @{em-deduct}em - @{px-deduct}px)";
+  left:~"-webkit-calc(@{total-left} - @{em-deduct}em - @{px-deduct}px)";
+  left:~"-moz-calc(@{total-left} - @{em-deduct}em - @{px-deduct}px)";
+  left:~"-o-calc(@{total-left} - @{em-deduct}em - @{px-deduct}px)";
 }

@@ -13,6 +13,8 @@
                 player = new YT.Player('player', {
                     playerVars: { 'autoplay': 1, 'origin': 'lab.sokratik.com', start: startTime},
                     videoId: videoId,
+                    height: '540',
+                    width: '960',
                     events: {
                         'onStateChange': onStateChange
                     }
