@@ -61,6 +61,10 @@
                 getBGAudio: function () {
                     return _backGroundAudio;
                 },
+                cleanUp: function () {
+                    playedTillNow = 0;
+                    _recordingStarted = null;
+                },
                 redo: function (context, deferred) {
                     var args = context.params;
                     var pausedInterval = parseInt(args.pausedInterval, 10);
@@ -94,7 +98,8 @@
                     // $log.info("[Play ] BackGround Audio played");
                 },
                 initBGAudio: function (index, volume) {
-                    if (_.isEqual(($state.current.data ||  {mode: ''}).mode, "play")) {
+                    if (_.isEqual(($state.current.data || {mode: ''}).mode, "play")) {
+                        (_backGroundAudio[index || 0] || {play: ng.noop}).play();
                         (_backGroundAudio[index || 0] || {}).volume = volume || 0.10;
                     }
                 },
@@ -107,6 +112,10 @@
                     _.each(_backGroundAudio, function (audio) {
                         (audio || {}).volume = 0;
                     });
+                },
+                //this was added only for testing
+                getState: function () {
+                    return {recordingStarted: _recordingStarted, playedTillNow: playedTillNow};
                 }
             };
         }];

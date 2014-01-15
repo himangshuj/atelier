@@ -128,7 +128,9 @@ describe('apollo service main audio', function () {
         });
         expect(notified).toBeTruthy();
         expect(resolved).toBeFalsy();
+        expect(apollo.getState().recordingStarted).toBe(null);
         jasmine.Clock.tick(1001);  //seekable was not true as yet
+        expect(apollo.getState().recordingStarted).toBe(timeStamp-1000);
         expect(resolved).toBeTruthy();
         expect(element.currentTime).toBeCloseTo(0, 0);
         deferred.cb = null;
@@ -161,7 +163,26 @@ describe('apollo service main audio', function () {
         expect(element.currentTime).toBeCloseTo(20, 0);// a lot of set time outs
 
     }));
+    it("cleanup main audio", inject(function () {
 
+        var timeStamp = (new Date()).getTime();
+        jasmine.Clock.useMock();
+        var promise = apollo.resume({params: {pausedInterval: 1000, timeStamp: timeStamp}}, q.defer());
+        var notified = false;
+        var resolved = false;
+        promise.then(function () {
+            resolved = true;
+        }, angular.noop, function () {
+            notified = true;
+            element.seekable.push(1);//dummy entry to enable resume
+        });
+        expect(notified).toBeTruthy();
+        expect(apollo.getState().recordingStarted).toBe(null);
+        jasmine.Clock.tick(1001);  //seekable was not true as yet
+        expect(apollo.getState().recordingStarted).toBe(timeStamp-1000);
+        apollo.cleanUp();
+        expect(apollo.getState().recordingStarted).toBe(null);
+    })) ;
     it("redo main audio", inject(function () {
         var timeStamp = (new Date()).getTime();
         jasmine.Clock.useMock();
