@@ -3,8 +3,8 @@
  */
 (function (ng, app) {
     'use strict';
-    var _sokratikAudioTrack = ['apollo','$state','$rootScope',
-        function (apollo,$state,$rootScope) {
+    var _sokratikAudioTrack = ['apollo','$state',
+        function (apollo,$state) {
             return {
                 "restrict": "A",
                 "transclude": false,
@@ -12,8 +12,7 @@
                 compile: function (tElement) {
                     apollo.addMainAudio(ng.element(tElement)[0]);
                     tElement[0].addEventListener('ended', function () {
-                        apollo.stopBGAudio();
-                        $rootScope.audioLocation = null;
+                        apollo.muteBGAudio();
                         $state.go('home');
                     });
                 }
