@@ -65,7 +65,10 @@
                 cleanUp: function () {
                     playedTillNow = 0;
                     _recordingStarted = null;
-                    _mainAudio.currentTime = 0;
+                    if (_mainAudio.currentTime> 0.5){
+                        _mainAudio.currentTime = 0;
+
+                    }
                 },
                 redo: function (context, deferred) {
                     var args = context.params;
