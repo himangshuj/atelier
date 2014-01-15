@@ -64,7 +64,7 @@
                 cleanUp: function () {
                     playedTillNow = 0;
                     _recordingStarted = null;
-                    if (_mainAudio.currentTime> 0.5){
+                    if (!!_mainAudio && _mainAudio.currentTime > 0.5) {
                         _mainAudio.currentTime = 0;
 
                     }
