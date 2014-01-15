@@ -19,7 +19,6 @@
                 var pausedInterval = parseInt(args.pausedInterval, 10);
                 _recordingStarted = _recordingStarted || (args.timeStamp - pausedInterval);
                 var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval);
-                console.log("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
                 deferred.notify("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
                 var deltaTime = (_mainAudio.currentTime * 1000) - reqdPosition;
                 if (Math.abs((reqdPosition / 1000) - playedTillNow) < 0.2) {
