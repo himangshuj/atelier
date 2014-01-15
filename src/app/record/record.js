@@ -117,11 +117,11 @@
                 //then clause
                 $scope.complete = function () {
                     $rootScope.loading = true;
-
                     acoustics.stopRecording(recorder, presentation._id).then(function (resp) {
                         $q.when(anduril.completeRecord(presentation))
                             .then(function () {
                                 "use strict";
+                                anduril.clearCache();
                                 $state.go("complete", {presentationId: presentationId});
                             });
                     });

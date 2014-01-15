@@ -31,7 +31,7 @@ describe('minerva edit mode text', function () {
         expect(element.children().scope().dialogueCtrl.getFragments().length).toBe(1);
         expect(element.attr("class")).toBe("ng-scope ng-isolate-scope");
         expect(angular.element(element.children()[0]).attr("class")).toBe("full-height");
-        expect(angular.element(element.find("input")[0]).attr("ng-model")).toBe("model.value");
+        expect(angular.element(element.find("textarea")[0]).attr("ng-model")).toBe("model.value");
     }));
     it('Sokratik fragment html Test with 1 fragment', inject(function () {
         scope.presentation = {"templateName": "textOnly", keyVals: {text3: "test text"}};
