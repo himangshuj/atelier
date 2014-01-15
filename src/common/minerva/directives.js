@@ -90,7 +90,7 @@
                                 return sokratikDialogueCtrl.getProperty(attrs.model);
                             },
                             images: function () {
-                                return [];
+                                return _injectors.anduril.fetchImages(_injectors.$stateParams.questionId);
                             }
                         }
                     });

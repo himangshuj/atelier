@@ -1,14 +1,14 @@
 var deferred = {promise: {then: angular.noop},
     resolve: angular.noop
 };
-var q = {
+var qrecord = {
     defer: function () {
         return deferred;
     },
     when: function () {
         return {
             then: function (fn) {
-                successFn.mock(fn);
+                fn();
             }
         };
     }
@@ -53,7 +53,16 @@ describe('record section control ', function () {
         spyOn(fakeMethods, "recordAction").andCallThrough();
         spyOn(acoustics, "resume").andCallThrough();
         spyOn(acoustics, "pause").andCallThrough();
-        spyOn(acoustics, "stopRecording").andCallThrough();
+        spyOn(acoustics, "stopRecording").andCallFake(function () {
+            return {then: function (fn) {
+               fn();
+            }};
+        });
+        spyOn(anduril, "completeRecord").andCallFake(function () {
+            return {then: function (fn) {
+                fn();
+            }};
+        });
     }));
     it("initialization checks", inject(function (anduril, $controller, $modal, $log, $state) {
         expect(presentation.script).toBeUndefined();
@@ -62,7 +71,7 @@ describe('record section control ', function () {
             acoustics: acoustics,
             $state: $state,
             anduril: anduril,
-            $q: q,
+            $q: qrecord,
             presentation: presentation,
             recordAction: angular.noop,
             recorder: {}
@@ -80,7 +89,7 @@ describe('record section control ', function () {
             acoustics: acoustics,
             $state: $state,
             anduril: anduril,
-            $q: q,
+            $q: qrecord,
             presentation: presentation,
             recordAction: fakeMethods.recordAction,
             recorder: {}
@@ -102,7 +111,7 @@ describe('record section control ', function () {
             acoustics: acoustics,
             $state: $state,
             anduril: anduril,
-            $q: q,
+            $q: qrecord,
             presentation: presentation,
             recordAction: fakeMethods.recordAction,
             recorder: {}
@@ -128,7 +137,7 @@ describe('record section control ', function () {
         scope.redoSlide();
         expect(presentation.script.length).toBe(6);
         expect(presentation.script[3].fnName).toBe("resume");
-        expect(presentation.script[3].actionInitiated/10).toBeCloseTo(resumeTime/10,0);
+        expect(presentation.script[3].actionInitiated / 10).toBeCloseTo(resumeTime / 10, 0);
         expect(presentation.script[4].fnName).toBe("redo");
         expect(presentation.script[4].module).toBe("apollo");
         expect(presentation.script[5].fnName).toBe("pause"); //this is added by redo
@@ -166,7 +175,7 @@ describe('record section control ', function () {
             runs(function () {
                 setTimeout(function () {
                     timedOut = true;
-                }, 100)  ;
+                }, 100);
             });
             waitsFor(function () {
                 return timedOut;
@@ -186,13 +195,16 @@ describe('record section control ', function () {
             acoustics: acoustics,
             $state: $state,
             anduril: anduril,
-            $q: q,
+            $q: qrecord,
             presentation: presentation,
             recordAction: fakeMethods.recordAction,
             recorder: {}
         });
+        spyOn(anduril, 'clearCache');
         scope.complete();
         expect(acoustics.stopRecording).toHaveBeenCalledWith({}, "presentationId");
+        expect(anduril.completeRecord).toHaveBeenCalled();
+        expect(anduril.clearCache).toHaveBeenCalled();
     }));
 });
 describe("record active initialization", function () {
@@ -246,7 +258,7 @@ describe("record active initialization", function () {
             "dialogue": dialogue,
             "$stateParams": {page: "0"},
             "recordAction": fakeMethods.recordAction,
-            "$q": q,
+            "$q": qrecord,
             "sokratube": sokratube
         });
         expect(scope.totalPages).toBe(13);
@@ -269,7 +281,7 @@ describe("record active initialization", function () {
             "dialogue": dialogue,
             "$stateParams": {page: "0"},
             "recordAction": fakeMethods.recordAction,
-            "$q": q,
+            "$q": qrecord,
             "sokratube": sokratube
         });
         expect(scope.totalPages).toBe(13);
@@ -335,7 +347,7 @@ describe("record active control", function () {
             "dialogue": dialogue,
             "$stateParams": {page: "0"},
             "recordAction": fakeMethods.recordAction,
-            "$q": q,
+            "$q": qrecord,
             "sokratube": sokratube
         });
         expect(scope.totalPages).toBe(13);
