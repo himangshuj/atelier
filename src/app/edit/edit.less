@@ -3,24 +3,6 @@
 @import "../../../vendor/bootstrap/less/variables";
 
 .presentation {
-  .button-delete {
-    .generate-button(100px, -92px, 0px, inherit, 101px, 0px);
-    border: none;
-  }
-
-  .button-record {
-    .generate-button(4px, -142px, 0px, inherit, 5px, 0px);
-  }
-
-  .stretch {
-    display: inline-block;
-    transform: scale(2, 3); /* W3C */
-    -webkit-transform: scale(2, 3); /* Safari and Chrome */
-    -moz-transform: scale(2, 3); /* Firefox */
-    -ms-transform: scale(2, 3); /* IE 9 */
-    -o-transform: scale(2, 3); /* Opera */
-  }
-
   .edit {
     p {
       margin: 0px;
@@ -30,6 +12,9 @@
     }
     .slide-image-fragment {
       margin-top: 0px;
+      &> .full-height:last-child{
+        border:10px solid #333;
+      }
     }
   }
 
@@ -73,9 +58,43 @@
     animation-timing-function: linear;
   }
 
-  @-webkit-keyframes spinnerRotate {
+  @-moz-keyframes spinnerRotate {
     from {
       -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinnerRotate {
+    from {
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes spinnerRotate {
+    from {
+      -webkit-transform: rotate(0deg);  //TODO make it a mixin
       -moz-transform: rotate(0deg);
       -o-transform: rotate(0deg);
       -ms-transform: rotate(0deg);

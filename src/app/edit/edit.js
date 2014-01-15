@@ -21,9 +21,9 @@
 
         _.defer(function () {
             player = new YT.Player('player', {
-                playerVars: { 'autoplay': 1, 'controls': 0 },
-                height: '300',
-                width: '640',
+                playerVars: { 'autoplay': 1, 'controls': 0},
+                height: '540',
+                width: '960',
                 videoId: videoId
             });
         });
@@ -126,9 +126,10 @@
                             changeTemplates((--images) + 'imageText');
                         }
                     };
+                    $scope.isFullImageTemplate = _.isEqual('fullImage', $scope.presentation.templateName);
 
                     $scope.toggleFullScreenImage = function () {
-                        if (_.isEqual('fullImage', $scope.presentation.templateName)) {
+                        if ($scope.isFullImageTemplate) {
                             images = 1;
                             changeTemplates('1imageText');
                         } else {

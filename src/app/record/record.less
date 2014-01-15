@@ -1,78 +1,6 @@
 @import "../../less/mixins";
 
-.presentation {
-  .button-record {
-    .generate-button(4px, -142px, 0px, inherit, 5px, 0px);
-  }
-
-  .button-complete {
-    .generate-button(4px, -10px, 0px, inherit, 5px, 0px);
-  }
-
-  .button-top-left-0 {
-    .generate-button-alternate(4px, 90px, 90px, 5px);
-  }
-
-  .button-top-left-1 {
-    .generate-button-alternate(4px, 10px, 10px, 5px);
-  }
-
-  .button-top-left-2 {
-    .generate-button-alternate(4px, 200px, 200px, 5px);
-  }
-
-  .button-top-left-3 {
-    .generate-button-alternate(4px, 260px, 260px, 5px);
-  }
-
-  .button-app {
-    .generate-button-alternate(90px, 0px, 0px, 85px);
-
-  }
-
-  .blinkerConfig () {
-    0% {
-      opacity: 1.0;
-    }
-    50% {
-      opacity: 0.0;
-    }
-    100% {
-      opacity: 1.0;
-    }
-
-  }
-
-  @-moz-keyframes blinker {
-
-  .blinkerConfig
-
-;
-}
-
-@-webkit-keyframes blinker {
-
-  .blinkerConfig
-
-;
-  }
-
-@keyframes blinker {
-
-  .blinkerConfig
-
-;
-  }
-
-.record-blink {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  color: #fa5f5f;
-  z-index: 1000;
-}
-
-.blink_me {
+.blink-animation{
   -webkit-animation-name: blinker;
   -webkit-animation-duration: 1s;
   -webkit-animation-timing-function: linear;
@@ -89,8 +17,58 @@
   animation-iteration-count: infinite;
 }
 
-.record .btn {
-  z-index: 10001;
+.presentation {
+  .toolbar .toolbar-icon.blink-me {
+    width: auto;
+    background-color: #ecf0f1;
+    .blink-animation;
+  }
+
+  .record {
+    .btn-pop-out, .toolbar, .navigation-button {
+      z-index: 10001;
+    }
+    .toolbar-left{
+      .btn-pop-out{
+        &:hover{
+            width: @left-toolbar-width;
+          }
+        }
+      }
+      .btn-pop-out{
+        &.btn-square{
+          width: auto;
+        }
+      }
+    .pause-cover{
+      position: absolute;
+      left: 0px;
+      top:0px;
+      width: 100%;
+      height:100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+  }
 }
 
-  }
+.crosshair{
+  cursor: crosshair;
+}
+
+@keyframes blinker{
+  0% {opacity: 1.0;}
+  50% {opacity: 0.0;}
+  100% {opacity: 1.0;}
+}
+
+@-moz-keyframes blinker{
+  0% {opacity: 1.0;}
+  50% {opacity: 0.0;}
+  100% {opacity: 1.0;}
+}
+
+@-webkit-keyframes blinker{
+  0% {opacity: 1.0;}
+  50% {opacity: 0.0;}
+  100% {opacity: 1.0;}
+}
