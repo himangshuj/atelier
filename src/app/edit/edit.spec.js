@@ -149,7 +149,7 @@ describe('edit section post initialization ', function () {
 
     }));
     it("toggle fullscreenimage", inject(function () {
-        scope.presentation.templateName = 'fullImage';
+        scope.isFullImageTemplate = true;
         scope.toggleFullScreenImage();
         expect(presentation.presentationData[scope.page].templateName).toBe("1imageText");
         scope.presentation.templateName = 'tada';
