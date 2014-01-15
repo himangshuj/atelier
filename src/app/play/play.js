@@ -106,7 +106,6 @@
                 $rootScope.hideMenu = true;
                 $rootScope.showCase = false;
                 modules.apollo.cleanUp();
-                anduril.clearCache();
                 _executeInstruction(presentation.script,
                     modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
