@@ -98,13 +98,15 @@
                 $rootScope.navigationMode = false;
 
             }])
-        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce',
-            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope, $sce) {
+        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce','anduril',
+            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope, $sce,anduril) {
                 'use strict';
                 modules.apollo.initBGAudio();
                 $rootScope.audioLocation = $sce.trustAsResourceUrl(presentation.audioLocation);
                 $rootScope.hideMenu = true;
                 $rootScope.showCase = false;
+                modules.apollo.cleanUp();
+                anduril.clearCache();
                 _executeInstruction(presentation.script,
                     modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
