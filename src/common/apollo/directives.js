@@ -3,8 +3,8 @@
  */
 (function (ng, app) {
     'use strict';
-    var _sokratikAudioTrack = ['apollo','$state','anduril',
-        function (apollo,$state,anduril) {
+    var _sokratikAudioTrack = ['apollo', '$state', 'anduril',
+        function (apollo, $state, anduril) {
             return {
                 "restrict": "A",
                 "transclude": false,
@@ -14,7 +14,9 @@
                     tElement[0].addEventListener('ended', function () {
                         apollo.muteBGAudio();
                         anduril.clearCache();
-                        $state.go('home');
+                        if (_.isEqual(($state.current.data || {mode: ''}).mode, "play")) {
+                            $state.go('home');
+                        }
                     });
                 }
 
@@ -34,7 +36,7 @@
 
             };
         }];
-    ng.module(app, ['sokratik.atelier.apollo.services', 'ui.router','sokratik.atelier.istari.services'])
+    ng.module(app, ['sokratik.atelier.apollo.services', 'ui.router', 'sokratik.atelier.istari.services'])
         .directive("sokratikAudioTrack", _sokratikAudioTrack)
         .directive("sokratikBackgroundAudioTrack", _sokratikBackgroundAudioTrack);
 })(angular, "sokratik.atelier.apollo.directives");
