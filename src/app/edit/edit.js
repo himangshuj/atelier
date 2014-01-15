@@ -119,7 +119,7 @@
                     };
                     var changeTemplates = _.once(_changeTemplates);
                     $scope.increaseImages = function () {
-                        changeTemplates((++images) % 7);
+                        changeTemplates((++images) % 5);
                     };
                     $scope.decreaseImages = function () {
                         if (images > 0) {
