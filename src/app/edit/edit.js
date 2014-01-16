@@ -167,6 +167,8 @@
                         });
                         return modalInstance;
                     };
+                    $scope.isTitle = page == 0;
+                    $scope.cantAddImage = $scope.isTitle || _.isEqual("4imageText",$scope.presentation.templateName);
                 }]);
 })(angular, 'sokratik.atelier.edit');
 
