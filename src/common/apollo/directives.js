@@ -3,21 +3,15 @@
  */
 (function (ng, app) {
     'use strict';
-    var _sokratikAudioTrack = ['apollo', '$state', 'anduril',
-        function (apollo, $state, anduril) {
+    var _sokratikAudioTrack = ['apollo',
+        function (apollo) {
             return {
                 "restrict": "A",
                 "transclude": false,
                 "template": "",
                 compile: function (tElement) {
                     apollo.addMainAudio(ng.element(tElement)[0]);
-                    tElement[0].addEventListener('ended', function () {
-                        apollo.muteBGAudio();
-                        anduril.clearCache();
-                        if (_.isEqual(($state.current.data || {mode: ''}).mode, "play")) {
-                            $state.go('home');
-                        }
-                    });
+
                 }
 
             };

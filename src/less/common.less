@@ -10,6 +10,10 @@
   width: 100%;
 }
 
+.invisible{
+  visibility:hidden;
+}
+
 body.presentation {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;;
   background: @presentation-background;
@@ -216,11 +220,6 @@ body.presentation {
         max-width: 100%;
         width: 100%;
         height: 100%;
-        z-index:-1;
-        //For story telling
-        //height: initial;
-        //animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
-        //-webkit-animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
       }
     }
     .text-fragment-holder{
@@ -232,6 +231,14 @@ body.presentation {
       padding: 20px 0px;
       textarea{
         color:#FFF;
+      }
+    }
+    &.full-background-animated.full-background-animated-down{
+      img{
+      //For story telling
+      height: initial;
+      animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
+      -webkit-animation: animatedFullImage 63s ease-in 3s 1 normal forwards;
       }
     }
   }
