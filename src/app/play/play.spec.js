@@ -73,6 +73,10 @@ describe('Player Audio', function () {
         modules.apollo = apollo;
         modules.dialogue = dialogue;
         modules.sokratube = sokratube;
+        spyOn(apollo, 'getMainAudio').andCallFake(function () {
+            return {removeEventListener: angular.noop,
+                addEventListener: angular.noop};
+        });
         spyOn(successFn, 'mock');
         spyOn(_, 'delay').andCallThrough();
         spyOn(apollo, 'initBGAudio');

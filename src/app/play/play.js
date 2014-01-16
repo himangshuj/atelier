@@ -108,7 +108,7 @@
                 $rootScope.showCase = false;
                 modules.apollo.cleanUp();
 
-                if (callBack != null) {
+                if (!!callBack ) {
                     modules.apollo.getMainAudio().removeEventListener('ended', callBack, false);
                 }
                 callBack = function () {

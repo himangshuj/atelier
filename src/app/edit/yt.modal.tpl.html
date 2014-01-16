@@ -1,8 +1,10 @@
 <div class="edit video-YT" xmlns="http://www.w3.org/1999/html">
-        <button class="btn-close" ng-click="cancel()"><i class="fa fa-times-circle-o"></i></button>
+        <button class="btn-close" ng-click="ok(selectedMedia,selectedMediaStart)"><i class="fa fa-times-circle-o"></i></button>
         <div class="modal-header">
             <input type="text" ng-model="selectedMedia" placeholder="Enter Youtube Video Embed code" ng-blur="renderYT(selectedMedia)"/>
-            <button class="btn btn-primary" ng-click="ok(selectedMedia)">Ok</button>
+            <input type="text" ng-model="selectedMediaStart" placeholder="Enter Start time of video in secs" />
+            <button class="btn btn-primary no-border" ng-click="ok(selectedMedia,selectedMediaStart)">Ok</button>
+
         </div>
         <div class="modal-body">
             <div id="player"></div>
