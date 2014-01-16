@@ -1,6 +1,6 @@
 <div class="toolbar toolbar-left">
     <div class="color-green">
-        <a ng-click="increaseImages()" class="btn-pop-out">
+        <a ng-click="increaseImages()" class="btn-pop-out"  ng-class="{invisible:cantAddImage}">
             <div class="toolbar-icon"><i class="fa fa-picture-o"></i></div>
             <span class="tip">Add an image</span>
         </a>
@@ -10,7 +10,7 @@
         </a>
     </div>
     <div class="color-yellow">
-        <a ng-click="toggleFullScreenImage()" class="btn-pop-out">
+        <a ng-click="toggleFullScreenImage()" class="btn-pop-out" ng-class="{invisible:isTitle}">
             <div class="toolbar-icon">
                 <i class="fa fa-compress" ng-show="{{isFullImageTemplate}}"></i>
             </div>
