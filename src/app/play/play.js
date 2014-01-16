@@ -1,5 +1,6 @@
 (function (ng, app) {
     var fragmentFn = ng.noop;//global variable is this really bad
+    var callBack = null;
     var _executeInstruction = function (instructions, modules, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
         'use strict';
         if (scriptIndex < _.size(instructions)) {
@@ -98,19 +99,28 @@
                 $rootScope.navigationMode = false;
 
             }])
-        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce','anduril',
-            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope, $sce,anduril) {
+        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce', 'anduril',
+            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope, $sce, anduril) {
                 'use strict';
                 modules.apollo.initBGAudio();
                 $rootScope.audioLocation = $sce.trustAsResourceUrl(presentation.audioLocation);
                 $rootScope.hideMenu = true;
                 $rootScope.showCase = false;
                 modules.apollo.cleanUp();
+
+                if (callBack != null) {
+                    modules.apollo.getMainAudio().removeEventListener('ended', callBack, false);
+                }
+                callBack = function () {
+                    modules.apollo.muteBGAudio();
+                    anduril.clearCache();
+                    $state.go('share', {presentationId: $stateParams.presentationId});
+
+                };
+                modules.apollo.getMainAudio().addEventListener('ended', callBack, false);
                 _executeInstruction(presentation.script,
                     modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
-
-
             }])
 
         .controller('PlayActive', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation',
