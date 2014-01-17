@@ -23,7 +23,9 @@
         };
 
         var _recordScript = function (presentation, tuple) {
-            presentation.script.push(tuple);
+            if (!!tuple) {
+                presentation.script.push(tuple);
+            }
         };
 
         var _insertScript = function (presentation, script) {
