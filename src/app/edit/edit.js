@@ -93,7 +93,7 @@
                     $scope.record = function () {
                         anduril.put(presentation, page, activePresentation);
                         anduril.post(presentation);
-                        $state.go('record.activate', {page: 0});
+                        $state.go('record.activate', {page: 0,presentationId:presentationId});
                     };
 
                     $scope.goToPage = function (page) {
