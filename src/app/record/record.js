@@ -20,9 +20,10 @@
                     mediaRecorderOrAudioNode: ["acoustics", function (acoustics) {
                         return acoustics.mediaRecorderOrAudioNode();
                     }],
-                    stream: ["acoustics", "$stateParams", "mediaRecorderOrAudioNode", function (acoustics, $stateParams, mediaRecorderOrAudioNode) {
-                        return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode);
-                    }],
+                    stream: ["acoustics", "$stateParams", "mediaRecorderOrAudioNode", "$rootScope",
+                        function (acoustics, $stateParams, mediaRecorderOrAudioNode, $rootScope) {
+                            return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, $rootScope);
+                        }],
                     recorder: ["mediaRecorderOrAudioNode", "stream", "$window", function (mediaRecorderOrAudioNode, stream, $window) {
                         if (!!$window.MediaRecorder) {
                             return {mediaRecorder: mediaRecorderOrAudioNode,
@@ -69,12 +70,12 @@
                         templateUrl: 'record/complete.tpl.html'
                     }
                 },
-                parent:'root'
+                parent: 'root'
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "presentation", "recordAction", "recorder", "$rootScope","canvas",
-            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope,canvas) {
+        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "presentation", "recordAction", "recorder", "$rootScope", "canvas",
+            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope, canvas) {
                 presentation.script = [];//reseting the script    //TODO This is crap
                 recordAction({fnName: "changeState",
                     args: {subState: '.activate', params: {page: 0}},
@@ -83,7 +84,7 @@
                 $scope.presentationId = presentation._id;
                 presentation.recordingStarted = new Date().getTime();    //TODO this is crap
                 $scope.drawing = false;
-                var enableCanvas = $scope.enableCanvas = function(arg) {
+                var enableCanvas = $scope.enableCanvas = function (arg) {
                     canvas.enableCanvas(arg);
                     $scope.drawing = arg;
                 };
@@ -112,7 +113,10 @@
                         pause();
                         $state.go("record.activate", {dummy: _.size(presentation.script)});
                     };
+
+                    anduril.registerRedoSlide($scope.redoSlide);
                 };
+
                 var presentationId = presentation._id;//this is a HACK replace with restangular why this is hack log the presentation in
                 //then clause
                 $scope.complete = function () {
@@ -139,8 +143,8 @@
             }])
 
         .controller('RecordDialogue', ["$scope", "presentation", "anduril", "dialogue", "$stateParams", "recordAction",
-            "$q", "sokratube","canvas",
-            function ($scope, presentation, anduril, dialogue, $stateParams, recordAction, $q, sokratube,canvas) {
+            "$q", "sokratube", "canvas",
+            function ($scope, presentation, anduril, dialogue, $stateParams, recordAction, $q, sokratube, canvas) {
                 var page = parseInt($stateParams.page, 10);
                 $scope.page = page;
                 var activePresentation = $scope.presentation = presentation.presentationData[page];
@@ -171,7 +175,7 @@
                     $scope.videoPlaying = true;
 
                     var videoId = existingVideo.params.videoId;
-                    sokratube.initYTVideo({videoId: videoId,startTime:existingVideo.params.startTime}, $q.defer()).then(function (resp) {
+                    sokratube.initYTVideo({videoId: videoId, startTime: existingVideo.params.startTime}, $q.defer()).then(function (resp) {
                         recordAction(resp);
                         $scope.videoPlaying = false;
 
