@@ -1,6 +1,9 @@
 describe('acoustics.services', function () {
     beforeEach(module('sokratik.atelier.acoustics.services'));
-    var acoustics, rootScope;
+    var acoustics, rootScope, q;
+    beforeEach(inject(function ($q) {
+        q = $q;
+    }));
 
     var FakeStream = function () {
         this.state = null;
@@ -57,7 +60,7 @@ describe('acoustics.services', function () {
 
     function resolvePromise(promise) {
         var resolved;
-        promise.then(function (value) {
+        q.when(promise).then(function (value) {
             resolved = value;
         });
         rootScope.$digest();
@@ -143,4 +146,21 @@ describe('acoustics.services', function () {
         expect(recorder.stream.state).toEqual("destroyed");
         expect(recorder.stream.writes).toEqual(1);
     });
+
+    it('should redoSlide when stream is stuck', inject(function ($window) {
+        var recorder = getRecorder(acoustics, "6");
+        recorder.stream.writable = false;
+        spyOn($window,'alert');
+        acoustics.resume(recorder);
+        if (recorder.mediaRecorder) {
+            recorder.mediaRecorder.ondataavailable({data: "foo"});
+        } else {
+            recorder.audionode.onaudioprocess(
+                { inputBuffer: { getChannelData: function (_) {
+                    return "foo";
+                }}});
+        }
+        expect($window.alert).toHaveBeenCalledWith('There were network issues, Re-record the slide');
+    }));
+
 });

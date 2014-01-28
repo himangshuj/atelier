@@ -5,6 +5,8 @@
     //noinspection JSUnresolvedVariable
     var MediaStream = window.MediaStream || window.webkitMediaStream;
 
+    var redoMessage = 'There were network issues, Re-record the slide';
+
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
     var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
     var _streams = {};
@@ -26,7 +28,7 @@
         }
     };
 
-    var streamRaw = function (presentationId, $q, $location) {
+    var streamRaw = function (presentationId, $q, $location, $window) {
         if (_streams[presentationId]) {
             return _streams[presentationId];
         }
@@ -56,7 +58,7 @@
                 }
                 if (!stream.writable) {
                     stream = client.createStream({presentationId: presentationId, sampleRate: context.sampleRate, resume: true});
-                    alert("There were network issues, Re-record the slide");
+                    $window.alert(redoMessage);
                     _redoSlide();
                 } else {
                     stream.write(buffer);
@@ -72,7 +74,7 @@
         return deferred.promise;
     };
 
-    var streamOgg = function (mediaRecorder, presentationId, $q, $location) {
+    var streamOgg = function (mediaRecorder, presentationId, $q, $location, $window) {
         if (_streams[presentationId]) {
             return _streams[presentationId];
         }
@@ -88,13 +90,12 @@
             mediaRecorder.ondataavailable = function (e) {
                 if (!stream.writable) {
                     stream = client.createStream({presentationId: presentationId, sampleRate: context.sampleRate, resume: true});
-                    alert("There were network issues, Re-record the slide");
+                    $window.alert(redoMessage);
                     _redoSlide();
                 } else {
                     stream.write(e.data);
                     _sentPackets++;
                 }
-                _sentPackets++;
             };
             mediaRecorder.start(2000);
             mediaRecorder.pause();
@@ -141,7 +142,6 @@
 
     var acoustics = function () {
         this.$get = ["$log", "$location", "$q", "$window", function ($log, $location, $q, $window) {
-
             return {
                 pause: function (_recorder) {
                     if (_recorder.mediaRecorder) {
@@ -164,6 +164,9 @@
                         recorder.connect(context.destination);
                     }
                 },
+                registerRedoSlide: function (redoSlide) {
+                    _redoSlide = redoSlide;
+                },
                 stopRecording: function (_recorder, presentationId) {
                     if (_recorder.mediaRecorder) {
 
@@ -179,12 +182,11 @@
                     return deferred.promise;
                 },
 
-                getStream: function (presentationId, recorder, redoSlideFunction) {
+                getStream: function (presentationId, recorder) {
                     if (!!$window.MediaRecorder) {
-
-                        return streamOgg(recorder, presentationId, $q, $location, redoSlideFunction);
+                        return streamOgg(recorder, presentationId, $q, $location, $window);
                     } else {
-                        return streamRaw(presentationId, $q, $location, redoSlideFunction);
+                        return streamRaw(presentationId, $q, $location, $window);
                     }
                 },
 
@@ -195,10 +197,6 @@
                     } else {
                         return getAudioNode($q);
                     }
-                },
-
-                registerRedoSlide: function (redoSlide) {
-                    _redoSlide = redoSlide;
                 }
             };
         }];

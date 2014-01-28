@@ -39,7 +39,8 @@ describe('record section control ', function () {
         pause: angular.noop,
         stopRecording: function () {
             return {then: angular.noop};
-        }
+        },
+        registerRedoSlide: angular.noop
 
     };
 

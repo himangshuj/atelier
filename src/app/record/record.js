@@ -113,8 +113,7 @@
                         pause();
                         $state.go("record.activate", {dummy: _.size(presentation.script)});
                     };
-
-                    anduril.registerRedoSlide($scope.redoSlide);
+                    acoustics.registerRedoSlide($scope.redoSlide);
                 };
 
                 var presentationId = presentation._id;//this is a HACK replace with restangular why this is hack log the presentation in
