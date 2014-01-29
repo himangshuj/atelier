@@ -10,21 +10,21 @@
             'ngSanitize',
             'ngAnimate'])
 
-        .config(["$stateProvider", function config($stateProvider) {
+        .config(['$stateProvider', function config($stateProvider) {
             $stateProvider.state('record', {
-                url: '/record/:presentationId',
+                url: '/record/:presentationId/:resumeFlag',
                 resolve: {
-                    presentation: ["$stateParams", "anduril", function ($stateParams, anduril) {
+                    presentation: ['$stateParams', 'anduril', function ($stateParams, anduril) {
                         return anduril.fetchPresentation($stateParams.presentationId);
                     }],
-                    mediaRecorderOrAudioNode: ["acoustics", function (acoustics) {
+                    mediaRecorderOrAudioNode: ['acoustics', function (acoustics) {
                         return acoustics.mediaRecorderOrAudioNode();
                     }],
-                    stream: ["acoustics", "$stateParams", "mediaRecorderOrAudioNode", "$rootScope",
-                        function (acoustics, $stateParams, mediaRecorderOrAudioNode, $rootScope) {
-                            return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, $rootScope);
+                    stream: ['acoustics', '$stateParams', 'mediaRecorderOrAudioNode',
+                        function (acoustics, $stateParams, mediaRecorderOrAudioNode) {
+                            return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, !!$stateParams.resumeFlag);
                         }],
-                    recorder: ["mediaRecorderOrAudioNode", "stream", "$window", function (mediaRecorderOrAudioNode, stream, $window) {
+                    recorder: ['mediaRecorderOrAudioNode', 'stream', '$window', function (mediaRecorderOrAudioNode, stream, $window) {
                         if (!!$window.MediaRecorder) {
                             return {mediaRecorder: mediaRecorderOrAudioNode,
                                 stream: stream};
@@ -34,18 +34,18 @@
                                 stream: stream};
                         }
                     }],
-                    recordAction: ["anduril", "presentation", function (anduril, presentation) {
-                        "use strict";
+                    recordAction: ['anduril', 'presentation', function (anduril, presentation) {
+                        'use strict';
                         return function (resp) {
                             return anduril.recordAction(presentation, resp);
                         };
                     }]
                 },
                 data: {
-                    mode: "record"
+                    mode: 'record'
                 },
                 views: {
-                    "main": {
+                    'main': {
                         controller: 'RecordCtrl',
                         templateUrl: 'record/record.tpl.html'
                     }
@@ -54,18 +54,18 @@
             });
 
             $stateProvider.state('record.activate', {
-                url: "/activate/:page/:dummy",
+                url: '/activate/:page/:dummy',
                 views: {
-                    "workspace": {
+                    'workspace': {
                         controller: 'RecordDialogue',
                         templateUrl: 'record/active.tpl.html'
                     }
                 }
             });
             $stateProvider.state('complete', {
-                url: "/complete/:presentationId",
+                url: '/complete/:presentationId',
                 views: {
-                    "main": {
+                    'main': {
                         controller: 'RecordComplete',
                         templateUrl: 'record/complete.tpl.html'
                     }
@@ -74,15 +74,17 @@
             });
 
         }])
-        .controller('RecordCtrl', ["$scope", "acoustics", "$state", "anduril", "$q", "presentation", "recordAction", "recorder", "$rootScope", "canvas",
-            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope, canvas) {
-                presentation.script = [];//reseting the script    //TODO This is crap
-                recordAction({fnName: "changeState",
+        .controller('RecordCtrl', ['$scope', 'acoustics', '$state', 'anduril', '$q', 'presentation', 'recordAction', 'recorder', '$rootScope', 'canvas','$stateParams',
+            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope, canvas,$stateParams) {
+                recordAction({fnName: 'changeState',
                     args: {subState: '.activate', params: {page: 0}},
-                    actionInitiated: new Date().getTime(), module: "dialogue"});
+                    actionInitiated: new Date().getTime(), module: 'dialogue'});
 
                 $scope.presentationId = presentation._id;
-                presentation.recordingStarted = new Date().getTime();    //TODO this is crap
+                if(!$stateParams.resumeFlag){
+                    presentation.recordingStarted = new Date().getTime();    //TODO this is crap
+                    presentation.script = [];//reseting the script    //TODO This is crap
+                }
                 $scope.drawing = false;
                 var enableCanvas = $scope.enableCanvas = function (arg) {
                     canvas.enableCanvas(arg);
@@ -93,8 +95,8 @@
                     enableCanvas(false);
                     acoustics.pause(recorder);
                     $scope.recording = false;
-                    recordAction({"fnName": "pause", "args": {},
-                        actionInitiated: new Date().getTime(), module: "apollo" });
+                    recordAction({'fnName': 'pause', 'args': {},
+                        actionInitiated: new Date().getTime(), module: 'apollo' });
 
                 };
 
@@ -102,18 +104,29 @@
                 $scope.record = function () {
                     $scope.recording = true;
                     acoustics.resume(recorder);
-                    recordAction({"fnName": "resume", "args": {},
-                        actionInitiated: new Date().getTime(), module: "apollo"});
+                    recordAction({'fnName': 'resume', 'args': {},
+                        actionInitiated: new Date().getTime(), module: 'apollo'});
                     var instructionsToKeep = _.clone(presentation.script);
                     $scope.redoSlide = function () {
-                        "use strict";
+                        'use strict';
                         anduril.insertScript(presentation, instructionsToKeep);
-                        recordAction({"fnName": "redo", "args": {}, module: "apollo",
+                        recordAction({'fnName': 'redo', 'args': {}, module: 'apollo',
                             actionInitiated: new Date().getTime() });
                         pause();
-                        $state.go("record.activate", {dummy: _.size(presentation.script)});
+                        $state.go('record.activate', {dummy: _.size(presentation.script),resumeFlag:false});
                     };
-                    acoustics.registerRedoSlide($scope.redoSlide);
+                    var resumeRecordingAfterNetworkDisruption = function (newStream) {
+                        anduril.insertScript(presentation, instructionsToKeep);
+                        enableCanvas(false);
+                        $scope.recording = false;
+                        recordAction({'fnName': 'pause', 'args': {},
+                            actionInitiated: new Date().getTime(), module: 'apollo' });
+                        console.log("ii4");
+                        $state.transitionTo('record.activate', {resumeFlag:true}, {
+                            reload: true, inherit: true, notify: true
+                        });
+                    };
+                    acoustics.registerRedoSlide(resumeRecordingAfterNetworkDisruption);
                 };
 
                 var presentationId = presentation._id;//this is a HACK replace with restangular why this is hack log the presentation in
@@ -123,9 +136,9 @@
                     acoustics.stopRecording(recorder, presentation._id).then(function (resp) {
                         $q.when(anduril.completeRecord(presentation))
                             .then(function () {
-                                "use strict";
+                                'use strict';
                                 anduril.clearCache();
-                                $state.go("complete", {presentationId: presentationId});
+                                $state.go('complete', {presentationId: presentationId});
                             });
                     });
                 };
@@ -133,7 +146,7 @@
 
                 $scope.$on('$stateChangeSuccess',
                     function () {
-                        "use strict";
+                        'use strict';
                         pause();
                         $scope.recording = false;
                     });
@@ -141,8 +154,8 @@
                 $rootScope.navigationMode = false;
             }])
 
-        .controller('RecordDialogue', ["$scope", "presentation", "anduril", "dialogue", "$stateParams", "recordAction",
-            "$q", "sokratube", "canvas",
+        .controller('RecordDialogue', ['$scope', 'presentation', 'anduril', 'dialogue', '$stateParams', 'recordAction',
+            '$q', 'sokratube', 'canvas',
             function ($scope, presentation, anduril, dialogue, $stateParams, recordAction, $q, sokratube, canvas) {
                 var page = parseInt($stateParams.page, 10);
                 $scope.page = page;
@@ -166,7 +179,7 @@
                         dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
                     }
                 }, 1500);
-                var existingVideo = _.findWhere(activePresentation.apps, {name: "YT"});
+                var existingVideo = _.findWhere(activePresentation.apps, {name: 'YT'});
                 $scope.videoPlaying = false;
                 $scope.videoPresent = !!existingVideo;
                 $scope.recordYTAction = function () {
@@ -184,13 +197,13 @@
                 $scope.nextSlide = _.throttle(function () {
                     $scope.enableCanvas(false);
                     canvas.deRegisterMethods();
-                    recordAction(dialogue.changeState({subState: ".activate", params: {page: ++page}}));
+                    recordAction(dialogue.changeState({subState: '.activate', params: {page: ++page,resumeFlag:false}}));
                 }, 1000);
 
             }
         ])
-        .controller('RecordComplete', ["$scope", "$stateParams", function ($scope, $stateParams) {
-            "use strict";
+        .controller('RecordComplete', ['$scope', '$stateParams', function ($scope, $stateParams) {
+            'use strict';
             $scope.presentationId = $stateParams.presentationId;
         }]);
-})(angular, "sokratik.atelier.record");
+})(angular, 'sokratik.atelier.record');

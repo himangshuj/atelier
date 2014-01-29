@@ -28,15 +28,15 @@
         }
     };
 
-    var streamRaw = function (presentationId, $q, $location, $window) {
-        if (_streams[presentationId]) {
+    var streamRaw = function (audioNode, presentationId, $q, $location, $window, resumeFlag) {
+        if (_streams[presentationId] && !resumeFlag) {
             return _streams[presentationId];
         }
         var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
-            var stream = client.createStream({presentationId: presentationId, sampleRate: context.sampleRate });
+            var stream = client.createStream({presentationId: presentationId, sampleRate: context.sampleRate, resume: resumeFlag});
             _streams[presentationId] = stream;
             deferred.resolve(stream);
             _sentPackets = 0;
@@ -56,10 +56,20 @@
                     view.setInt16(index + 2, right[i] * 0x7FFF, true);
                     index += 4;
                 }
-                if (!stream.writable) {
-                    stream = client.createStream({presentationId: presentationId, sampleRate: context.sampleRate, resume: true});
+
+                var _streamRenew = function () {
+                    _streams[presentationId] = null;
+                    audioNode.disconnect();
+                    recorder.disconnect();
                     $window.alert(redoMessage);
-                    _redoSlide();
+                    _.defer(_redoSlide)
+                };
+                var streamRenew = _.throttle(_streamRenew,1000,{leading:false});
+                if (!stream.writable) {
+                    audioNode.disconnect();
+                    recorder.disconnect();
+                    streamRenew();
+                    console.log("non writeable stream");
                 } else {
                     stream.write(buffer);
                     _sentPackets++;
@@ -74,24 +84,31 @@
         return deferred.promise;
     };
 
-    var streamOgg = function (mediaRecorder, presentationId, $q, $location, $window) {
-        if (_streams[presentationId]) {
+
+    var streamOgg = function (mediaRecorder, presentationId, $q, $location, $window, resumeFlag) {
+        if (_streams[presentationId] && !resumeFlag) {
             return _streams[presentationId];
         }
-        var client = new BinaryClient("ws://socket." + $location.host + ":" + $location.port() + "/ogg-writer");
+        var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/ogg-writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
-            var stream = client.createStream({presentationId: presentationId});
+            var stream = client.createStream({presentationId: presentationId, resume: resumeFlag});
             _streams[presentationId] = stream;
             deferred.resolve(stream);
             _sentPackets = 0;
             _receivedPackets = 0;
+            var _streamRenew = function () {
+                mediaRecorder.pause();
+                _streams[presentationId] = null;
+                $window.alert(redoMessage);
+                var deferredStream = $q.defer();
+                _.defer(_redoSlide)
+            };
+            var streamRenew = _.throttle(_streamRenew,1000,{leading:false});
             mediaRecorder.ondataavailable = function (e) {
                 if (!stream.writable) {
-                    stream = client.createStream({presentationId: presentationId, sampleRate: context.sampleRate, resume: true});
-                    $window.alert(redoMessage);
-                    _redoSlide();
+                    streamRenew();
                 } else {
                     stream.write(e.data);
                     _sentPackets++;
@@ -165,7 +182,7 @@
                     }
                 },
                 registerRedoSlide: function (redoSlide) {
-                    _redoSlide = redoSlide;
+                    _redoSlide = _.once(redoSlide);
                 },
                 stopRecording: function (_recorder, presentationId) {
                     if (_recorder.mediaRecorder) {
@@ -182,11 +199,12 @@
                     return deferred.promise;
                 },
 
-                getStream: function (presentationId, recorder) {
+                getStream: function (presentationId, recorder, resumeFlag) {
+                    console.log('Resume flag' + resumeFlag);
                     if (!!$window.MediaRecorder) {
-                        return streamOgg(recorder, presentationId, $q, $location, $window);
+                        return streamOgg(recorder, presentationId, $q, $location, $window, resumeFlag);
                     } else {
-                        return streamRaw(presentationId, $q, $location, $window);
+                        return streamRaw(recorder, presentationId, $q, $location, $window, resumeFlag);
                     }
                 },
 
