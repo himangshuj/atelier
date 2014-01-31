@@ -93,7 +93,7 @@
                     $scope.record = function () {
                         anduril.put(presentation, page, activePresentation);
                         anduril.post(presentation);
-                        $state.go('record.activate', {page: 0,presentationId:presentationId});
+                        $state.go('record.activate', {page: 0, presentationId: presentationId});
                     };
 
                     $scope.goToPage = function (page) {
@@ -168,7 +168,7 @@
                         return modalInstance;
                     };
                     $scope.isTitle = page == 0;
-                    $scope.cantAddImage = $scope.isTitle || _.isEqual("4imageText",$scope.presentation.templateName);
+                    $scope.cantAddImage = $scope.isTitle || _.isEqual("4imageText", $scope.presentation.templateName);
                 }]);
 })(angular, 'sokratik.atelier.edit');
 
