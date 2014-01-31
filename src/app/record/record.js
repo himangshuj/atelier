@@ -104,11 +104,29 @@
                 var completed = false;
                 var resumeRecordingAfterNetworkDisruption = function () {
                     if (!completed) {
-                        $scope.redoSlide();
+                        var lastTransmittedTime = acoustics.lastTransmittedTime();
+                        var instructionsToKeep = _.filter(_.clone(presentation.script), function (instruction) {
+                            return lastTransmittedTime > instruction.actionInitiated;
+                        });
+                        anduril.insertScript(presentation, instructionsToKeep);
+                        recordAction({'fnName': 'redo', 'args': {}, module: 'apollo',
+                            actionInitiated: lastTransmittedTime });
+                        enableCanvas(false);
+                        acoustics.pause(recorder);
+                        $scope.recording = false;
+                        recordAction({'fnName': 'pause', 'args': {},
+                            actionInitiated: lastTransmittedTime, module: 'apollo' });
+                        //console.log((new Date()).getTime());
+                        var reversedInstructions = _.clone(instructionsToKeep).reverse();
+                        var lastSlideChange = _.find(reversedInstructions, function (instruction) {
+                            return _.isEqual(instruction.fnName, "changeState");
+                        }) || {args: {params: {page: 0}}};
                         acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, true).then(function (stream) {
                             recorder.stream = stream;
                             $window.alert('There has been a network issue when recording the slide, you need to re-record the slide');
                         });
+                        $state.go('record.activate', {dummy: _.size(presentation.script),
+                            page: lastSlideChange.args.params.page});
                     }
                 };
 

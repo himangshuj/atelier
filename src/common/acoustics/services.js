@@ -6,10 +6,11 @@
     var MediaStream = window.MediaStream || window.webkitMediaStream;
 
     //noinspection JSUnresolvedVariable,JSUnresolvedFunction
-    var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(2048, 2, 2) : {};
+    var recorder = context.createJavaScriptNode ? context.createJavaScriptNode(8192, 2, 2) : {};
     var _streams = {};
     var _sentPackets = 0;
     var _receivedPackets = 0;
+    var _timeStamps = {};
     var _closeStream = function (stream, iteration, deferred) {
         "use strict";
         if (!stream.writable) {
@@ -17,11 +18,14 @@
             return;
 
         }
-        if ((iteration > 100) || (_sentPackets == _receivedPackets)) {
+        if ((iteration > 100) || (_sentPackets === _receivedPackets)) {
             stream.destroy();
             _sentPackets = _receivedPackets = 0;
             deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
         } else {
+            console.log("sent" + _sentPackets);
+            console.log("received" + _receivedPackets);
+
             _.delay(_closeStream, 10000, stream, ++iteration, deferred);
         }
     };
@@ -55,8 +59,9 @@
                     index += 4;
                 }
                 if (stream.writable) {
+                    _timeStamps[_sentPackets++] = (new Date()).getTime();
                     stream.write(buffer);
-                    _sentPackets++;
+
                 } else {
                     console.log("stream not writeable");
                 }
@@ -92,6 +97,7 @@
             stream.pause();
             stream.on("data", function () {
                 "use strict";
+                console.log('here');
                 _receivedPackets++;
             });
         });
@@ -173,6 +179,9 @@
                 },
 
                 getStream: function (presentationId, recorder, resumeFlag) {
+                    if (!resumeFlag) {
+                        _timeStamps = {};
+                    }
                     if (!!$window.MediaRecorder) {
 
                         return streamOgg(recorder, presentationId, $q, $location, resumeFlag);
@@ -187,6 +196,14 @@
 
                     } else {
                         return getAudioNode($q);
+                    }
+                },
+
+                lastTransmittedTime: function () {
+                    if (_receivedPackets > 0) {
+                        return _timeStamps[_receivedPackets - 1];
+                    } else {
+                        return 0;
                     }
                 }
             };
