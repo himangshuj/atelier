@@ -147,20 +147,4 @@ describe('acoustics.services', function () {
         expect(recorder.stream.writes).toEqual(1);
     });
 
-    it('should redoSlide when stream is stuck', inject(function ($window) {
-        var recorder = getRecorder(acoustics, "6");
-        recorder.stream.writable = false;
-        spyOn($window,'alert');
-        acoustics.resume(recorder);
-        if (recorder.mediaRecorder) {
-            recorder.mediaRecorder.ondataavailable({data: "foo"});
-        } else {
-            recorder.audionode.onaudioprocess(
-                { inputBuffer: { getChannelData: function (_) {
-                    return "foo";
-                }}});
-        }
-        expect($window.alert).toHaveBeenCalledWith('There were network issues, Re-record the slide');
-    }));
-
 });
