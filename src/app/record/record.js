@@ -12,7 +12,7 @@
 
         .config(['$stateProvider', function config($stateProvider) {
             $stateProvider.state('record', {
-                url: '/record/:presentationId/:resumeFlag',
+                url: '/record/:presentationId',
                 resolve: {
                     presentation: ['$stateParams', 'anduril', function ($stateParams, anduril) {
                         return anduril.fetchPresentation($stateParams.presentationId);
@@ -22,7 +22,7 @@
                     }],
                     stream: ['acoustics', '$stateParams', 'mediaRecorderOrAudioNode',
                         function (acoustics, $stateParams, mediaRecorderOrAudioNode) {
-                            return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, !!$stateParams.resumeFlag);
+                            return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, false);
                         }],
                     recorder: ['mediaRecorderOrAudioNode', 'stream', '$window', function (mediaRecorderOrAudioNode, stream, $window) {
                         if (!!$window.MediaRecorder) {
@@ -74,17 +74,19 @@
             });
 
         }])
-        .controller('RecordCtrl', ['$scope', 'acoustics', '$state', 'anduril', '$q', 'presentation', 'recordAction', 'recorder', '$rootScope', 'canvas','$stateParams',
-            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope, canvas,$stateParams) {
+        .controller('RecordCtrl', ['$scope', 'acoustics', '$state', 'anduril', '$q', 'presentation', 'recordAction',
+            'recorder', '$rootScope', 'canvas', '$stateParams', '$window', 'mediaRecorderOrAudioNode',
+            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope, canvas, $stateParams, $window, mediaRecorderOrAudioNode) {
+
+
+                presentation.recordingStarted = new Date().getTime();    //TODO this is crap
+                presentation.script = [];//reseting the script    //TODO This is crap
                 recordAction({fnName: 'changeState',
                     args: {subState: '.activate', params: {page: 0}},
                     actionInitiated: new Date().getTime(), module: 'dialogue'});
-
                 $scope.presentationId = presentation._id;
-                if(!$stateParams.resumeFlag){
-                    presentation.recordingStarted = new Date().getTime();    //TODO this is crap
-                    presentation.script = [];//reseting the script    //TODO This is crap
-                }
+
+
                 $scope.drawing = false;
                 var enableCanvas = $scope.enableCanvas = function (arg) {
                     canvas.enableCanvas(arg);
@@ -98,6 +100,16 @@
                     recordAction({'fnName': 'pause', 'args': {},
                         actionInitiated: new Date().getTime(), module: 'apollo' });
 
+                };
+                var completed = false;
+                var resumeRecordingAfterNetworkDisruption = function () {
+                    if (!completed) {
+                        $scope.redoSlide();
+                        acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, true).then(function (stream) {
+                            recorder.stream = stream;
+                            $window.alert('There has been a network issue when recording the slide, you need to re-record the slide');
+                        });
+                    }
                 };
 
                 $scope.recordAction = recordAction;
@@ -113,26 +125,24 @@
                         recordAction({'fnName': 'redo', 'args': {}, module: 'apollo',
                             actionInitiated: new Date().getTime() });
                         pause();
-                        $state.go('record.activate', {dummy: _.size(presentation.script),resumeFlag:false});
+                        $state.go('record.activate', {dummy: _.size(presentation.script)});
                     };
-                    var resumeRecordingAfterNetworkDisruption = function (newStream) {
-                        anduril.insertScript(presentation, instructionsToKeep);
-                        enableCanvas(false);
-                        $scope.recording = false;
-                        recordAction({'fnName': 'pause', 'args': {},
-                            actionInitiated: new Date().getTime(), module: 'apollo' });
-                        console.log("ii4");
-                        $state.transitionTo('record.activate', {resumeFlag:true}, {
-                            reload: true, inherit: true, notify: true
-                        });
-                    };
-                    acoustics.registerRedoSlide(resumeRecordingAfterNetworkDisruption);
+
+
                 };
+
+                _.defer(function () {
+                    recorder.stream.on('error', resumeRecordingAfterNetworkDisruption);
+                    recorder.stream.on('close', resumeRecordingAfterNetworkDisruption);
+
+                });
+
 
                 var presentationId = presentation._id;//this is a HACK replace with restangular why this is hack log the presentation in
                 //then clause
                 $scope.complete = function () {
                     $rootScope.loading = true;
+                    completed = true;
                     acoustics.stopRecording(recorder, presentation._id).then(function (resp) {
                         $q.when(anduril.completeRecord(presentation))
                             .then(function () {
@@ -152,6 +162,7 @@
                     });
                 $rootScope.presentationMode = true;
                 $rootScope.navigationMode = false;
+
             }])
 
         .controller('RecordDialogue', ['$scope', 'presentation', 'anduril', 'dialogue', '$stateParams', 'recordAction',
@@ -197,7 +208,7 @@
                 $scope.nextSlide = _.throttle(function () {
                     $scope.enableCanvas(false);
                     canvas.deRegisterMethods();
-                    recordAction(dialogue.changeState({subState: '.activate', params: {page: ++page,resumeFlag:false}}));
+                    recordAction(dialogue.changeState({subState: '.activate', params: {page: ++page}}));
                 }, 1000);
 
             }
