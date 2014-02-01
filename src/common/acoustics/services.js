@@ -79,7 +79,7 @@
         if (_streams[presentationId] && !resumeFlag) {
             return _streams[presentationId];
         }
-        var client = new BinaryClient("ws://socket." + $location.host + ":" + $location.port() + "/ogg-writer");
+        var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/ogg-writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
@@ -123,12 +123,17 @@
     var getMediaRecorder = function ($q) {
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
+        if (_.isUndefined(fakeNavigator)) {
+            var fakeNavigator = {};
+            var FakeMediaRecorder = null;
+
+        }
         navigator.getUserMedia = fakeNavigator.mockGetUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
         navigator.getUserMedia({audio: true}, function (mediaStream) {
             //noinspection JSUnresolvedFunction
-            var MediaRecorder = FakeMediaRecorder || MediaRecorder;
-            var mediaRecorder = new MediaRecorder(mediaStream);
-            deferred.resolve(mediaRecorder);
+            var mediaRecorder = FakeMediaRecorder || MediaRecorder;
+            var mediaRecorderObj = new mediaRecorder(mediaStream);
+            deferred.resolve(mediaRecorderObj);
         }, function (err) {
             //  console.log("getUserMedia error: " + err);
         });
