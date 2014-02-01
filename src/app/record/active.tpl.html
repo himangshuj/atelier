@@ -3,7 +3,9 @@
         <div class="color-red">
             <a ng-click="record()" class="btn-pop-out btn-square">
                 <div class="toolbar-icon"><i class="fa fa-microphone fa-5x"></i></div>
-                <div class="center-tip">Record</div>
+                <div class="center-tip">Record
+                    <div style="font-size:small" ng-show="videoPresent">This slide has a video</div>
+                </div>
             </a>
         </div>
     </div>
@@ -18,7 +20,7 @@
         </div>
         <div class="color-green" ng-show="videoPresent">
             <a ng-click="recordYTAction()" class="btn-pop-out">
-                <div class="toolbar-icon"><i class="fa fa-youtube"></i></div>
+                <div class="toolbar-icon"><i class="fa fa-youtube-play"></i></div>
                 <span class="tip"></span>
             </a>
         </div>
