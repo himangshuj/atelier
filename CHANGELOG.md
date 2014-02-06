@@ -1,3 +1,7 @@
+<a name="v5.3.1"></a>
+### v5.3.1 (2014-02-06)
+## Fixes to play log format
+
 <a name="v5.3.0"></a>
 ## v5.3.0 (2014-02-06)
 ## Features
