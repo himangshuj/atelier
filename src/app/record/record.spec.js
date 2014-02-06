@@ -17,7 +17,8 @@ describe('record section control ', function () {
     beforeEach(module('sokratik.atelier.record'));
     var scope;
     var recorder = {
-        stream: {on: angular.noop}
+        stream: {on: angular.noop},
+        audionode: {disconnect: angular.noop}
     };
     var presentation = {_id: "presentationId", presentationData: [
         {templateName: "t1", keyVals: {k1: "v1"}},
@@ -216,12 +217,13 @@ describe('record section control ', function () {
 
     describe("stream disruptions", function () {
         var resumeAfterDisruption;
-        beforeEach(inject(function (anduril, $controller, $modal, $log, $state, $window,acoustics) {
+        beforeEach(inject(function (anduril, $controller, $modal, $log, $state, $window, acoustics) {
             expect(resumeAfterDisruption).not.toBeDefined();
             var recorder = {
                 stream: {on: function (ev, fn) {
                     resumeAfterDisruption = fn;
-                }}
+                }, writeable: true, pause: angular.noop},
+                audionode: {disconnect: angular.noop}
             };
             $controller("RecordCtrl", {
                 $scope: scope,
@@ -235,28 +237,28 @@ describe('record section control ', function () {
                 mediaRecorderOrAudioNode: {}
             });
             scope.$digest();
-            spyOn(acoustics,'getStream').andCallFake(function(){
-                return {then: function (fn){
-                    fn();
+            spyOn(acoustics, 'getStream').andCallFake(function () {
+                return {then: function (fn) {
+                    fn(recorder.stream);
                 }}
             });
 
 
         }));
-        it("stream disruption test", inject(function (anduril, $controller, $modal, $log, $state, $window) {
+        it("stream disruption test", inject(function (anduril, $controller, $modal, $log, $state, $window,acoustics) {
             scope.redoSlide = angular.noop;
-            spyOn(scope,'redoSlide');
+            spyOn(scope, 'redoSlide');
             expect(resumeAfterDisruption).not.toBeDefined();
-            spyOn($window,'alert');
+            spyOn($window, 'alert');
             waitsFor(function () {
                 return !!resumeAfterDisruption;
             }, "resume function not bound", 2000);
             runs(function () {
                 expect(resumeAfterDisruption).toBeDefined();
                 resumeAfterDisruption();
-                expect(scope.redoSlide).toHaveBeenCalled();
+                expect(acoustics.getStream).toHaveBeenCalled();
                 expect($window.alert).toHaveBeenCalledWith('There has been a network issue when recording the slide, you need to re-record the slide');
-
+                expect($state.go).toHaveBeenCalledWith('record.activate', { dummy : 2, page : 0 });
             });
 
         }));

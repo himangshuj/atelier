@@ -11,7 +11,7 @@
     var _sentPackets = 0;
     var _receivedPackets = 0;
     var _timeStamps = {};
-    var _closeStream = function (stream, iteration, deferred) {
+    var _closeStream = function (stream, iteration, deferred, $log) {
         "use strict";
         if (!stream.writable) {
             deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
@@ -23,14 +23,14 @@
             _sentPackets = _receivedPackets = 0;
             deferred.resolve("uploaded audio " + _receivedPackets + "  out of " + _sentPackets);
         } else {
-            console.log("sent" + _sentPackets);
-            console.log("received" + _receivedPackets);
+            $log.info("sent" + _sentPackets);
+            $log.info("received" + _receivedPackets);
 
             _.delay(_closeStream, 10000, stream, ++iteration, deferred);
         }
     };
 
-    var streamRaw = function (presentationId, $q, $location, resumeFlag) {
+    var streamRaw = function (presentationId, $q, $location, resumeFlag, $log) {
         if (_streams[presentationId] && !resumeFlag) {
             return _streams[presentationId];
         }
@@ -63,7 +63,7 @@
                     stream.write(buffer);
 
                 } else {
-                    console.log("stream not writeable");
+                    $log.info("stream not writeable");
                 }
             };
             stream.pause();
@@ -75,7 +75,7 @@
         return deferred.promise;
     };
 
-    var streamOgg = function (mediaRecorder, presentationId, $q, $location, resumeFlag) {
+    var streamOgg = function (mediaRecorder, presentationId, $q, $location, resumeFlag, $log) {
         if (_streams[presentationId] && !resumeFlag) {
             return _streams[presentationId];
         }
@@ -97,7 +97,6 @@
             stream.pause();
             stream.on("data", function () {
                 "use strict";
-                console.log('here');
                 _receivedPackets++;
             });
         });
@@ -120,22 +119,20 @@
         return deferred.promise;
     };
 
-    var getMediaRecorder = function ($q) {
+    var getMediaRecorder = function ($q, $window) {
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
-        if (_.isUndefined(fakeNavigator)) {
-            var fakeNavigator = {};
-            var FakeMediaRecorder = null;
 
-        }
-        navigator.getUserMedia = fakeNavigator.mockGetUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        navigator.getUserMedia = ($window.fakeNavigator || {}).mockGetUserMedia
+            || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia;
         navigator.getUserMedia({audio: true}, function (mediaStream) {
             //noinspection JSUnresolvedFunction
-            var mediaRecorder = FakeMediaRecorder || MediaRecorder;
+            var mediaRecorder = $window.FakeMediaRecorder || MediaRecorder;
             var mediaRecorderObj = new mediaRecorder(mediaStream);
             deferred.resolve(mediaRecorderObj);
         }, function (err) {
-            //  console.log("getUserMedia error: " + err);
+            throw err;
         });
         return deferred.promise;
     };
@@ -179,7 +176,7 @@
                     }
                     _streams[presentationId] = null;
                     var deferred = $q.defer();
-                    _closeStream(_recorder.stream, 0, deferred);
+                    _closeStream(_recorder.stream, 0, deferred, $log);
                     return deferred.promise;
                 },
 
@@ -189,15 +186,15 @@
                     }
                     if (!!$window.MediaRecorder) {
 
-                        return streamOgg(recorder, presentationId, $q, $location, resumeFlag);
+                        return streamOgg(recorder, presentationId, $q, $location, resumeFlag, $log);
                     } else {
-                        return streamRaw(presentationId, $q, $location, resumeFlag);
+                        return streamRaw(presentationId, $q, $location, resumeFlag, $log);
                     }
                 },
 
                 mediaRecorderOrAudioNode: function () {
                     if (!!$window.MediaRecorder) {
-                        return getMediaRecorder($q);
+                        return getMediaRecorder($q, $window);
 
                     } else {
                         return getAudioNode($q);

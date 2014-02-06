@@ -1,3 +1,10 @@
+<a name="v5.3.0"></a>
+## v5.3.0 (2014-02-06)
+## Features
+* added extra logging which will be sent to server
+## Fixes
+* test cases fixes for mediaRecorder
+
 # 0.3.0 (2013-06-25)
 
 ## Features
