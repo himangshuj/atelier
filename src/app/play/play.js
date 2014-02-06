@@ -1,7 +1,7 @@
 (function (ng, app) {
     var fragmentFn = ng.noop;//global variable is this really bad
     var callBack = null;
-    var _executeInstruction = function (instructions, modules, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope) {
+    var _executeInstruction = function (instructions, modules, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope, $log) {
         'use strict';
         if (scriptIndex < _.size(instructions)) {
             var index = scriptIndex || 0;
@@ -16,9 +16,10 @@
             } else {
             }
             var intraState = function () {
-                _executeInstruction(instructions, modules, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope);
+                _executeInstruction(instructions, modules, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope, $log);
             };
             var postExecute = !(ng.equals(instruction.fnName, 'changeState')) ? intraState : ng.noop;
+            $log.info("Executing " + instruction.fnName +" with delay"+delay);
             _.delay(function () {
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
                     (instruction.args || {}).params, {pausedInterval: pausedInterval});
@@ -98,8 +99,8 @@
                 $rootScope.navigationMode = false;
 
             }])
-        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce', 'anduril',
-            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope, $sce, anduril) {
+        .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce', 'anduril', '$log',
+            function ($scope, $state, $stateParams, $q, modules, presentation, $rootScope, $sce, anduril, $log) {
                 'use strict';
                 modules.apollo.initBGAudio();
                 $rootScope.audioLocation = $sce.trustAsResourceUrl(presentation.audioLocation);
@@ -107,7 +108,7 @@
                 $rootScope.showCase = false;
                 modules.apollo.cleanUp();
 
-                if (!!callBack ) {
+                if (!!callBack) {
                     modules.apollo.getMainAudio().removeEventListener('ended', callBack, false);
                 }
                 callBack = function () {
@@ -119,11 +120,11 @@
                 modules.apollo.getMainAudio().addEventListener('ended', callBack, false);
                 _executeInstruction(presentation.script,
                     modules, $state,
-                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
+                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope, $log);
             }])
 
-        .controller('PlayActive', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation',
-            function ($scope, $state, $stateParams, $q, modules, presentation) {
+        .controller('PlayActive', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$log',
+            function ($scope, $state, $stateParams, $q, modules, presentation, $log) {
                 'use strict';
                 var page = parseInt($stateParams.page, 10);
                 //noinspection JSUnresolvedVariable
@@ -137,7 +138,7 @@
                             function () {
                                 _executeInstruction(presentation.script,
                                     modules, $state,
-                                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope);
+                                    $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope, $log);
                             }
                         );
 

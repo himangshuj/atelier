@@ -4,6 +4,11 @@ describe('acoustics.services', function () {
     beforeEach(inject(function ($q) {
         q = $q;
     }));
+    beforeEach(inject(function($window){
+        $window.fakeNavigator = {
+            mockGetUserMedia: fakeGetUserMedia
+        };
+    })) ;
 
     var FakeStream = function () {
         this.state = null;

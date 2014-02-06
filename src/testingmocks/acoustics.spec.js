@@ -56,9 +56,7 @@ window.navigator = {
     mozGetUserMedia: fakeGetUserMedia
 };
 
-fakeNavigator = {
-    mockGetUserMedia: fakeGetUserMedia
-};
+
 
 window.FakeAudioContext = FakeAudioContext;
 window.MediaStream = FakeMediaStream;
