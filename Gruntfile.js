@@ -19,6 +19,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-ngmin');
     grunt.loadNpmTasks('grunt-html2js');
+    grunt.loadNpmTasks('grunt-bump');
+
 
     /**
      * Load in our build configuration file.
