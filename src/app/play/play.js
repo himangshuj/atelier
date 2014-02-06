@@ -19,7 +19,7 @@
                 _executeInstruction(instructions, modules, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope, $log);
             };
             var postExecute = !(ng.equals(instruction.fnName, 'changeState')) ? intraState : ng.noop;
-            $log.info("Executing " + instruction.fnName +" with delay"+delay);
+            $log.info("Executing " + instruction.fnName +" with delay "+delay);
             _.delay(function () {
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
                     (instruction.args || {}).params, {pausedInterval: pausedInterval});
