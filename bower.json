@@ -1,21 +1,23 @@
 {
-    "name": "atelier",
-    "version": "5.3.1",
-    "devDependencies": {
-        "angular": "~1.2.1",
-        "angular-mocks": "~1.2.1",
-        "angular-sanitize": "~1.2.1",
-        "angular-animate": "~1.2.1",
-        "angular-cookies": "~1.2.1",
-        "angular-resource": "~1.2.1",
-        "bootstrap": "~3.0.3",
-        "angular-bootstrap": "~0.6.0",
-        "angular-ui-router": "~0.2.0",
-        "angular-ui-utils": "~0.0.4",
-        "underscore": "~1.5.2",
-        "underscore.string": "~2.3.3",
-        "animate.css":"https://github.com/daneden/animate.css.git#master",
-        "angular-elastic":"~2.3.0"
-    },
-    "dependencies": {}
+  "name": "atelier",
+  "version": "5.3.1",
+  "devDependencies": {
+    "angular": "~1.2.1",
+    "angular-mocks": "~1.2.1",
+    "angular-sanitize": "~1.2.1",
+    "angular-animate": "~1.2.1",
+    "angular-cookies": "~1.2.1",
+    "angular-resource": "~1.2.1",
+    "bootstrap": "~3.0.3",
+    "angular-bootstrap": "~0.6.0",
+    "angular-ui-router": "~0.2.0",
+    "angular-ui-utils": "~0.0.4",
+    "underscore": "~1.5.2",
+    "underscore.string": "~2.3.3",
+    "animate.css": "https://github.com/daneden/animate.css.git#master",
+    "angular-elastic": "~2.3.0"
+  },
+  "dependencies": {
+    "blueimp-canvas-to-blob": "~2.1.0"
+  }
 }
