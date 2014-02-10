@@ -48,6 +48,7 @@
      */
     var _fragmentCommonLink = function (scope, attrs, sokratikDialogueCtrl) {
         scope.model = {};
+        //noinspection JSUnresolvedFunction
         scope.model.value = sokratikDialogueCtrl.getProperty(attrs.model);
         scope.model.caption = sokratikDialogueCtrl.getProperty(attrs.model + '_Caption');
         scope.model.css = ["fragment"];
@@ -338,12 +339,13 @@
         "play": linkFn
     };
 
-    var _sokratikFragmentDirective = ["$state", "$sce", "anduril", "$stateParams", "$modal",
-        function ($state, $sce, anduril, $stateParams, $modal) {
+    var _sokratikFragmentDirective = ["$state", "$sce", "anduril", "$stateParams", "$modal","$log",
+        function ($state, $sce, anduril, $stateParams, $modal,$log) {
             _injectors.$sce = $sce;
             _injectors.anduril = anduril;
             _injectors.$modal = $modal;
             _injectors.$stateParams = $stateParams;
+            _injectors.$log = $log;
             return {
                 "restrict": "E",
                 "transclude": true,
@@ -361,12 +363,13 @@
             };
 
         }];
-    var _sokratikDialogueContainerDirective = ["$state", "dialogue", "$q", "anduril",
-        function ($state, dialogue, $q, anduril) {
+    var _sokratikDialogueContainerDirective = ["$state", "dialogue", "$q", "anduril","$log",
+        function ($state, dialogue, $q, anduril,$log) {
             _injectors.$q = $q;
             _injectors.dialogue = dialogue;
             _injectors.anduril = anduril;
             _injectors.$state = $state;
+            _injectors.$log = $log;
             return {
                 restrict: "E",
                 templateUrl: function () {
@@ -406,6 +409,117 @@
 
     }];
 
+    var _sokratikImageUploadDirective = ['$q', '$state', '$window', '$http','$location', function ($q, $state, $window, $http,$location) {
+        var URL = $window.URL || $window.webkitURL;
+        var fileToDataURL = function (file) {
+            var deferred = $q.defer();
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                deferred.resolve(e.target.result);
+            };
+            reader.readAsDataURL(file);
+            return deferred.promise;
+        };
+        var resizeImage = function (origImage, options, canvas) {
+            var maxHeight = 400;
+            var maxWidth = 600;
+            var quality = 0.7;
+            var type = 'image/jpg';
+            var deferred = $q.defer();
+
+            var height = origImage.height;
+            var width = origImage.width;
+
+            // calculate the width and height, constraining the proportions
+            if (width > height) {
+                if (width > maxWidth) {
+                    height = Math.round(height *= maxWidth / width);
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width = Math.round(width *= maxHeight / height);
+                    height = maxHeight;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            //draw image on canvas
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(origImage, 0, 0, width, height);
+            canvas.toBlob(
+                function (blob) {
+                    deferred.resolve(blob);
+                },
+                'image/jpeg'
+            );
+
+            return deferred.promise;
+        };
+
+        var createImage = function (url, callback) {
+            var image = new Image();
+            image.onload = function () {
+                callback(image);
+            };
+            image.src = url;
+        };
+        return {
+            restrict: "E",
+            templateUrl: function () {
+                return $state.current.data.mode + "/image-upload.tpl.html";
+            },
+            scope: {
+                caption: '=',
+                url: '='
+
+            },
+            link: function (scope, element, attrs) {
+                var canvas = ng.element(element).find('canvas')[0];
+                var image = ng.element(element).find('input');
+                var doResizing = function (imageResult) {
+                    var deferred = $q.defer();
+                    createImage(imageResult.url, function (image) {
+                        resizeImage(image, scope, canvas).then(function (blob) {
+                            deferred.resolve(blob);
+                        });
+                    });
+                    return deferred.promise;
+                };
+                image.bind('change', function (evt) {
+                    var file = evt.target.files[0];
+                    var imageResult = {
+                        file: file,
+                        url: URL.createObjectURL(file)
+                    };
+                    fileToDataURL(file).then(function (dataURL) {
+                        imageResult.dataURL = dataURL;
+                    });
+                    doResizing(imageResult).then(function (blob) {
+                        var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/image-writer");
+                        client.on('open', function () {
+                            var stream = client.send(blob, {size: blob.size});
+                            stream.on('data', function (url) {
+                                scope.$apply(function(){
+                                    scope.url = url;
+                                });
+                            });
+                            stream.on('close', function () {
+                                client.close();
+                            });
+                        });
+                    });
+
+
+                });
+            }
+        };
+
+
+    }];
+
     ng.module(app, ['sokratik.atelier.istari.services',
             'sokratik.atelier.minerva.services',
             'sokratik.atelier.canvas.services',
@@ -416,6 +530,7 @@
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
         .directive("sokratikCanvas", _sokratikCanvasDirective)
+        .directive('sokratikImageUpload', _sokratikImageUploadDirective)
         .controller("DialogueController", ["$scope", function ($scope) {
             $scope.templateName = "templates/" + ($scope.presentation.templateName || "imageText") + ".tpl.html";
             $scope.currentFragmentIndex = 0;
