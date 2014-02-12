@@ -1,3 +1,8 @@
+<a name="v5.4.1"></a>
+### v5.4.1 (2014-02-12)
+##### Fixes
+* Pre-emptively remove nulls from presentationData and script
+
 <a name="v5.4.0"></a>
 ## v5.4.0 (2014-02-10)
 
