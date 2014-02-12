@@ -130,6 +130,24 @@ describe("istari, the one where we talk to server", function () {
             return posted;
         }, "put call did not succeed", 1000);
     }));
+    it("savepresentation", inject(function (anduril) {
+        httpBackend.when('PUT', '/presentation/presentationId').respond(function (method, url, data) {
+                return [200, data];
+            }
+        );
+        presentation.presentationData.push(null);
+        var posted = false;
+        expect(presentation.presentationData.length).toBe(3);
+        anduril.post(presentation).then(function (resp) {
+            posted = true;
+            expect(resp._id).toBe("presentationId");
+            expect(resp.presentationData.length).toBe(2);
+        });
+        httpBackend.flush();
+        waitsFor(function () {
+            return posted;
+        }, "put call did not succeed", 1000);
+    }));
     it("complete Record", inject(function (anduril) {
         httpBackend.when('PUT', '/presentation/presentationId').respond(function (method, url, data) {
                 return [200, data];

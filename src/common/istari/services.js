@@ -37,6 +37,12 @@
             _cache[presentation._id] = presentation;
             return presentation.$update();
         };
+        var sanitizeRequestBody = function (presentation) {
+            var script = _.without(presentation.script, null);
+            var presentationData = _.without(presentation.presentationData,null);
+            var retVal = _.chain(presentation).omit('__v').extend({script: script, presentationData: presentationData}).value();
+            return retVal;
+        };
         this.$get = ["$http", "$log", "$q", "$resource", function ($http, $log, $q, $resource) {
             injectors.$http = $http;
             injectors.$log = $log;
@@ -80,9 +86,10 @@
                 post: function (presentation) {
                     //noinspection JSUnresolvedFunction
                     var deferred = $q.defer();
-                    _cache[presentation._id] = presentation;
-                    presentation.$update(function () {
-                        deferred.resolve(presentation);
+                    var sanitizedPresentation = sanitizeRequestBody(presentation);
+                    _cache[presentation._id] = sanitizedPresentation;
+                    sanitizedPresentation.$update(function () {
+                        deferred.resolve(sanitizedPresentation);
 
                     });
                     return deferred.promise;
