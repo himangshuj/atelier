@@ -81,7 +81,7 @@
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;
                     $scope.presentationId = presentationId;
-                    var activePresentation = $scope.presentation = presentation.presentationData[page];
+                    var activePresentation = $scope.presentation = presentation.presentationData[page] || {};
                     $scope.totalPages = _.size(presentation.presentationData);
                     $scope.presentation.keyVals = _.extend({}, $scope.presentation.keyVals);
                     anduril.put(presentation, page, $scope.presentation);
@@ -104,8 +104,14 @@
                     };
                     $scope.remove = function () {
                         'use strict';
+                        if (page == _.size(presentation.presentationData)) {
+
+                        }
+                        var targetPage = (page === 0) ? page : page - 1;
                         anduril.post(anduril.remove(presentation, page));
-                        $state.go('edit', {templateName: $stateParams.templateName, presentationId: presentationId, page: page - 1});
+
+                        $state.go('edit', {templateName: $stateParams.templateName, presentationId: presentationId, page: targetPage },
+                            {reload: true});
                     };
 
                     var _changeTemplates = function (templateName) {
@@ -167,7 +173,7 @@
                         });
                         return modalInstance;
                     };
-                    $scope.isTitle = page == 0;
+                    $scope.isTitle = _.isEqual("title", $scope.presentation.templateName);
                     $scope.cantAddImage = $scope.isTitle || _.isEqual("4imageText", $scope.presentation.templateName);
                 }]);
 })(angular, 'sokratik.atelier.edit');
