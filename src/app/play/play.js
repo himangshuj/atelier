@@ -162,6 +162,12 @@
                     (modules.apollo.getMainAudio() || {}).play();
                 };
 
+                $scope.createNew = function(){
+                    paused = true;
+                    modules.apollo.cleanUp();
+                    $state.go('create',{},{inherit:false});
+                };
+
                 $scope.played =  modules.apollo.getMainAudio().played.length > 0;
                 modules.apollo.getMainAudio().addEventListener('play', function(){
                     $scope.played = true;
