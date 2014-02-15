@@ -1,0 +1,19 @@
+.presentation {
+  .playback {
+    .btn-pop-out, .toolbar{
+      z-index: 10001;
+    }
+    .toolbar-left{
+      .btn-pop-out{
+        &:hover{
+          width: @left-toolbar-width;
+        }
+      }
+    }
+    .btn-pop-out{
+      &.btn-square{
+        width: auto;
+      }
+    }
+  }
+}
