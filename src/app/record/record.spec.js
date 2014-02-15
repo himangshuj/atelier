@@ -240,7 +240,7 @@ describe('record section control ', function () {
             spyOn(acoustics, 'getStream').andCallFake(function () {
                 return {then: function (fn) {
                     fn(recorder.stream);
-                }}
+                }};
             });
 
 
