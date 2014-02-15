@@ -28,8 +28,7 @@
                     (instruction.args || {}).params, {pausedInterval: pausedInterval});
                 if (!paused) {
                     $q.when(modules[instruction.module][instruction.fnName]
-                        (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()})
-                            , $q.defer())).then(postExecute);
+                        (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
                 } else {
                     modules.apollo.pause();
                     modules.apollo.muteBGAudio();
@@ -37,9 +36,8 @@
                     resume = function(){
                         $log.info("Resuming the play");
                         $q.when(modules[instruction.module][instruction.fnName]
-                            (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()})
-                                , $q.defer())).then(postExecute);
-                    }
+                            (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
+                    };
                 }
 
             }, delay);
