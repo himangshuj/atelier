@@ -30,16 +30,16 @@
         }
     };
 
-    var streamRaw = function (presentationId, $q, $location, resumeFlag, $log) {
-        if (_streams[presentationId] && !resumeFlag) {
-            return _streams[presentationId];
+    var streamRaw = function (audioId, $q, $location, resumeFlag, $log) {
+        if (_streams[audioId] && !resumeFlag) {
+            return _streams[audioId];
         }
         var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
-            var stream = client.createStream({presentationId: presentationId, sampleRate: context.sampleRate, resume: !!resumeFlag, sentPackets: _sentPackets});
-            _streams[presentationId] = stream;
+            var stream = client.createStream({presentationId: audioId, sampleRate: context.sampleRate, resume: !!resumeFlag, sentPackets: _sentPackets});
+            _streams[audioId] = stream;
             deferred.resolve(stream);
             _sentPackets = 0;
             _receivedPackets = 0;
@@ -75,16 +75,16 @@
         return deferred.promise;
     };
 
-    var streamOgg = function (mediaRecorder, presentationId, $q, $location, resumeFlag, $log) {
-        if (_streams[presentationId] && !resumeFlag) {
-            return _streams[presentationId];
+    var streamOgg = function (mediaRecorder, audioId, $q, $location, resumeFlag, $log) {
+        if (_streams[audioId] && !resumeFlag) {
+            return _streams[audioId];
         }
         var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/ogg-writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
-            var stream = client.createStream({presentationId: presentationId, resume: !!resumeFlag, sentPackets: _sentPackets});
-            _streams[presentationId] = stream;
+            var stream = client.createStream({presentationId: audioId, resume: !!resumeFlag, sentPackets: _sentPackets});
+            _streams[audioId] = stream;
             deferred.resolve(stream);
             _sentPackets = 0;
             _receivedPackets = 0;
@@ -123,13 +123,11 @@
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
 
-        navigator.getUserMedia = ($window.fakeNavigator || {}).mockGetUserMedia
-            || navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia;
+        navigator.getUserMedia = ($window.fakeNavigator || {}).mockGetUserMedia || navigator.webkitGetUserMedia ||navigator.mozGetUserMedia;
         navigator.getUserMedia({audio: true}, function (mediaStream) {
             //noinspection JSUnresolvedFunction
-            var mediaRecorder = $window.FakeMediaRecorder || MediaRecorder;
-            var mediaRecorderObj = new mediaRecorder(mediaStream);
+            var MediaRecorderClass = $window.FakeMediaRecorder || MediaRecorder;
+            var mediaRecorderObj = new MediaRecorderClass(mediaStream);
             deferred.resolve(mediaRecorderObj);
         }, function (err) {
             throw err;
@@ -139,7 +137,7 @@
 
 
     var acoustics = function () {
-        this.$get = ["$log", "$location", "$q", "$window", function ($log, $location, $q, $window) {
+        this.$get = ["$log", "$location", "$q", "$window", "$http", function ($log, $location, $q, $window, $http) {
 
             return {
                 pause: function (_recorder) {
@@ -180,15 +178,15 @@
                     return deferred.promise;
                 },
 
-                getStream: function (presentationId, recorder, resumeFlag) {
+                getStream: function (audioId, recorder, resumeFlag) {
                     if (!resumeFlag) {
                         _timeStamps = {};
                     }
                     if (!!$window.MediaRecorder) {
 
-                        return streamOgg(recorder, presentationId, $q, $location, resumeFlag, $log);
+                        return streamOgg(recorder, audioId, $q, $location, resumeFlag, $log);
                     } else {
-                        return streamRaw(presentationId, $q, $location, resumeFlag, $log);
+                        return streamRaw(audioId, $q, $location, resumeFlag, $log);
                     }
                 },
 

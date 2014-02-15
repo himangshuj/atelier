@@ -1,6 +1,8 @@
 (function (ng, app) {
     var fragmentFn = ng.noop;//global variable is this really bad
     var callBack = null;
+    var paused = false;
+    var resume = ng.noop;
     var _executeInstruction = function (instructions, modules, $state, scriptIndex, timeStamp, $q, pausedInterval, $scope, $log) {
         'use strict';
         if (scriptIndex < _.size(instructions)) {
@@ -19,12 +21,25 @@
                 _executeInstruction(instructions, modules, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope, $log);
             };
             var postExecute = !(ng.equals(instruction.fnName, 'changeState')) ? intraState : ng.noop;
-            $log.info("Executing " + instruction.fnName +" with delay "+delay);
+
+            $log.info("Executing " + instruction.fnName + " with delay " + delay);
             _.delay(function () {
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
                     (instruction.args || {}).params, {pausedInterval: pausedInterval});
-                $q.when(modules[instruction.module][instruction.fnName]
-                    (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
+                if (!paused) {
+                    $q.when(modules[instruction.module][instruction.fnName]
+                        (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
+                } else {
+                    modules.apollo.pause();
+                    modules.apollo.muteBGAudio();
+                    $log.info("Pausing the play");
+                    resume = function(){
+                        $log.info("Resuming the play");
+                        $q.when(modules[instruction.module][instruction.fnName]
+                            (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
+                    };
+                }
+
             }, delay);
         }
         else {
@@ -130,6 +145,35 @@
                 //noinspection JSUnresolvedVariable
                 $scope.presentation = presentation.presentationData[page];
                 $scope.presentationId = presentation._id;
+                $scope.paused = paused;
+                $scope.pause = function () {
+                    paused = true;
+                    $scope.paused = true;
+                };
+
+                $scope.resume = function () {
+                    modules.apollo.initBGAudio();
+                    paused = false;
+                    $scope.paused = false;
+                    resume();
+                };
+                $scope.start = function (){
+                    $scope.played = true;
+                    (modules.apollo.getMainAudio() || {}).play();
+                };
+
+                $scope.createNew = function(){
+                    paused = true;
+                    modules.apollo.cleanUp();
+                    $state.go('create',{},{inherit:false});
+                };
+
+                $scope.played =  modules.apollo.getMainAudio().played.length > 0;
+                modules.apollo.getMainAudio().addEventListener('play', function(){
+                    $scope.played = true;
+
+                });
+
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
                     function resetFragments() {

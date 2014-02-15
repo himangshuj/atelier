@@ -20,9 +20,10 @@
                     mediaRecorderOrAudioNode: ['acoustics', function (acoustics) {
                         return acoustics.mediaRecorderOrAudioNode();
                     }],
-                    stream: ['acoustics', '$stateParams', 'mediaRecorderOrAudioNode',
-                        function (acoustics, $stateParams, mediaRecorderOrAudioNode) {
-                            return acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, false);
+                    stream: ['acoustics', '$stateParams', 'mediaRecorderOrAudioNode', 'presentation',
+                        function (acoustics, $stateParams, mediaRecorderOrAudioNode, presentation) {
+                            return acoustics.getStream($stateParams.presentationId + '_' + presentation.audioId,
+                                mediaRecorderOrAudioNode, false);
                         }],
                     recorder: ['mediaRecorderOrAudioNode', 'stream', '$window', function (mediaRecorderOrAudioNode, stream, $window) {
                         if (!!$window.MediaRecorder) {
@@ -75,8 +76,8 @@
 
         }])
         .controller('RecordCtrl', ['$scope', 'acoustics', '$state', 'anduril', '$q', 'presentation', 'recordAction',
-            'recorder', '$rootScope', 'canvas', '$stateParams', '$window', 'mediaRecorderOrAudioNode',
-            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope, canvas, $stateParams, $window, mediaRecorderOrAudioNode) {
+            'recorder', '$rootScope', 'canvas', '$stateParams', '$window', 'mediaRecorderOrAudioNode', '$http',
+            function ($scope, acoustics, $state, anduril, $q, presentation, recordAction, recorder, $rootScope, canvas, $stateParams, $window, mediaRecorderOrAudioNode, $http) {
 
 
                 presentation.recordingStarted = new Date().getTime();    //TODO this is crap
@@ -121,7 +122,7 @@
                         var lastSlideChange = _.find(reversedInstructions, function (instruction) {
                             return _.isEqual(instruction.fnName, "changeState");
                         }) || {args: {params: {page: 0}}};
-                        acoustics.getStream($stateParams.presentationId, mediaRecorderOrAudioNode, true).then(function (stream) {
+                        acoustics.getStream($stateParams.presentationId + '_' + presentation.audioId, mediaRecorderOrAudioNode, true).then(function (stream) {
                             recorder.stream = stream;
                             $window.alert('There has been a network issue when recording the slide, you need to re-record the slide');
                         });
@@ -166,6 +167,10 @@
                             .then(function () {
                                 'use strict';
                                 anduril.clearCache();
+                                $http.get('/presentation/complete/' + presentationId).success(function (resp) {
+                                    console.log(resp);
+                                });
+
                                 $state.go('complete', {presentationId: presentationId});
                             });
                     });

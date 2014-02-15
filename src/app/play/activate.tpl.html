@@ -1,3 +1,37 @@
+<div class="toolbar toolbar-left">
+    <div ng-hide="played">
+        <div class="color-green">
+            <a ng-click="start()" class="btn-pop-out">
+                <div class="toolbar-icon"><i class="fa fa-play"></i></div>
+                <span class="tip"></span>
+            </a>
+        </div>
+    </div>
+    <div ng-hide="paused && played">
+        <div class="color-green">
+            <a ng-click="pause()" class="btn-pop-out">
+                <div class="toolbar-icon"><i class="fa fa-pause"></i></div>
+                <span class="tip"></span>
+            </a>
+        </div>
+    </div>
+    <div ng-show="paused && played">
+        <div class="color-green">
+            <a ng-click="resume()" class="btn-pop-out">
+                <div class="toolbar-icon"><i class="fa fa-play"></i></div>
+                <span class="tip"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="toolbar toolbar-right">
+    <div class="color-red">
+        <a ng-click="createNew()" class="btn-pop-out">
+            <div class="toolbar-icon"><i class="fa"></i></div>
+            <span class="tip"><small>Create your own video </small></span>
+        </a>
+    </div>
+</div>
 <div class="full-height">
     <sokratik-dialogue presentation="presentation"  presentation-id="{{presentationId}}" class="full-height zoom-in"
                        add-fragment="addFragment(fragment)"/>

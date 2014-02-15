@@ -1,0 +1,22 @@
+.presentation {
+  .playback {
+    .btn-pop-out, .toolbar{
+      z-index: 10001;
+    }
+    .toolbar-left{
+      .btn-pop-out{
+        &:hover{
+          width: @left-toolbar-width;
+        }
+      }
+    }
+    .toolbar-right{
+      .btn-pop-out{
+        width:@left-toolbar-tooltip-width;
+        .tip{
+          right:30px;
+        }
+      }
+    }
+  }
+}
