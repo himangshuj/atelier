@@ -163,6 +163,11 @@
                 };
 
                 $scope.played =  modules.apollo.getMainAudio().played.length > 0;
+                modules.apollo.getMainAudio().addEventListener('play', function(){
+                    $scope.played = true;
+
+                });
+
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;
                     function resetFragments() {
