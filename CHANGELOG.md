@@ -1,3 +1,10 @@
+<a name="v5.6.0"></a>
+## v5.6.0 (2014-02-15)
+### Features
+* play/pause resume in play
+* from play mode you can directly create a presentation
+
+
 <a name="v5.4.1"></a>
 ### v5.4.1 (2014-02-12)
 ##### Fixes

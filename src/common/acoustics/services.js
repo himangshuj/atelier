@@ -123,13 +123,11 @@
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
 
-        navigator.getUserMedia = ($window.fakeNavigator || {}).mockGetUserMedia
-            || navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia;
+        navigator.getUserMedia = ($window.fakeNavigator || {}).mockGetUserMedia || navigator.webkitGetUserMedia ||navigator.mozGetUserMedia;
         navigator.getUserMedia({audio: true}, function (mediaStream) {
             //noinspection JSUnresolvedFunction
-            var mediaRecorder = $window.FakeMediaRecorder || MediaRecorder;
-            var mediaRecorderObj = new mediaRecorder(mediaStream);
+            var MediaRecorderClass = $window.FakeMediaRecorder || MediaRecorder;
+            var mediaRecorderObj = new MediaRecorderClass(mediaStream);
             deferred.resolve(mediaRecorderObj);
         }, function (err) {
             throw err;
