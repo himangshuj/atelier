@@ -7,18 +7,18 @@
             </a>
         </div>
     </div>
-    <div ng-hide="paused">
+    <div ng-hide="paused && played">
         <div class="color-green">
-            <a ng-click="start()" class="btn-pop-out">
-                <div class="toolbar-icon"><i class="fa fa-play"></i></div>
+            <a ng-click="pause()" class="btn-pop-out">
+                <div class="toolbar-icon"><i class="fa fa-pause"></i></div>
                 <span class="tip"></span>
             </a>
         </div>
     </div>
-    <div ng-show="paused">
+    <div ng-show="paused && played">
         <div class="color-green">
             <a ng-click="resume()" class="btn-pop-out">
-                <div class="toolbar-icon"><i class="fa fa-pause"></i></div>
+                <div class="toolbar-icon"><i class="fa fa-play"></i></div>
                 <span class="tip"></span>
             </a>
         </div>
