@@ -93,7 +93,7 @@
                     $scope.record = function () {
                         anduril.put(presentation, page, activePresentation);
                         anduril.post(presentation);
-                        $window._trackEvent('creationMileStone', 'recordMode', 'ImportantStates');
+                        $window.ga('send', 'event', 'ImportantStates', 'click', 'recordStart');
                         $state.go('record.activate', {page: 0, presentationId: presentationId});
                     };
 
