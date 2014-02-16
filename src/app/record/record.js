@@ -162,6 +162,7 @@
                 $scope.complete = function () {
                     $rootScope.loading = true;
                     completed = true;
+                    $window._trackEvent('creationMileStone', 'recordComplete', 'ImportantStates');
                     acoustics.stopRecording(recorder, presentation._id).then(function (resp) {
                         $q.when(anduril.completeRecord(presentation))
                             .then(function () {
