@@ -35,6 +35,7 @@
         var _postScript = function (presentation) {
             //noinspection JSUnresolvedFunction
             _cache[presentation._id] = presentation;
+            presentation.recorded = true;
             return presentation.$update();
         };
         var sanitizeRequestBody = function (presentation) {

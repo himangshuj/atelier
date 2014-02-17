@@ -72,8 +72,8 @@
         }])
 
         .controller('EditController',
-            ['$scope', 'page', '$stateParams', 'presentation', 'anduril', '$state', '$modal', '$rootScope',
-                function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $rootScope) {
+            ['$scope', 'page', '$stateParams', 'presentation', 'anduril', '$state', '$modal', '$rootScope','$window',
+                function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $rootScope,$window) {
 
                     $rootScope.presentationMode = true;
                     $rootScope.navigationMode = false;
@@ -93,6 +93,7 @@
                     $scope.record = function () {
                         anduril.put(presentation, page, activePresentation);
                         anduril.post(presentation);
+                        $window.ga('send', 'event', 'ImportantStates', 'click', 'recordStart');
                         $state.go('record.activate', {page: 0, presentationId: presentationId});
                     };
 

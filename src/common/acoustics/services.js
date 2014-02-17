@@ -34,7 +34,7 @@
         if (_streams[audioId] && !resumeFlag) {
             return _streams[audioId];
         }
-        var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/writer");
+        var client = new BinaryClient("ws://socket.localhost:3000/writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
@@ -79,7 +79,7 @@
         if (_streams[audioId] && !resumeFlag) {
             return _streams[audioId];
         }
-        var client = new BinaryClient("ws://socket." + $location.host() + ":" + $location.port() + "/ogg-writer");
+        var client = new BinaryClient("ws://socket.localhost:3000/ogg-writer");
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         client.on('open', function () {
