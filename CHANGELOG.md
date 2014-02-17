@@ -1,3 +1,11 @@
+<a name="v5.7.0"></a>
+## v5.7.0 (2014-02-17)
+
+### Features
+
+* Enable google analytics
+* extra logging for playmode issues
+
 <a name="v5.6.0"></a>
 ## v5.6.0 (2014-02-15)
 ### Features
