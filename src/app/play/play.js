@@ -159,6 +159,7 @@
                 };
                 $scope.start = function (){
                     modules.apollo.getMainAudio().play();
+                    modules.apollo.initBGAudio();
                 };
 
                 $scope.createNew = function(){
