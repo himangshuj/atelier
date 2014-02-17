@@ -162,16 +162,13 @@
                 $scope.complete = function () {
                     $rootScope.loading = true;
                     completed = true;
-                    $window._trackEvent('creationMileStone', 'recordComplete', 'ImportantStates');
+                    $window.ga('send', 'event', 'ImportantStates', 'click', 'recordComplete');
+
                     acoustics.stopRecording(recorder, presentation._id).then(function (resp) {
                         $q.when(anduril.completeRecord(presentation))
                             .then(function () {
                                 'use strict';
                                 anduril.clearCache();
-                                $http.get('/presentation/complete/' + presentationId).success(function (resp) {
-                                    console.log(resp);
-                                });
-
                                 $state.go('complete', {presentationId: presentationId});
                             });
                     });

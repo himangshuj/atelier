@@ -9,7 +9,7 @@
         var _backGroundAudio = [];
         var _recordingStarted = null;
         var playedTillNow = 0;
-        var _seekAudio = function (context, deferred) {
+        var _seekAudio = function (context, deferred,$log) {
             if ((_mainAudio.seekable || []).length > 0) {
                 if (_mainAudio.volume > 0) {
                     playedTillNow = _mainAudio.currentTime;
@@ -19,7 +19,7 @@
                 var pausedInterval = parseInt(args.pausedInterval, 10);
                 _recordingStarted = _recordingStarted || (args.timeStamp - pausedInterval);
                 var reqdPosition = (args.timeStamp - _recordingStarted - pausedInterval);
-                deferred.notify("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
+                $log.info("CurrentTime " + _mainAudio.currentTime + "Reqd Time" + reqdPosition);
                 var deltaTime = (_mainAudio.currentTime * 1000) - reqdPosition;
                 if (Math.abs((reqdPosition / 1000) - playedTillNow) < 0.2) {
                     _mainAudio.play();
@@ -40,8 +40,10 @@
                 }
 
             } else {
-                deferred.notify("delaying");
-                _.delay(_seekAudio, 1000, context, deferred);
+                $log.info("delaying");
+                $log.info(_mainAudio.src);
+                $log.info(_mainAudio.seekable);
+                _.delay(_seekAudio, 1000, context, deferred,$log);
             }
 
         };
@@ -56,6 +58,7 @@
 
                 },
                 getMainAudio: function () {
+                    $log.info('getting main audio');
                     return _mainAudio;
                 },
                 getBGAudio: function () {
@@ -91,7 +94,7 @@
                     return context;
                 },
                 resume: function (context, deferred) {
-                    _seekAudio(context, deferred);
+                    _seekAudio(context, deferred,$log);
                     return deferred.promise;
                 },
                 addBGAudio: function (backGroundAudio) {
