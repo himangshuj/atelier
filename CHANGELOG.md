@@ -1,3 +1,9 @@
+<a name="v5.7.3"></a>
+### v5.7.3 (2014-02-18)
+
+#### Fixes
+* bjs stream location was wrong
+
 <a name="v5.7.0"></a>
 ## v5.7.0 (2014-02-17)
 
