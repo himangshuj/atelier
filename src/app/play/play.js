@@ -158,8 +158,8 @@
                     resume();
                 };
                 $scope.start = function (){
-                    $scope.played = true;
-                    (modules.apollo.getMainAudio() || {}).play();
+                    modules.apollo.getMainAudio().load();
+                    modules.apollo.getMainAudio().play();
                 };
 
                 $scope.createNew = function(){
