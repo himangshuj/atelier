@@ -77,6 +77,7 @@
 
                     $rootScope.presentationMode = true;
                     $rootScope.navigationMode = false;
+//                    $rootScope.walkthroughActive = true;
                     //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;

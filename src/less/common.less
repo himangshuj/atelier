@@ -151,7 +151,7 @@ body.presentation {
   h1, .subtitle {
     textarea {
       height: @headingLineHeight !important; //TODO hack to prevent angular-elastic error
-      z-index: 3;
+      z-index: @walkthrough-backdrop-depth - 3;
     }
   }
 
@@ -203,7 +203,7 @@ body.presentation {
     top: -19px;
     background: none;
     border: none;
-    z-index: 2000;
+    z-index: @walkthrough-backdrop-depth - 2;
   }
   .full-background {
     .slide-image-fragment {
@@ -319,30 +319,49 @@ body.presentation {
     }
   }
   .navigation-button {
-    &.btn-fill {
-      position: absolute;
-      top: 300px;
+    position: absolute;
+    top: 300px;
+    &.btn-fill-left {
+      left: 2px;
+      a{
+        &:after{
+          right:0px;
+        }
+        .fa{
+          right:12px;
+        }
+      }
+    }
+    &.btn-fill-right {
+      right: 2px;
+      a{
+        &:after{
+          left:0px;
+        }
+        .fa{
+          left:12px;
+        }
+      }
+    }   a {
+      .btn-fill;
       height: @left-toolbar-width;
       width: @left-toolbar-width;
-      &.btn-fill-left {
-        left: 2px;
-      }
-      &.btn-fill-right {
-        right: 2px;
-      }
     }
   }
 }
 
 .image-close.btn-close {
   display: none;
-  background-color: #333;
-  color: #FFF;
   top: @headingLineHeight+1.7em;
   &.image-close-1, &.image-close-2, &.image-close-3, &.image-close-4 {
     display: block;
     right: auto;
     .left-calc(100%, 0.0001, unit(@lg-margin)+80, 85%);
+  }
+  button{
+    background-color: #333;
+    color: #FFF;
+    border:none;
   }
 }
 
