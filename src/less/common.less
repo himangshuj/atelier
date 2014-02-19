@@ -327,9 +327,6 @@ body.presentation {
         &:after{
           right:0px;
         }
-        .fa{
-          right:12px;
-        }
       }
     }
     &.btn-fill-right {
@@ -338,12 +335,15 @@ body.presentation {
         &:after{
           left:0px;
         }
-        .fa{
-          left:12px;
-        }
       }
-    }   a {
+    }
+    a {
       .btn-fill;
+      i{
+        position: relative;
+        z-index: 3;
+        margin-left:12px;
+      }
       height: @left-toolbar-width;
       width: @left-toolbar-width;
     }

@@ -1,9 +1,16 @@
 <div class="toolbar toolbar-center">
     <div ng-hide="recording || videoPlaying">
-        <div class="color-red">
+        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===1 && walkthroughActive}">
+            <div class="walkthrough-tip-container above">
+                <div class="my-pointer">
+                </div>
+                <span class="tip-text" style="margin-top:-200px;width:600px">
+                    Click and start speaking to record your voice for this slide. Click anywhere on the screen to reveal elements 1-by-1.
+                </span>
+            </div>
             <a ng-click="record()" class="btn-pop-out btn-square">
                 <div class="toolbar-icon"><i class="fa fa-microphone fa-5x"></i></div>
-                <div class="center-tip">Record
+                <div class="center-tip">Record {{walkthroughActive = true}} {{walkThroughStage = 6}}
                     <div style="font-size:small" ng-show="videoPresent">This slide has a video</div>
                 </div>
             </a>
@@ -11,20 +18,41 @@
     </div>
 </div>
 <div class="toolbar toolbar-left">
-    <div ng-show="recording">
-        <div class="color-red">
+    <div ng-show="recording || walkthroughActive">
+        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===2 && walkthroughActive}">
+            <div class="walkthrough-tip-container right">
+                <div class="my-pointer">
+                </div>
+                <span class="tip-text">
+                    Pause recording
+                </span>
+            </div>
             <a ng-click="pause()" class="btn-pop-out">
                 <div class="toolbar-icon"><i class="fa fa-pause"></i></div>
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-green" ng-show="videoPresent">
+        <div class="color-green" ng-show="videoPresent || walkthroughActive" ng-class="{'walkthrough-active': walkThroughStage===3 && walkthroughActive}">
+            <div class="walkthrough-tip-container right">
+                <div class="my-pointer">
+                </div>
+                <span class="tip-text">
+                    Play video (visible only if you had embedded a video in this slide).
+                </span>
+            </div>
             <a ng-click="recordYTAction()" class="btn-pop-out">
                 <div class="toolbar-icon"><i class="fa fa-youtube-play"></i></div>
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-blue" ng-show="recording && !drawing">
+        <div class="color-blue" ng-show="(recording && !drawing) || walkthroughActive" ng-class="{'walkthrough-active': walkThroughStage===4 && walkthroughActive}">
+            <div class="walkthrough-tip-container right">
+                <div class="my-pointer">
+                </div>
+                <span class="tip-text">
+                    Draw / write / annotate on the screen
+                </span>
+            </div>
             <a ng-click="enableCanvas(true)" class="btn-pop-out">
                 <div class="toolbar-icon">
                     <i class="fa fa-pencil"></i>
@@ -40,7 +68,14 @@
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-yellow" ng-show="recording">
+        <div class="color-yellow" ng-show="recording || walkthroughActive" ng-class="{'walkthrough-active': walkThroughStage===5 && walkthroughActive}">
+            <div class="walkthrough-tip-container right">
+                <div class="my-pointer">
+                </div>
+                <span class="tip-text">
+                    Redo recording for this slide
+                </span>
+            </div>
             <a ng-click="redoSlide()" class="btn-pop-out">
                 <div class="toolbar-icon">
                     <i class="fa fa-undo"></i>
@@ -51,7 +86,14 @@
     </div>
 </div>
 
-<div class="toolbar toolbar-right">
+<div class="toolbar toolbar-right" ng-class="{'walkthrough-active': walkThroughStage===6 && walkthroughActive}">
+    <div class="walkthrough-tip-container left">
+        <div class="my-pointer">
+        </div>
+        <span class="tip-text">
+            Click done when you have finished recording for all slides
+        </span>
+    </div>
     <div class="color-red">
         <a ng-click="complete()" class="btn-pop-out">
             <div class="toolbar-icon"><i class="fa fa-check-square"></i></div>
