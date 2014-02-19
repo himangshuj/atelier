@@ -1,13 +1,11 @@
-<div>
-    <div ng-class="{'walkthrough-active': walkthroughActive}">
+    <div ng-class="{'walkthrough-active': walkthroughActive}" class="full-height">
         <div class="walkthrough-tip-container above">
-            <div class="my-pointer"></div>
+            <div class="my-pointer">
+            </div>
                 <span class="tip-text">
                     Add image
                 </span>
-            </div>
         </div>
-    </div>
     <span ng-class="model.css">
         <img ng-show="model.value==''" ng-click="addImage()" src='/img/image-icon.png' class="image-placeholder" >
     <img ng-hide="model.value==''" ng-src="{{model.value}}" ng-click="addImage()" src='/img/image-icon.png'
@@ -18,4 +16,4 @@
             </div>
         </div>
     </span>
-</div>
+    </div>
