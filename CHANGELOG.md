@@ -1,3 +1,10 @@
+<a name="v5.8.0"></a>
+## v5.8.0 (2014-02-20)
+### Features
+
+* edit mode walkthrough using highlighting
+* record mode walkthrough
+
 <a name="v5.7.3"></a>
 ### v5.7.3 (2014-02-18)
 
