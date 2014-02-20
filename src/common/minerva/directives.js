@@ -75,7 +75,7 @@
         });
         scope.haltAutoAdvance = function () {
             scope.$emit('haltAutoAdvance', false);
-        }
+        };
     };
 
     var _fragmentLink = {

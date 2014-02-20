@@ -100,13 +100,14 @@
                     $scope.recording = false;
                     recordAction({'fnName': 'pause', 'args': {},
                         actionInitiated: new Date().getTime(), module: 'apollo' });
-                    $scope.walkThroughStage = 0
+                    $scope.walkThroughStage = 0;
+                    var autoAdvance = function () {
+                        $scope.$apply(function () {
+                            $scope.walkThroughStage = ($scope.walkThroughStage + 1) % 7;
+                        });
+                    };
                     for (var i = 0; i < 8; i++) {
-                        _.delay(function () {
-                            $scope.$apply(function () {
-                                $scope.walkThroughStage = ($scope.walkThroughStage+1)%7;
-                            });
-                        }, i * 1500);
+                        _.delay(autoAdvance, i * 1500);
 
                     }
 
