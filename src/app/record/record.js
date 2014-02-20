@@ -107,7 +107,7 @@
                         });
                     };
                     for (var i = 0; i < 8; i++) {
-                        _.delay(autoAdvance, i * 1500);
+                        _.delay(autoAdvance, i * 2000);
 
                     }
 

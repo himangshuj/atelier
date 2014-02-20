@@ -1,3 +1,8 @@
+<a name="v5.8.2"></a>
+### v5.8.2 (2014-02-20)
+#### Feature changes
+image modal changes
+
 <a name="v5.8.1"></a>
 ### v5.8.1 (2014-02-20)
 #### Fixes
