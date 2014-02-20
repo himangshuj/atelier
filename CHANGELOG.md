@@ -1,3 +1,7 @@
+<a name="v5.8.1"></a>
+### v5.8.1 (2014-02-20)
+#### Fixes
+* jshint fixes
 <a name="v5.8.0"></a>
 ## v5.8.0 (2014-02-20)
 ### Features
