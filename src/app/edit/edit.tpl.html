@@ -1,9 +1,9 @@
 <div class="toolbar toolbar-left">
-    <div class="color-green" ng-class="{'walkthrough-active': walkthroughActive}">
+    <div class="color-green" ng-class="{'walkthrough-active': walkThroughStage===3 && walkthroughActive}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
                 <span class="tip-text">
-                    Increase number of images
+                    Add more images
                 </span>
         </div>
         <a ng-click="increaseImages()" class="btn-pop-out"  ng-class="{invisible:cantAddImage}">
@@ -11,11 +11,11 @@
             <span class="tip">Add an image</span>
         </a>
     </div>
-    <div class="color-green" ng-class="{'walkthrough-active': walkthroughActive}">
+    <div class="color-green" ng-class="{'walkthrough-active': walkThroughStage===6 && walkthroughActive}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
                 <span class="tip-text">
-                    Add an image
+                    Add a video
                 </span>
         </div>
         <a ng-click="addVideo()" class="btn-pop-out">
@@ -23,14 +23,14 @@
             <span class="tip">Add a video</span>
         </a>
     </div>
-    <div class="color-yellow" ng-class="{'walkthrough-active': walkthroughActive}">
+    <div class="color-yellow" ng-class="{'walkthrough-active': walkThroughStage===5 && walkthroughActive}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
                 <span class="tip-text">
                     Expand the image?
                 </span>
         </div>
-        <a ng-click="toggleFullScreenImage()" class="btn-pop-out" ng-class="{invisible:isTitle}">
+        <a ng-click="toggleFullScreenImage()" class="btn-pop-out" >
             <div class="toolbar-icon">
                 <i class="fa fa-compress" ng-show="{{isFullImageTemplate}}"></i>
             </div>
@@ -43,7 +43,7 @@
             </div>
         </a>
     </div>
-    <div class="color-red" ng-class="{'walkthrough-active': walkthroughActive}">
+    <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===7 && walkthroughActive}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
                 <span class="tip-text">
@@ -57,7 +57,7 @@
     </div>
 </div>
 <div class="toolbar toolbar-right">
-    <div class="color-red" ng-class="{'walkthrough-active': walkthroughActive}">
+    <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===8 && walkthroughActive}">
         <div class="walkthrough-tip-container left">
             <div class="my-pointer"></div>
                 <span class="tip-text">
@@ -71,7 +71,7 @@
     </div>
 </div>
 
-<div class="navigation-button btn-fill-left" ng-show="page > 0 " ng-class="{'walkthrough-active': walkthroughActive}">
+<div class="navigation-button btn-fill-left" ng-show="page > 0 " ng-class="{'walkthrough-active': walkThroughStage===9 && walkthroughActive}">
     <div class="walkthrough-tip-container right">
         <div class="my-pointer"></div>
                 <span class="tip-text">
@@ -83,7 +83,7 @@
     </a>
 </div>
 
-<div class="navigation-button btn-fill-right" ng-show="page < (totalPages-1)" ng-class="{'walkthrough-active': walkthroughActive}">
+<div class="navigation-button btn-fill-right" ng-show="page < (totalPages-1)" ng-class="{'walkthrough-active': walkThroughStage===10 && walkthroughActive}">
     <div class="walkthrough-tip-container left">
         <div class="my-pointer"></div>
                 <span class="tip-text">
@@ -95,7 +95,7 @@
     </a>
 </div>
 
-<div class="navigation-button btn-fill-right" ng-show="page >= (totalPages-1)" ng-class="{'walkthrough-active': walkthroughActive}">
+<div class="navigation-button btn-fill-right" ng-show="page >= (totalPages-1)" ng-class="{'walkthrough-active': walkThroughStage===9 && walkthroughActive}">
     <div class="walkthrough-tip-container left">
         <div class="my-pointer"></div>
                 <span class="tip-text">
@@ -107,7 +107,7 @@
     </a>
 </div>
 
-<div class="image-close btn-close image-close-{{presentation.templateName.substr(0,1)}}" ng-class="{'walkthrough-active': walkthroughActive}">
+<div class="image-close btn-close image-close-{{presentation.templateName.substr(0,1)}}" ng-class="{'walkthrough-active': walkThroughStage===3 && walkthroughActive}">
     <div class="walkthrough-tip-container below">
         <div class="my-pointer"></div>
                 <span class="tip-text">
@@ -128,5 +128,5 @@
     <div class="spinner-backdrop" style="opacity:0.5"></div>
     <div id="spinner"></div>
 </div>
-<div class="walkthrough-backdrop" ng-show="walkthroughActive">
+<div class="walkthrough-backdrop" ng-show="walkthroughActive" ng-click="hideWalkThrough()">
 </div>

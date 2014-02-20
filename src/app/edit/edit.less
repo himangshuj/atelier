@@ -13,10 +13,12 @@
     }
     .walkthrough-tip-container{
       opacity:1;
+      display:block;
     }
   }
   .walkthrough-tip-container{
     opacity:0;
+    display:none;
     position:absolute;
     z-index:@walkthrough-backdrop-depth + 2;
     left:50%; margin-left: -30px;
@@ -27,19 +29,17 @@
     }
     .tip-text{
       position: absolute;
-      font-size:36px;
-      font-family: 'Open Sans';
+      font-size:42px;
+      font-family: 'Just Another Hand', cursive;
       line-height: 1.4;
       padding: 3px 8px;
       color: #FFF;
       text-align: center;
       text-decoration: none;
-      width:300px;
+      width:600px;
+      text-align: left;
     }
-//    .ng-hide-add, .ng-hide-remove, .ng-show-add, .ng-show-remove  {
       transition:0.3s ease-in-out all;
-//      display:block!important;
-//    }
     .ng-hide-add, .ng-show-remove{opacity:0;}
     .ng-hide-remove, .ng-show-add{opacity:1;}
     &.right{
@@ -63,8 +63,10 @@
         -webkit-transform: scaleX(-1);-transform: scaleX(-1);
       }
       .tip-text{
-        right: @left-toolbar-width;
+        right: 0px;
         margin-top: 0px;
+        margin-right: @left-toolbar-width;
+        text-align: right;
       }
     }
     &.below{
@@ -77,6 +79,7 @@
       .tip-text{
         margin-left: -3*@left-toolbar-width;
         margin-top: 2*@left-toolbar-width;
+        text-align: center;
       }
     }
     &.above{
@@ -90,6 +93,7 @@
       .tip-text{
         margin-left: -3*@left-toolbar-width;
         margin-top: -2*@left-toolbar-width;
+        text-align:center;
       }
     }
   }

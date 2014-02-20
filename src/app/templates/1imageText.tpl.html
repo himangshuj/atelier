@@ -1,24 +1,12 @@
 <div class="slide full-sized">
-        <h2 ng-class="{'walkthrough-active': walkthroughActive}">
-            <div class="walkthrough-tip-container below">
-                <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Enter title
-                </span>
-            </div>
+        <h2>
             <div>
                 <sokratik-fragment type="text" model="title" default=""
                                    placeholder="Click to edit title"></sokratik-fragment>
             </div>
         </h2>
         <div class="row-fluid slide-image-fragment">
-            <div class="col-xs-12 full-height" ng-class="{'walkthrough-active': walkthroughActive}">
-                <div class="walkthrough-tip-container above">
-                    <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Add an image
-                </span>
-                </div>
+            <div class="col-xs-12 full-height">
                 <div class="full-height">
                     <sokratik-fragment type="image" caption="" model="image1" default="" caption="">
                     </sokratik-fragment>
@@ -27,13 +15,6 @@
             </div>
         </div>
         <div class="text-fragment-holder">
-            <div ng-class="{'walkthrough-active': walkthroughActive}">
-                <div class="walkthrough-tip-container above">
-                    <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Enter more text
-                </span>
-                </div>
                 <sokratik-fragment type="text" model="text1" default=""
                                    placeholder="Click to edit line 1"></sokratik-fragment>
             </div>
