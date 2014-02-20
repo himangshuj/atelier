@@ -1,6 +1,6 @@
 <div class="toolbar toolbar-center">
     <div ng-hide="recording || videoPlaying">
-        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===1 && walkthroughActive}">
+        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===1 && !recording}">
             <div class="walkthrough-tip-container above">
                 <div class="my-pointer">
                 </div>
@@ -10,7 +10,7 @@
             </div>
             <a ng-click="record()" class="btn-pop-out btn-square">
                 <div class="toolbar-icon"><i class="fa fa-microphone fa-5x"></i></div>
-                <div class="center-tip">Record {{walkthroughActive = true}} {{walkThroughStage = 6}}
+                <div class="center-tip">Record 
                     <div style="font-size:small" ng-show="videoPresent">This slide has a video</div>
                 </div>
             </a>
@@ -18,8 +18,8 @@
     </div>
 </div>
 <div class="toolbar toolbar-left">
-    <div ng-show="recording || walkthroughActive">
-        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===2 && walkthroughActive}">
+    <div ng-show="recording || !recording">
+        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===2 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
@@ -32,7 +32,7 @@
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-green" ng-show="videoPresent || walkthroughActive" ng-class="{'walkthrough-active': walkThroughStage===3 && walkthroughActive}">
+        <div class="color-green" ng-show="videoPresent || !recording" ng-class="{'walkthrough-active': walkThroughStage===3 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
@@ -45,7 +45,7 @@
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-blue" ng-show="(recording && !drawing) || walkthroughActive" ng-class="{'walkthrough-active': walkThroughStage===4 && walkthroughActive}">
+        <div class="color-blue" ng-show="(recording && !drawing) || !recording" ng-class="{'walkthrough-active': walkThroughStage===4 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
@@ -68,7 +68,7 @@
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-yellow" ng-show="recording || walkthroughActive" ng-class="{'walkthrough-active': walkThroughStage===5 && walkthroughActive}">
+        <div class="color-yellow" ng-show="recording || !recording" ng-class="{'walkthrough-active': walkThroughStage===5 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
@@ -86,7 +86,7 @@
     </div>
 </div>
 
-<div class="toolbar toolbar-right" ng-class="{'walkthrough-active': walkThroughStage===6 && walkthroughActive}">
+<div class="toolbar toolbar-right" ng-class="{'walkthrough-active': walkThroughStage===6 && !recording}">
     <div class="walkthrough-tip-container left">
         <div class="my-pointer">
         </div>

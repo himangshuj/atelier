@@ -133,7 +133,7 @@
                                 });
                                 advanceWalkThrough();
                             }
-                        }, 5000);
+                        }, 2000);
                     };
                     var presentationId = $stateParams.presentationId;
                     $scope.presentationId = presentationId;
