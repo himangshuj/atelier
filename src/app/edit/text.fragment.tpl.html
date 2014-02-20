@@ -1,5 +1,19 @@
-<span ng-class="model.css">
-    <textarea  maxlength="250" ng-model="model.value" placeholder="{{model.placeholder}}" ng-blur="read()"/>
-</span>
+<div ng-class="{'walkthrough-active': walkthroughActive}">
+    <div class="walkthrough-tip-container" ng-class="{above:model.value=='title', below:model.value!='title'}">
+        <div class="my-pointer">
+        </div>
+        <span class="tip-text" ng-show="{{model.value=='title'}}">
+            Enter slide title
+        </span>
+        <span class="tip-text" ng-hide="{{model.value=='title'}}">
+            Add more text
+        </span>
+    </div>
+    <div>
+        <span ng-class="model.css">
+            <textarea maxlength="250" ng-model="model.value" placeholder="{{model.placeholder}}" ng-blur="read()" ng-click="haltAutoAdvance()"/>
+        </span>
+    </div>
+</div>
 
 
