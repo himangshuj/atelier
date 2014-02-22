@@ -18,6 +18,7 @@
     "angular-elastic": "~2.3.0"
   },
   "dependencies": {
-    "blueimp-canvas-to-blob": "~2.1.0"
+    "blueimp-canvas-to-blob": "~2.1.0",
+    "hopscotch": "*"
   }
 }

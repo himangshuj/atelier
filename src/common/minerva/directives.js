@@ -60,21 +60,7 @@
     var editCommonLink = function (scope, attrs) {
         scope.model.value = scope.model.value || attrs.default;
         scope.model.placeholder = attrs.placeholder;
-        scope.clicked = false;
-
-        scope.$on('hideWalkThrough', function (event, walkThroughStage) {
-            scope.walkthroughActive = false;
-            scope.walkThroughStage = walkThroughStage;
-
-        });
-        var i = 0;
-        scope.emitShowWalkThrough = _.once(function (stage) {
-            scope.$emit('showWalkThrough', stage);
-            scope.walkthroughActive = false;
-        });
-        scope.haltAutoAdvance = function () {
-            scope.$emit('haltAutoAdvance', false);
-        };
+        scope.model.id = attrs.model;
     };
 
     var _fragmentLink = {
@@ -83,34 +69,18 @@
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 // Listen for change events to enable binding
 
-
-                // Write data to the mode
+                // Write data to the model
                 scope.read = function () {
                     sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
-                    if (scope.walkthroughActivated) {
-                        if(attrs.model === 'title'){
-                            scope.emitShowWalkThrough(1);
-                        }
-                    }
                 };
-
                 editCommonLink(scope, attrs);
-
-                    scope.walkthroughActive = true;
-                    scope.walkthroughActivated = true;
-
 
             },
             "image": function (scope, element, attrs, sokratikDialogueCtrl) {
                 _fragmentCommonLink(scope, attrs, sokratikDialogueCtrl);
                 //registers the current value in the parent dialogue which is aware of the entire presentation
                 editCommonLink(scope, attrs);
-                scope.$on('showWalkThroughDirective', function (event, stage) {
-                    scope.walkthroughActive = stage == 2;
-                    scope.walkthroughActivated = stage == 2 || scope.walkthroughActivated;
-                });
                 scope.addImage = function () {
-                    scope.haltAutoAdvance();
                     var modalInstance = _injectors.$modal.open({
                         templateUrl: 'edit/image.modal.tpl.html',
                         controller: _imageSelectionModal,
@@ -130,17 +100,10 @@
                     modalInstance.result.then(function (selected) {
                         scope.model.value = _injectors.$sce.trustAsHtml(selected.selectedImage);
                         scope.model.caption = selected.selectedCaption;
-                        console.log(scope.walkthroughActivated);
-                        if (scope.walkthroughActivated) {
-                            scope.emitShowWalkThrough(2);
-                        }
                         sokratikDialogueCtrl.setProperty(attrs.model, selected.selectedImage);
                         sokratikDialogueCtrl.setProperty(attrs.model + '_Caption', selected.selectedCaption);
                     }, function () {
                         //noinspection JSUnresolvedFunction
-                        if (scope.walkthroughActivated) {
-                            scope.emitShowWalkThrough(2);
-                        }
                         _injectors.$log.info('Modal dismissed at: ' + new Date());
                     });
                     return modalInstance;
@@ -377,8 +340,8 @@
         "play": linkFn
     };
 
-    var _sokratikFragmentDirective = ["$state", "$sce", "anduril", "$stateParams", "$modal", "$log",
-        function ($state, $sce, anduril, $stateParams, $modal, $log) {
+    var _sokratikFragmentDirective = ["$state", "$sce", "anduril", "$stateParams", "$modal","$log",
+        function ($state, $sce, anduril, $stateParams, $modal,$log) {
             _injectors.$sce = $sce;
             _injectors.anduril = anduril;
             _injectors.$modal = $modal;
@@ -401,8 +364,8 @@
             };
 
         }];
-    var _sokratikDialogueContainerDirective = ["$state", "dialogue", "$q", "anduril", "$log",
-        function ($state, dialogue, $q, anduril, $log) {
+    var _sokratikDialogueContainerDirective = ["$state", "dialogue", "$q", "anduril","$log",
+        function ($state, dialogue, $q, anduril,$log) {
             _injectors.$q = $q;
             _injectors.dialogue = dialogue;
             _injectors.anduril = anduril;
@@ -447,7 +410,7 @@
 
     }];
 
-    var _sokratikImageUploadDirective = ['$q', '$state', '$window', '$http', '$location', function ($q, $state, $window, $http, $location) {
+    var _sokratikImageUploadDirective = ['$q', '$state', '$window', '$http','$location', function ($q, $state, $window, $http,$location) {
         var URL = $window.URL || $window.webkitURL;
         var fileToDataURL = function (file) {
             var deferred = $q.defer();
@@ -540,7 +503,7 @@
                         client.on('open', function () {
                             var stream = client.send(blob, {size: blob.size});
                             stream.on('data', function (url) {
-                                scope.$apply(function () {
+                                scope.$apply(function(){
                                     scope.url = url;
                                 });
                             });
@@ -578,7 +541,6 @@
                     .union(dialogueFragment)
                     .flatten()
                     .value();
-                return _.size(dialogueFragments);
             };
             this.getProperty = function (propertyKey, defaultValue) {
                 return ($scope.presentation.keyVals || {})[propertyKey] || defaultValue;

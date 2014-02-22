@@ -1,22 +1,5 @@
-<div ng-class="{'walkthrough-active': walkthroughActive}">
-    <div class="walkthrough-tip-container" ng-class="{above:model.value=='title', below:model.value!='title'}">
-        <div class="my-pointer">
-        </div>
-        <span class="tip-text" ng-show="{{model.value=='title'}}">
-            Enter title here
-                <a class="walkthrough-nav walkthrough-nav-close">
-                    <i class="fa fa-times-circle"></i>
-                </a>
-                <a  class="walkthrough-nav walkthrough-nav-next">
-                    <i class="fa fa-arrow-circle-right"></i>
-                </a>
-        </span>
-    </div>
-    <div>
-        <span ng-class="model.css">
-            <textarea maxlength="250" ng-model="model.value" placeholder="{{model.placeholder}}" ng-blur="read()" ng-click="haltAutoAdvance()"/>
-        </span>
-    </div>
-</div>
+<span ng-class="model.css" id="{{model.id}}">
+    <textarea  maxlength="250" ng-model="model.value" placeholder="{{model.placeholder}}" ng-blur="read()"/>
+</span>
 
 
