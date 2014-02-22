@@ -80,6 +80,7 @@
 
                     //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
+                    $scope.walkthroughOverride = true;
                     $scope.walkthroughActive = true;
                     $scope.walkThroughStage = 1;
                     var walkThroughStage = 1;

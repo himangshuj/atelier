@@ -1,11 +1,40 @@
+<div class="full-sized" ng-class="{'walkthrough-active': walkThroughStage===2}" style="position:absolute">
+    <div class="walkthrough-tip-container below" style="top:10%">
+                <span class="tip-text" style="margin-right:-400px;top:120px">
+                    Whatever you say now will be recorded. Say "Hello world" or "World peace"
+                    <a class="walkthrough-nav walkthrough-nav-close">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                    <a  class="walkthrough-nav walkthrough-nav-next">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </span>
+    </div>
+</div>
+<div class="full-sized" ng-class="{'walkthrough-active': walkThroughStage===3}" style="position:absolute">
+    <div class="walkthrough-tip-container below" style="top:20%">
+            <span class="tip-text" style="margin-right:-400px;top:120px">
+                Click or touch anywhere on the screen to reveal the hidden elements one by one. <br/>Sync your voice with elements. Try it now!
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
+    </div>
+</div>
 <div class="toolbar toolbar-center">
     <div ng-hide="recording || videoPlaying">
         <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===1 && !recording}">
             <div class="walkthrough-tip-container above">
                 <div class="my-pointer">
                 </div>
-                <span class="tip-text" style="margin-top:-200px;width:600px">
-                    Click and start speaking to record your voice for this slide. Click anywhere on the screen to reveal elements 1-by-1.
+                <span class="tip-text">
+                    Press here to record current slide
+                    <a class="walkthrough-nav walkthrough-nav-close">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
                 </span>
             </div>
             <a ng-click="record()" class="btn-pop-out btn-square">
@@ -19,12 +48,18 @@
 </div>
 <div class="toolbar toolbar-left">
     <div ng-show="recording || !recording">
-        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===2 && !recording}">
+        <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===4 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
                 <span class="tip-text">
-                    Pause recording
+                    Pause recording by clicking here
+                    <a class="walkthrough-nav walkthrough-nav-close">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                    <a  class="walkthrough-nav walkthrough-nav-next">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
                 </span>
             </div>
             <a ng-click="pause()" class="btn-pop-out">
@@ -32,12 +67,18 @@
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-green" ng-show="videoPresent || !recording" ng-class="{'walkthrough-active': walkThroughStage===3 && !recording}">
+        <div class="color-green" ng-show="videoPresent || !recording" ng-class="{'walkthrough-active': walkThroughStage===5 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
                 <span class="tip-text">
-                    Play video (visible only if you had embedded a video in this slide).
+                    Click here to play video embedded in this slide
+                    <a class="walkthrough-nav walkthrough-nav-close">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                    <a  class="walkthrough-nav walkthrough-nav-next">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
                 </span>
             </div>
             <a ng-click="recordYTAction()" class="btn-pop-out">
@@ -45,12 +86,18 @@
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-blue" ng-show="(recording && !drawing) || !recording" ng-class="{'walkthrough-active': walkThroughStage===4 && !recording}">
+        <div class="color-blue" ng-show="(recording && !drawing) || !recording" ng-class="{'walkthrough-active': walkThroughStage===7 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
                 <span class="tip-text">
-                    Draw / write / annotate on the screen
+                    Pro tip! Write on the screen using the pen
+                    <a class="walkthrough-nav walkthrough-nav-close">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                    <a  class="walkthrough-nav walkthrough-nav-next">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
                 </span>
             </div>
             <a ng-click="enableCanvas(true)" class="btn-pop-out">
@@ -68,12 +115,19 @@
                 <span class="tip"></span>
             </a>
         </div>
-        <div class="color-yellow" ng-show="recording || !recording" ng-class="{'walkthrough-active': walkThroughStage===5 && !recording}">
+        <div class="color-yellow" ng-show="recording || !recording" ng-class="{'walkthrough-active': walkThroughStage===6 && !recording}">
             <div class="walkthrough-tip-container right">
                 <div class="my-pointer">
                 </div>
                 <span class="tip-text">
-                    Redo recording for this slide
+                    Pro tip! If you want to make changes and record the slide again, use the redo button. <br/>
+                    You will be able to record the current slide again.
+                    <a class="walkthrough-nav walkthrough-nav-close">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                    <a  class="walkthrough-nav walkthrough-nav-next">
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
                 </span>
             </div>
             <a ng-click="redoSlide()" class="btn-pop-out">
@@ -86,13 +140,19 @@
     </div>
 </div>
 
-<div class="toolbar toolbar-right" ng-class="{'walkthrough-active': walkThroughStage===6 && !recording}">
+<div class="toolbar toolbar-right" ng-class="{'walkthrough-active': walkThroughStage===9 && !recording}">
     <div class="walkthrough-tip-container left">
         <div class="my-pointer">
         </div>
-        <span class="tip-text">
-            Click done when you have finished recording for all slides
-        </span>
+            <span class="tip-text">
+                When all slides are recorded, click on done! Your video will be created
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
     </div>
     <div class="color-red">
         <a ng-click="complete()" class="btn-pop-out">
@@ -102,9 +162,21 @@
     </div>
 </div>
 
-<a class="navigation-button btn-fill btn-fill-right" ng-show="recording && page < totalPages -1" ng-click="nextSlide()">
-    <i class="fa fa-long-arrow-right"></i>
-</a>
+<div class="navigation-button btn-fill-right" ng-class="{'walkthrough-active': walkThroughStage===8 && !recording}">
+    <div class="walkthrough-tip-container left">
+        <div class="my-pointer">
+        </div>
+            <span class="tip-text">
+                Once the current slide is recorded, go to the next slide
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+            </span>
+    </div>
+    <a class="nav-link" ng-show="recording && page < totalPages -1" ng-click="nextSlide()">
+        <i class="fa fa-long-arrow-right"></i>
+    </a>
+</div>
 
 <div class="pause-cover" ng-hide="recording">
 </div>

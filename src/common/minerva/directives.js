@@ -89,7 +89,7 @@
                 scope.read = function () {
                     sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
                     if (scope.walkthroughActivated) {
-                        scope.emitShowWalkThrough(attrs.model === 'title' ? 1 : 5);
+                        scope.emitShowWalkThrough(attrs.model === 'title' ? 1 : 1);
                     }
                 };
 
@@ -100,8 +100,8 @@
                     scope.walkthroughActivated = true;
                 } else {
                     scope.$on('showWalkThroughDirective', function (event, stage) {
-                        scope.walkthroughActive = stage == 5;
-                        scope.walkthroughActivated = stage == 5;
+                        scope.walkthroughActive = stage == 1;
+                        scope.walkthroughActivated = stage == 1;
 
                     });
                 }

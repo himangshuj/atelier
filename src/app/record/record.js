@@ -103,10 +103,10 @@
                     $scope.walkThroughStage = 0;
                     var autoAdvance = function () {
                         $scope.$apply(function () {
-                            $scope.walkThroughStage = ($scope.walkThroughStage + 1) % 7;
+                            $scope.walkThroughStage = ($scope.walkThroughStage + 1) % 10;
                         });
                     };
-                    for (var i = 0; i < 8; i++) {
+                    for (var i = 0; i < 11; i++) {
                         _.delay(autoAdvance, i * 2000);
 
                     }

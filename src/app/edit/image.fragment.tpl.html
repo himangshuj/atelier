@@ -1,10 +1,16 @@
-    <div ng-class="{'walkthrough-active': walkthroughActive}" class="full-height">
-        <div class="walkthrough-tip-container above">
+    <div ng-class="{'walkthrough-active': walkthroughActive}" class="full-height walkthrough-active">
+        <div class="walkthrough-tip-container below" style="top:20%">
             <div class="my-pointer">
             </div>
-                <span class="tip-text">
-                    Add image
-                </span>
+            <span class="tip-text">
+                Add an image
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
         </div>
     <span ng-class="model.css">
         <img ng-show="model.value==''" ng-click="addImage()" src='/img/image-icon.png' class="image-placeholder" >
