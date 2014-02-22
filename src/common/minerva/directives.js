@@ -70,7 +70,6 @@
         var i = 0;
         scope.emitShowWalkThrough = _.once(function (stage) {
             scope.$emit('showWalkThrough', stage);
-            console.log(attrs.model);
             scope.walkthroughActive = false;
         });
         scope.haltAutoAdvance = function () {
@@ -89,22 +88,17 @@
                 scope.read = function () {
                     sokratikDialogueCtrl.setProperty(attrs.model, scope.model.value);
                     if (scope.walkthroughActivated) {
-                        scope.emitShowWalkThrough(attrs.model === 'title' ? 1 : 5);
+                        if(attrs.model === 'title'){
+                            scope.emitShowWalkThrough(1);
+                        }
                     }
                 };
 
                 editCommonLink(scope, attrs);
 
-                if (attrs.model === 'title') {
                     scope.walkthroughActive = true;
                     scope.walkthroughActivated = true;
-                } else {
-                    scope.$on('showWalkThroughDirective', function (event, stage) {
-                        scope.walkthroughActive = stage == 5;
-                        scope.walkthroughActivated = stage == 5;
 
-                    });
-                }
 
             },
             "image": function (scope, element, attrs, sokratikDialogueCtrl) {

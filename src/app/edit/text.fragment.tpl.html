@@ -3,10 +3,13 @@
         <div class="my-pointer">
         </div>
         <span class="tip-text" ng-show="{{model.value=='title'}}">
-            Enter slide title
-        </span>
-        <span class="tip-text" ng-hide="{{model.value=='title'}}">
-            Add more text
+            Enter title here
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
         </span>
     </div>
     <div>

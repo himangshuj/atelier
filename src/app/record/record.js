@@ -101,15 +101,16 @@
                     recordAction({'fnName': 'pause', 'args': {},
                         actionInitiated: new Date().getTime(), module: 'apollo' });
                     $scope.walkThroughStage = 0;
-                    var autoAdvance = function () {
+                    var autoAdvance = function (i) {
                         $scope.$apply(function () {
-                            $scope.walkThroughStage = ($scope.walkThroughStage + 1) % 7;
+                            $scope.walkThroughStage = ($scope.walkThroughStage + 1) % 10;
                         });
+                        if (i < 11) {
+                            _.delay(autoAdvance,2000,i+1);
+                        }
                     };
-                    for (var i = 0; i < 8; i++) {
-                        _.delay(autoAdvance, i * 2000);
+                    autoAdvance(0);
 
-                    }
 
                 };
                 var completed = false;

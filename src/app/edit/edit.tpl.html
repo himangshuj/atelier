@@ -1,34 +1,52 @@
 <div class="toolbar toolbar-left">
-    <div class="color-green" ng-class="{'walkthrough-active': walkThroughStage===3 && walkthroughActive}">
+    <div class="color-green" ng-class="{'walkthrough-active': (walkThroughStage===3 && walkthroughActive) || walkthroughOverride}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Add more images
-                </span>
+            <span class="tip-text">
+                Add more images
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
         </div>
         <a ng-click="increaseImages()" class="btn-pop-out"  ng-class="{invisible:cantAddImage}">
             <div class="toolbar-icon"><i class="fa fa-picture-o"></i></div>
             <span class="tip">Add an image</span>
         </a>
     </div>
-    <div class="color-green" ng-class="{'walkthrough-active': walkThroughStage===6 && walkthroughActive}">
+    <div class="color-green" ng-class="{'walkthrough-active': (walkThroughStage===3 && walkthroughActive) || walkthroughOverride}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Add a video
-                </span>
+            <span class="tip-text">
+                Embed a video
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
         </div>
         <a ng-click="addVideo()" class="btn-pop-out">
             <div class="toolbar-icon"><i class="fa fa-youtube"></i></div>
             <span class="tip">Add a video</span>
         </a>
     </div>
-    <div class="color-yellow" ng-class="{'walkthrough-active': walkThroughStage===5 && walkthroughActive}">
+    <div class="color-yellow" ng-class="{'walkthrough-active': (walkThroughStage===5 && walkthroughActive) || walkthroughOverride}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Expand the image?
-                </span>
+            <span class="tip-text">
+                Pro tip: You can expand images to take up the full-screen
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
         </div>
         <a ng-click="toggleFullScreenImage()" class="btn-pop-out" >
             <div class="toolbar-icon">
@@ -43,12 +61,18 @@
             </div>
         </a>
     </div>
-    <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===7 && walkthroughActive}">
+    <div class="color-red" ng-class="{'walkthrough-active': (walkThroughStage===4 && walkthroughActive) || walkthroughOverride}">
         <div class="walkthrough-tip-container right">
             <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Delete this slide
-                </span>
+            <span class="tip-text">
+                Delete slide
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
         </div>
         <a ng-click="remove()" class="btn-pop-out">
             <div class="toolbar-icon"><i class="fa fa-trash-o"></i></div>
@@ -57,12 +81,18 @@
     </div>
 </div>
 <div class="toolbar toolbar-right">
-    <div class="color-red" ng-class="{'walkthrough-active': walkThroughStage===8 && walkthroughActive}">
+    <div class="color-red" ng-class="{'walkthrough-active': (walkThroughStage===6 && walkthroughActive) || walkthroughOverride}">
         <div class="walkthrough-tip-container left">
             <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Start recording!
-                </span>
+            <span class="tip-text">
+                Once you have made all slides, it's time to record over them!  Press here to go to record mode
+                <a class="walkthrough-nav walkthrough-nav-close">
+                    <i class="fa fa-times-circle"></i>
+                </a>
+                <a  class="walkthrough-nav walkthrough-nav-next">
+                    <i class="fa fa-arrow-circle-right"></i>
+                </a>
+            </span>
         </div>
         <a ng-click="record()" class="btn-pop-out">
             <div class="toolbar-icon"><i class="fa fa-circle"></i></div>
@@ -71,48 +101,48 @@
     </div>
 </div>
 
-<div class="navigation-button btn-fill-left" ng-show="page > 0 " ng-class="{'walkthrough-active': walkThroughStage===9 && walkthroughActive}">
-    <div class="walkthrough-tip-container right">
-        <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Go to previous slide
-                </span>
-        </div>
-    <a ng-click="goToPage(page-1)">
+<div class="navigation-button btn-fill-left" ng-show="page > 0 ">
+    <a class="nav-link" ng-click="goToPage(page-1)">
         <i class="fa fa-long-arrow-left"></i>
     </a>
 </div>
 
-<div class="navigation-button btn-fill-right" ng-show="page < (totalPages-1)" ng-class="{'walkthrough-active': walkThroughStage===10 && walkthroughActive}">
-    <div class="walkthrough-tip-container left">
-        <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Go to next slide
-                </span>
-    </div>
-    <a ng-click="goToPage(page+1)">
+<div class="navigation-button btn-fill-right" ng-show="page < (totalPages-1)">
+    <a class="nav-link" ng-click="goToPage(page+1)">
         <i class="fa fa-long-arrow-right"></i>
     </a>
 </div>
 
-<div class="navigation-button btn-fill-right" ng-show="page >= (totalPages-1)" ng-class="{'walkthrough-active': walkThroughStage===9 && walkthroughActive}">
+<div class="navigation-button btn-fill-right" ng-show="page >= (totalPages-1)" ng-class="{'walkthrough-active': (walkThroughStage===4 && walkthroughActive) || walkthroughOverride}">
     <div class="walkthrough-tip-container left">
         <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Add a new slide
-                </span>
+        <span class="tip-text">
+            Add a new slide
+            <a class="walkthrough-nav walkthrough-nav-close">
+                <i class="fa fa-times-circle"></i>
+            </a>
+            <a class="walkthrough-nav walkthrough-nav-next">
+                <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </span>
     </div>
-    <a ng-click="add()">
+    <a class="nav-link" ng-click="add()">
         <i class="fa fa-long-arrow-right"></i>
     </a>
 </div>
 
-<div class="image-close btn-close image-close-{{presentation.templateName.substr(0,1)}}" ng-class="{'walkthrough-active': walkThroughStage===3 && walkthroughActive}">
+<div class="image-close btn-close image-close-{{presentation.templateName.substr(0,1)}}" ng-class="{'walkthrough-active': (walkThroughStage===2 && walkthroughActive) || walkthroughOverride}">
     <div class="walkthrough-tip-container below">
         <div class="my-pointer"></div>
-                <span class="tip-text">
-                    Remove this image
-                </span>
+        <span class="tip-text">
+            Press here to delete image
+            <a class="walkthrough-nav walkthrough-nav-close">
+                <i class="fa fa-times-circle"></i>
+            </a>
+            <a  class="walkthrough-nav walkthrough-nav-next">
+                <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </span>
     </div>
     <button ng-click="decreaseImages()" >
         <i class="fa fa-times-circle-o"></i>
@@ -128,5 +158,5 @@
     <div class="spinner-backdrop" style="opacity:0.5"></div>
     <div id="spinner"></div>
 </div>
-<div class="walkthrough-backdrop" ng-show="walkthroughActive" ng-click="hideWalkThrough()">
+<div class="walkthrough-backdrop" ng-show="walkthroughOverride" ng-click="hideWalkThrough()">
 </div>
