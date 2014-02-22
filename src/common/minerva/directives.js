@@ -60,6 +60,7 @@
     var editCommonLink = function (scope, attrs) {
         scope.model.value = scope.model.value || attrs.default;
         scope.model.placeholder = attrs.placeholder;
+        scope.model.id = attrs.model;
     };
 
     var _fragmentLink = {

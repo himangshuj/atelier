@@ -72,8 +72,8 @@
         }])
 
         .controller('EditController',
-            ['$scope', 'page', '$stateParams', 'presentation', 'anduril', '$state', '$modal', '$rootScope','$window',
-                function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $rootScope,$window) {
+            ['$scope', 'page', '$stateParams', 'presentation', 'anduril', '$state', '$modal', '$rootScope', '$window',
+                function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $rootScope, $window) {
 
                     $rootScope.presentationMode = true;
                     $rootScope.navigationMode = false;
@@ -176,6 +176,88 @@
                     };
                     $scope.isTitle = _.isEqual("title", $scope.presentation.templateName);
                     $scope.cantAddImage = $scope.isTitle || _.isEqual("4imageText", $scope.presentation.templateName);
+                    var tour = {
+                        id: "edit-tutorial",
+                        steps: [
+                            {
+                                title: "Title",
+                                content: "This is the title of the canvas",
+                                target: "title",
+                                placement: "bottom",
+                                xOffset: 400
+
+                            },
+                            {
+                                title: "Change Image",
+                                content: "Click to add an image",
+                                target: '.image-placeholder',
+                                placement: "right"
+                            } ,
+                            {
+                                title: "Add Image",
+                                content: "Click to add more images to the canvas",
+                                target: "addImage",
+                                placement: "right"
+                            } ,
+                            {
+                                title: "Add Video",
+                                content: "Click to embed Youtube",
+                                target: "addVideo",
+                                placement: "right"
+                            }    ,
+                            {
+                                title: "Toggle FullScreen",
+                                content: "Click to make the image fullScreen",
+                                target: "toggleFullScreen",
+                                placement: "right"
+                            }  ,
+
+                            {
+                                title: "Add Text",
+                                content: "Add More Text",
+                                target: "text1",
+                                placement: "top"
+                            },
+                            {
+                                title: "Add Text",
+                                content: "Add More Text",
+                                target: "text2",
+                                placement: "top"
+                            }
+                            ,
+                            {
+                                title: "Add canvas",
+                                content: "Click to add another canvas",
+                                target: "next",
+                                placement: "left"
+                            },
+                            {
+                                title: "Delete canvas",
+                                content: "Click to delete canvas",
+                                target: "deleteSlide",
+                                placement: "right"
+                            }  ,
+                            {
+                                title: "Reduce Images",
+                                content: "Click to reduce number of images",
+                                target: "decreaseImage",
+                                placement: "left"
+                            }  ,
+
+                            {
+                                title: "Add Voice",
+                                content: "Click to add voice to canvas",
+                                target: "recordVoice",
+                                placement: "left"
+                            }
+
+
+                        ],
+                        showPrevButton: true
+                    };
+                    if (page === 0) {
+                        $window.hopscotch.startTour(tour);
+                    }
                 }]);
 })(angular, 'sokratik.atelier.edit');
 
