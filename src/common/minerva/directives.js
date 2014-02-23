@@ -525,8 +525,7 @@
             'sokratik.atelier.minerva.services',
             'sokratik.atelier.canvas.services',
             'ui.bootstrap',
-            'templates-app',
-            'monospaced.elastic'
+            'templates-app'
         ])
         .directive("sokratikFragment", _sokratikFragmentDirective)
         .directive("sokratikDialogue", _sokratikDialogueContainerDirective)
