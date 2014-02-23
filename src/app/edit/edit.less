@@ -9,7 +9,7 @@
     }
     textarea, img{
       position: relative;
-      background-color: #DDD;
+      border:2px solid #fcad26;
     }
     .walkthrough-tip-container{
       opacity:1;
@@ -26,18 +26,38 @@
       position: absolute;
       margin-top: 0px;
       margin-left: @left-toolbar-width - 10px;
+      background-image: url("/img/arrow-1.png");
     }
     .tip-text{
       position: absolute;
       font-size:42px;
       font-family: 'Just Another Hand', cursive;
       line-height: 1.4;
-      padding: 3px 8px;
+      padding: 0px 35px 0px 8px;
       color: #FFF;
       text-align: center;
       text-decoration: none;
-      width:600px;
       text-align: left;
+      background-color: #fcad26;
+      white-space: nowrap;
+      .walkthrough-nav{
+        position:absolute;
+        font-family: 'Open Sans';
+        text-decoration: none;
+        color:#FFF;
+        font-weight: bold;
+        padding: 1px 5px;
+        font-size:20px;
+        right:0px;
+        &.walkthrough-nav-close{
+          top:0px;
+          background-color:#f06060;
+        }
+        &.walkthrough-nav-next{
+          bottom:0px;
+          background-color:#2ac56c;
+        }
+      }
     }
       transition:0.3s ease-in-out all;
     .ng-hide-add, .ng-show-remove{opacity:0;}
@@ -46,8 +66,6 @@
       .my-pointer{
         width: @arrow-width;
         height: @arrow-height;
-        background-image: url("/img/arrow-white-1.png");
-
       }
       .tip-text{
         margin-left: 2*@left-toolbar-width;
@@ -59,27 +77,23 @@
         width: @arrow-width;
         height: @arrow-height;
         right:-10px;
-        background-image: url("/img/arrow-white-1.png");
         -webkit-transform: scaleX(-1);-transform: scaleX(-1);
       }
       .tip-text{
         right: 0px;
         margin-top: 0px;
         margin-right: @left-toolbar-width;
-        text-align: right;
       }
     }
     &.below{
       .my-pointer{
         width: @arrow-width;
         height: @arrow-height;
-        background-image: url("/img/arrow-white-1.png");
         -webkit-transform: translateY(@left-toolbar-width) translateX(-@left-toolbar-width) rotate(90deg);-transform: translateY(@left-toolbar-width) translateX(-@left-toolbar-width) rotate(90deg);
       }
       .tip-text{
-        margin-left: -3*@left-toolbar-width;
-        margin-top: 2*@left-toolbar-width;
-        text-align: center;
+        right:0px;
+        top:80px;
       }
     }
     &.above{
@@ -87,13 +101,11 @@
         top:10px;
         width: @arrow-width;
         height: @arrow-height;
-        background-image: url("/img/arrow-white-1.png");
         -webkit-transform: scaleX(-1) scaleY(-1) translateY(@left-toolbar-width) translateX(@left-toolbar-width) rotate(90deg);-transform: scaleX(-1) scaleY(-1) translateY(@left-toolbar-width) translateX(@left-toolbar-width) rotate(90deg);
       }
       .tip-text{
         margin-left: -3*@left-toolbar-width;
         margin-top: -2*@left-toolbar-width;
-        text-align:center;
       }
     }
   }
