@@ -7,6 +7,7 @@
             'sokratik.atelier.acoustics.services',
             'sokratik.atelier.sokratube.services',
             'sokratik.atelier.apollo.services',
+            'ui.bootstrap',
             'ngSanitize',
             'ngAnimate'])
 
@@ -93,25 +94,64 @@
                     canvas.enableCanvas(arg);
                     $scope.drawing = arg;
                 };
+                var tour = {
+                    id: "record-tutorial",
+                    steps: [
+                        {
+                            title: "Start Recording",
+                            content: "Press here to record current slide",
+                            target: "record-button",
+                            placement: "top"
 
+                        },
+                        {
+                            title: "Pause Recording",
+                            content: "Pause recording and return to this screen by clicking here",
+                            target: 'pause-recording',
+                            placement: "right"
+                        } ,
+                        {
+                            title: "Play Video",
+                            content: "Click here to start playing embedded YT video",
+                            target: "playVideo",
+                            placement: "right"
+                        } ,
+                        {
+                            title: "Annotate",
+                            content: "Pro tip! Write on the screen using the pen",
+                            target: "annotation",
+                            placement: "right"
+                        }    ,
+                        {
+                            title: "Redo",
+                            content: "Pro tip! If you want to make changes and record the slide again, use the redo button. You will be able to record the current slide again.",
+                            target: "redo",
+                            placement: "right"
+                        }  ,
+                        {
+                            title: "Done Recording",
+                            content: "When all slides are recorded, click on done! Your video will be created",
+                            target: "done",
+                            placement: "left"
+                        }
+                    ],
+                    showPrevButton: true
+                };
+
+
+                $scope.closeAlert = function (index) {
+                    $scope.alerts.splice(index, 1);
+                };
                 var pause = $scope.pause = function () {
                     enableCanvas(false);
                     acoustics.pause(recorder);
                     $scope.recording = false;
+                    $window.hopscotch.startTour(tour);
                     recordAction({'fnName': 'pause', 'args': {},
                         actionInitiated: new Date().getTime(), module: 'apollo' });
-                    $scope.walkThroughStage = 0;
-                    var autoAdvance = function (i) {
-                        $scope.$apply(function () {
-                            $scope.walkThroughStage = ($scope.walkThroughStage + 1) % 10;
-                        });
-                        if (i < 11) {
-                            _.delay(autoAdvance,2000,i+1);
-                        }
-                    };
-                    autoAdvance(0);
-
-
+                    $scope.alerts = [
+                        { type: 'danger', msg: 'Nothing is being recorded now. Click on record and start speaking' }
+                    ];
                 };
                 var completed = false;
                 var resumeRecordingAfterNetworkDisruption = function () {
@@ -139,6 +179,7 @@
                         });
                         $state.go('record.activate', {dummy: _.size(presentation.script),
                             page: lastSlideChange.args.params.page});
+
                     }
                 };
 
@@ -149,6 +190,14 @@
                     recordAction({'fnName': 'resume', 'args': {},
                         actionInitiated: new Date().getTime(), module: 'apollo'});
                     var instructionsToKeep = _.clone(presentation.script);
+                    $scope.alerts = [
+                        { type: 'warning', msg: 'Click or touch anywhere on the screen to reveal the hidden elements one by one.' } ];
+                    $scope.closeAlert = function () {
+                        $scope.alerts = [{ type: 'info', msg: 'Want to change what you just spoke!! Click on the redo button on the left bar' }];
+                        $scope.closeAlert = function(){
+                            $scope.alerts = [];
+                        }
+                    };
                     $scope.redoSlide = function () {
                         'use strict';
                         anduril.insertScript(presentation, instructionsToKeep);
@@ -217,6 +266,7 @@
 
                 $scope.index = 0;
                 $scope.next = _.throttle(function () {
+                    $scope.alerts = [];
                     if ($scope.recording) {
                         $scope.totalFragments = _.size(fragmentFn());
                         dialogue.makeVisible({fragments: fragmentFn(), index: $scope.index++}, $q.defer()).then(recordAction);
