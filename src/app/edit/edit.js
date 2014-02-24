@@ -254,6 +254,16 @@
 
                         ],
                         showPrevButton: true
+
+                    };
+                    var tourIndex = 0;
+                    $window.hopscotch.listen('show', function () {
+                        tourIndex = ($window.hopscotch.getCurrStepNum()+1) %12 ;
+                        _.delay($window.hopscotch.endTour, 3000);
+                    });
+
+                    $scope.nextTip = function () {
+                        $window.hopscotch.startTour(tour, tourIndex);
                     };
                     if (page === 0) {
                         $window.hopscotch.startTour(tour);

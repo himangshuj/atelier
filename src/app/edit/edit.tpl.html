@@ -1,6 +1,6 @@
 <div class="toolbar toolbar-left">
     <div class="color-green">
-        <a ng-click="increaseImages()" class="btn-pop-out"  ng-class="{invisible:cantAddImage}" id="addImage">
+        <a ng-click="increaseImages()" class="btn-pop-out" ng-class="{invisible:cantAddImage}" id="addImage">
             <div class="toolbar-icon"><i class="fa fa-picture-o"></i></div>
             <span class="tip">Add an image</span>
         </a>
@@ -15,6 +15,7 @@
                 <i class="fa fa-compress" ng-show="{{isFullImageTemplate}}"></i>
             </div>
             <span class="tip">Full-screen</span>
+
             <div ng-hide="{{isFullImageTemplate}}">
                 <div class="toolbar-icon">
                     <i class="fa fa-expand"></i>
@@ -37,6 +38,13 @@
             <span class="tip">Start Recording</span>
         </a>
     </div>
+    <div class="color-red">
+        <a ng-click="nextTip()" class="btn-pop-out">
+            <div class="toolbar-icon"><i class="fa fa-hand-o-right"></i></div>
+            <span class="tip">Show next tip</span>
+        </a>
+    </div>
+
 </div>
 
 <a class="navigation-button btn-fill btn-fill-left" ng-click="goToPage(page-1)" ng-show="page > 0 " id="previous">
