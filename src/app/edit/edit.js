@@ -181,7 +181,7 @@
                         steps: [
                             {
                                 title: "Title",
-                                content: "This is the title of the canvas",
+                                content: "Enter title here ",
                                 target: "title",
                                 placement: "bottom",
                                 xOffset: 400
@@ -189,64 +189,66 @@
                             },
                             {
                                 title: "Change Image",
-                                content: "Click to add an image",
+                                content: "Upload an image or give image url ",
                                 target: '.image-placeholder',
                                 placement: "right"
                             } ,
                             {
                                 title: "Add Image",
-                                content: "Click to add more images to the canvas",
+                                content: "Click to Add another image",
                                 target: "addImage",
                                 placement: "right"
                             } ,
                             {
                                 title: "Add Video",
-                                content: "Click to embed Youtube",
+                                content: "Click and provide url to include a youtube video. " +
+                                    "Copy the contents of your address bar",
                                 target: "addVideo",
                                 placement: "right"
                             }    ,
-                            {
-                                title: "Toggle FullScreen",
-                                content: "Click to make the image fullScreen",
-                                target: "toggleFullScreen",
-                                placement: "right"
-                            }  ,
+
 
                             {
                                 title: "Add Text",
-                                content: "Add More Text",
+                                content: "Add More Text here",
                                 target: "text1",
                                 placement: "top"
                             },
                             {
                                 title: "Add Text",
-                                content: "Add More Text",
+                                content: "Add More Text here",
                                 target: "text2",
                                 placement: "top"
                             }
                             ,
                             {
-                                title: "Add canvas",
-                                content: "Click to add another canvas",
+                                title: "Add Slide",
+                                content: "Add another slide by clicking here",
                                 target: "next",
                                 placement: "left"
                             },
                             {
-                                title: "Delete canvas",
-                                content: "Click to delete canvas",
+                                title: "Delete Slide",
+                                content: "Click here to delete the slide",
                                 target: "deleteSlide",
                                 placement: "right"
                             }  ,
                             {
-                                title: "Reduce Images",
-                                content: "Click to reduce number of images",
+                                title: "Reduce images",
+                                content: "Delete an image if you wish",
                                 target: "decreaseImage",
                                 placement: "left"
+                            }  ,
+                            {
+                                title: "Pro Tip!",
+                                content: "Add an image and use this button for full screen images",
+                                target: "toggleFullScreen",
+                                placement: "right"
                             }  ,
 
                             {
                                 title: "Add Voice",
-                                content: "Click to add voice to canvas",
+                                content: "Once you have made all slides, it's time to record over them !  press here to go to record mode",
                                 target: "recordVoice",
                                 placement: "left"
                             }
@@ -257,12 +259,21 @@
 
                     };
                     var tourIndex = 0;
+                    var timeOut = null;
                     $window.hopscotch.listen('show', function () {
-                        tourIndex = ($window.hopscotch.getCurrStepNum()+1) %12 ;
-                        _.delay($window.hopscotch.endTour, 3000);
+                        tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 11;
+                        timeOut = _.delay(function () {
+                            $window.hopscotch.endTour();
+                        }, 3000);
                     });
-
+                    $window.hopscotch.listen('next', function () {
+                        $window.clearTimeout(timeOut);
+                    });
+                    $window.hopscotch.listen('prev', function () {
+                        $window.clearTimeout(timeOut);
+                    });
                     $scope.nextTip = function () {
+                        $window.clearTimeout(timeOut);
                         $window.hopscotch.startTour(tour, tourIndex);
                     };
                     if (page === 0) {
