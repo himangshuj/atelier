@@ -38,13 +38,6 @@
             <span class="tip">Start Recording</span>
         </a>
     </div>
-    <div class="color-blue">
-        <a ng-click="nextTip()" class="btn-pop-out">
-            <div class="toolbar-icon"><i class="fa fa-hand-o-right"></i></div>
-            <span class="tip">Show next tip</span>
-        </a>
-    </div>
-
 </div>
 
 <div class="navigation-button btn-fill-left" ng-show="page > 0 " id="previous">
@@ -82,7 +75,10 @@
 </div>
 
 <div class="tip-container">
-    <a ng-click="nextTip()">
-        Show next tip
+    <a class="tip-text" ng-click="prevTip()">
+        Previous tip
+    </a>
+    <a class="tip-text flashing" ng-click="nextTip()">
+        Next tip <i class="fa fa-arrow-circle-right"></i></div>
     </a>
 </div>

@@ -256,9 +256,12 @@
                         showNextButton: false
                     };
                     var tourIndex = 0;
+                    var timeOut = null;
                     $window.hopscotch.listen('show', function () {
-                        tourIndex = ($window.hopscotch.getCurrStepNum()+1) %12 ;
-                        _.delay($window.hopscotch.endTour, 3000);
+                        tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 11;
+                        timeOut = _.delay(function () {
+                            $window.hopscotch.endTour();
+                        }, 5000);
                     });
                     $window.hopscotch.listen('next', function () {
                         $window.clearTimeout(timeOut);
@@ -269,6 +272,10 @@
                     $scope.nextTip = function () {
                         $window.clearTimeout(timeOut);
                         $window.hopscotch.startTour(tour, tourIndex);
+                    };
+                    $scope.prevTip = function () {
+                        $window.clearTimeout(timeOut);
+                        $window.hopscotch.startTour(tour, Math.max(tourIndex-2,0));
                     };
                     if (page === 0) {
                         $window.hopscotch.startTour(tour);

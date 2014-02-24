@@ -99,43 +99,56 @@
                     steps: [
                         {
                             title: "Start Recording",
-                            content: "Press here to record current slide",
+                            content: "Click here to start recording your voice & actions. Don't skip to the next tip before clicking on it!",
                             target: "record-button",
-                            placement: "top"
-
+                            placement: "top",
+                            zindex:1050
+                        },
+                        {
+                            title: "Record your voice",
+                            content: "Your voice is now being recorded. Try saying 'Hello World'",
+                            target: "record-button",
+                            placement: "top",
+                            zindex:1050
+                        },
+                        {
+                            title: "Reveal elements",
+                            content: "Click anywhere on the screen to reveal slide-elements one-by-one. Practise syncing your voice & revealing",
+                            target: "record-button",
+                            placement: "top",
+                            zindex:1050
                         },
                         {
                             title: "Pause Recording",
-                            content: "Pause recording and return to this screen by clicking here",
+                            content: "You can pause recording any time by clicking here",
                             target: 'pause-recording',
-                            placement: "right"
-                        } ,
-                        {
-                            title: "Play Video",
-                            content: "Click here to start playing embedded YT video",
-                            target: "playVideo",
-                            placement: "right"
+                            placement: "right",
+                            zindex:1050
                         } ,
                         {
                             title: "Annotate",
-                            content: "Pro tip! Write on the screen using the pen",
+                            content: "Pro tip! Write on the screen using this pen",
                             target: "annotation",
-                            placement: "right"
+                            placement: "right",
+                            zindex:1050
                         }    ,
                         {
                             title: "Redo",
                             content: "Pro tip! If you want to make changes and record the slide again, use the redo button. You will be able to record the current slide again.",
                             target: "redo",
-                            placement: "right"
+                            placement: "right",
+                            zindex:1050
                         }  ,
                         {
                             title: "Done Recording",
-                            content: "When all slides are recorded, click on done! Your video will be created",
+                            content: "When all slides are recorded, click here. Your video will be created",
                             target: "done",
-                            placement: "left"
+                            placement: "left",
+                            zindex:1050
                         }
                     ],
-                    showPrevButton: true
+                    showPrevButton: false,
+                    showNextButton: false
                 };
 
 
@@ -148,7 +161,7 @@
                     tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 7;
                     timeOut = _.delay(function () {
                         $window.hopscotch.endTour();
-                    }, 3000);
+                    }, 5000);
                 });
                 $window.hopscotch.listen('next', function () {
                     $window.clearTimeout(timeOut);
@@ -159,6 +172,10 @@
                 $scope.nextTip = function () {
                     $window.clearTimeout(timeOut);
                     $window.hopscotch.startTour(tour, tourIndex);
+                };
+                $scope.prevTip = function () {
+                    $window.clearTimeout(timeOut);
+                    $window.hopscotch.startTour(tour, Math.max(tourIndex-2,0));
                 };
                 var pause = $scope.pause = function () {
                     enableCanvas(false);
