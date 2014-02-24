@@ -142,11 +142,29 @@
                 $scope.closeAlert = function (index) {
                     $scope.alerts.splice(index, 1);
                 };
+                var tourIndex = 0;
+                var timeOut = null;
+                $window.hopscotch.listen('show', function () {
+                    tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 7;
+                    timeOut = _.delay(function () {
+                        $window.hopscotch.endTour();
+                    }, 3000);
+                });
+                $window.hopscotch.listen('next', function () {
+                    $window.clearTimeout(timeOut);
+                });
+                $window.hopscotch.listen('prev', function () {
+                    $window.clearTimeout(timeOut);
+                });
+                $scope.nextTip = function () {
+                    $window.clearTimeout(timeOut);
+                    $window.hopscotch.startTour(tour, tourIndex);
+                };
                 var pause = $scope.pause = function () {
                     enableCanvas(false);
                     acoustics.pause(recorder);
                     $scope.recording = false;
-                    $window.hopscotch.startTour(tour);
+                    $window.hopscotch.startTour(tour,0);
                     recordAction({'fnName': 'pause', 'args': {},
                         actionInitiated: new Date().getTime(), module: 'apollo' });
                     $scope.alerts = [
