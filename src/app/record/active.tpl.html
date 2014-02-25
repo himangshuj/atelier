@@ -4,6 +4,10 @@
 
 
 <div class="toolbar toolbar-center" id="record-button">
+    <div id="tooltip-proxy-2">
+    </div>
+    <div id="tooltip-proxy-3">
+    </div>
     <div ng-hide="recording || videoPlaying">
         <div class="color-red">
             <a ng-click="record()" class="btn-pop-out btn-square">
@@ -68,6 +72,15 @@
 <div class="navigation-button btn-fill-right">
     <a class="nav-link" ng-show="recording && page < totalPages -1" ng-click="nextSlide()">
         <i class="fa fa-long-arrow-right"></i>
+    </a>
+</div>
+
+<div class="tip-container">
+    <a class="tip-text" ng-click="prevTip()">
+        Previous tip
+    </a>
+    <a class="tip-text flashing" ng-click="nextTip()">
+        Show next tip
     </a>
 </div>
 
