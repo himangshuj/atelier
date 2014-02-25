@@ -181,82 +181,79 @@
                         steps: [
                             {
                                 title: "Title",
-                                content: "Enter title here ",
+                                content: "Enter the title of the slide here",
                                 target: "title",
                                 placement: "bottom",
-                                xOffset: 400
+                                xOffset: 400,
+                                yOffset: 40
 
                             },
                             {
-                                title: "Change Image",
-                                content: "Upload an image or give image url ",
+                                title: "Choose image",
+                                content: "Click here to add an image by adding the URL of an image or by uploading one from your computer. Skip forward if you don't want to add any image",
                                 target: '.image-placeholder',
                                 placement: "right"
                             } ,
                             {
-                                title: "Add Image",
-                                content: "Click to Add another image",
+                                title: "Add more images",
+                                content: "Click here if you want to add more images. Skip forward if you don't want to add any more images",
                                 target: "addImage",
                                 placement: "right"
                             } ,
                             {
-                                title: "Add Video",
-                                content: "Click and provide url to include a youtube video. " +
-                                    "Copy the contents of your address bar",
+                                title: "Add a video",
+                                content: "Click here to embed a youtube video in the slide. You can play this video during recording. Skip forward if you don't want to use any video",
                                 target: "addVideo",
                                 placement: "right"
                             }    ,
-
-
                             {
-                                title: "Add Text",
-                                content: "Add More Text here",
-                                target: "text1",
-                                placement: "top"
-                            },
-                            {
-                                title: "Add Text",
-                                content: "Add More Text here",
-                                target: "text2",
-                                placement: "top"
-                            }
-                            ,
-                            {
-                                title: "Add Slide",
-                                content: "Add another slide by clicking here",
-                                target: "next",
-                                placement: "left"
-                            },
-                            {
-                                title: "Delete Slide",
-                                content: "Click here to delete the slide",
-                                target: "deleteSlide",
-                                placement: "right"
-                            }  ,
-                            {
-                                title: "Reduce images",
-                                content: "Delete an image if you wish",
-                                target: "decreaseImage",
-                                placement: "left"
-                            }  ,
-                            {
-                                title: "Pro Tip!",
-                                content: "Add an image and use this button for full screen images",
+                                title: "Toggle fullScreen",
+                                content: "Pro tip! You can expand the image to take up the full-screen",
                                 target: "toggleFullScreen",
                                 placement: "right"
                             }  ,
 
                             {
-                                title: "Add Voice",
-                                content: "Once you have made all slides, it's time to record over them !  press here to go to record mode",
+                                title: "Add text",
+                                content: "Add more Text",
+                                target: "text1",
+                                placement: "top"
+                            },
+                            {
+                                title: "Add text",
+                                content: "Add more Text",
+                                target: "text2",
+                                placement: "top"
+                            }
+                            ,
+                            {
+                                title: "Add another slide",
+                                content: "Click to add another slide",
+                                target: "next",
+                                placement: "left"
+                            },
+                            {
+                                title: "Delete slide",
+                                content: "Click to delete the present slide",
+                                target: "deleteSlide",
+                                placement: "right"
+                            }  ,
+                            {
+                                title: "Delete images",
+                                content: "Click to remove this image from the slide",
+                                target: "decreaseImage",
+                                placement: "left"
+                            }  ,
+
+                            {
+                                title: "Start recording",
+                                content: "Once you have filled in the slide, click here to start recording your voice",
                                 target: "recordVoice",
                                 placement: "left"
                             }
-
-
                         ],
-                        showPrevButton: true
-
+                        showPrevButton: false,
+                        showNextButton: false
                     };
                     var tourIndex = 0;
                     var timeOut = null;
@@ -264,7 +261,7 @@
                         tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 11;
                         timeOut = _.delay(function () {
                             $window.hopscotch.endTour();
-                        }, 3000);
+                        }, 5000);
                     });
                     $window.hopscotch.listen('next', function () {
                         $window.clearTimeout(timeOut);
@@ -275,6 +272,10 @@
                     $scope.nextTip = function () {
                         $window.clearTimeout(timeOut);
                         $window.hopscotch.startTour(tour, tourIndex);
+                    };
+                    $scope.prevTip = function () {
+                        $window.clearTimeout(timeOut);
+                        $window.hopscotch.startTour(tour, Math.max(tourIndex-2,0));
                     };
                     if (page === 0) {
                         $window.hopscotch.startTour(tour);

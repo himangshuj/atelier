@@ -4,6 +4,10 @@
 
 
 <div class="toolbar toolbar-center" id="record-button">
+    <div id="tooltip-proxy-2">
+    </div>
+    <div id="tooltip-proxy-3">
+    </div>
     <div ng-hide="recording || videoPlaying">
         <div class="color-red">
             <a ng-click="record()" class="btn-pop-out btn-square">
@@ -63,12 +67,6 @@
             <span class="tip">Done!</span>
         </a>
     </div>
-    <div class="color-blue">
-        <a ng-click="nextTip()" class="btn-pop-out">
-            <div class="toolbar-icon"><i class="fa fa-hand-o-right"></i></div>
-            <span class="tip">Next Tip!</span>
-        </a>
-    </div>
 </div>
 
 <div class="navigation-button btn-fill-right">
@@ -77,7 +75,14 @@
     </a>
 </div>
 
-
+<div class="tip-container">
+    <a class="tip-text" ng-click="prevTip()">
+        Previous tip
+    </a>
+    <a class="tip-text flashing" ng-click="nextTip()">
+        Show next tip
+    </a>
+</div>
 
 <div class="pause-cover" ng-hide="recording">
 </div>
