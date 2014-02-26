@@ -119,6 +119,7 @@
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.changeTemplate(presentation, page, templateName);
                         anduril.post(presentation);
+                        $window.hopscotch.endTour(false);
                         $state.go('edit', { images: images, templateName: templateName});
 
                     };
@@ -181,7 +182,7 @@
                         steps: [
                             {
                                 title: "Title",
-                                content: "Enter the title of the slide here",
+                                content: "This is a blank slide.  Click here to type the title",
                                 target: "title",
                                 placement: "bottom",
                                 xOffset: 400,
@@ -190,64 +191,58 @@
                             },
                             {
                                 title: "Choose image",
-                                content: "Click here to add an image by adding the URL of an image or by uploading one from your computer. Skip forward if you don't want to add any image",
+                                content: "Click on this icon to edit the image. upload pictures from your machine or use internet images",
                                 target: '.image-placeholder',
                                 placement: "right"
                             } ,
                             {
                                 title: "Add more images",
-                                content: "Click here if you want to add more images. Skip forward if you don't want to add any more images",
+                                content: "Click here to add more images",
                                 target: "addImage",
                                 placement: "right"
                             } ,
                             {
+                                title: "Delete images",
+                                content: "Click here to delete an image",
+                                target: "decreaseImage",
+                                placement: "left",
+                                xOffset: 40
+                            }  ,
+                            {
                                 title: "Add a video",
-                                content: "Click here to embed a youtube video in the slide. You can play this video during recording. Skip forward if you don't want to use any video",
+                                content: "Click here and input URL of the youtube video you want",
                                 target: "addVideo",
                                 placement: "right"
                             }    ,
                             {
-                                title: "Toggle fullScreen",
-                                content: "Pro tip! You can expand the image to take up the full-screen",
+                                title: "Add text",
+                                content: "Click here and type text",
+                                target: "text1",
+                                placement: "top"
+                            },
+                            {
+                                title: "Add another slide",
+                                content: "Click here to add a new blank slide",
+                                target: "next",
+                                placement: "left"
+                            },
+                            {
+                                title: " fullScreen images",
+                                content: "Click here to expand images to take the full screen",
                                 target: "toggleFullScreen",
                                 placement: "right"
                             }  ,
 
                             {
-                                title: "Add text",
-                                content: "Add more Text",
-                                target: "text1",
-                                placement: "top"
-                            },
-                            {
-                                title: "Add text",
-                                content: "Add more Text",
-                                target: "text2",
-                                placement: "top"
-                            }
-                            ,
-                            {
-                                title: "Add another slide",
-                                content: "Click to add another slide",
-                                target: "next",
-                                placement: "left"
-                            },
-                            {
                                 title: "Delete slide",
-                                content: "Click to delete the present slide",
+                                content: "Click here to delete current slide",
                                 target: "deleteSlide",
                                 placement: "right"
-                            }  ,
-                            {
-                                title: "Delete images",
-                                content: "Click to remove this image from the slide",
-                                target: "decreaseImage",
-                                placement: "left"
                             }  ,
 
                             {
                                 title: "Start recording",
-                                content: "Once you have filled in the slide, click here to start recording your voice",
+                                content: "Once you have filled in the slide(s), click here to start recording your voice",
                                 target: "recordVoice",
                                 placement: "left"
                             }
@@ -255,12 +250,19 @@
                         showPrevButton: false,
                         showNextButton: false
                     };
+                    var tourState =   _.str.words($window.hopscotch.getState(),":");
                     var tourIndex = 0;
+                    if(!!tourState && tourState[0]==='edit-tutorial'){
+                        tourIndex = _.str.words($window.hopscotch.getState(),":")[1];
+                        tourIndex = parseInt(tourIndex,10);
+                    }else{
+                        tourIndex = 0;
+                    }
                     var timeOut = null;
                     $window.hopscotch.listen('show', function () {
                         tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 11;
                         timeOut = _.delay(function () {
-                            $window.hopscotch.endTour();
+                            $window.hopscotch.endTour(false);
                         }, 5000);
                     });
                     $window.hopscotch.listen('next', function () {
@@ -278,7 +280,7 @@
                         $window.hopscotch.startTour(tour, Math.max(tourIndex-2,0));
                     };
                     if (page === 0) {
-                        $window.hopscotch.startTour(tour);
+                        $window.hopscotch.startTour(tour,tourIndex);
                     }
                 }]);
 })(angular, 'sokratik.atelier.edit');

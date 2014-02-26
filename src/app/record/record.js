@@ -4,46 +4,62 @@
         steps: [
             {
                 title: "Start Recording",
-                content: "Click here to start recording your voice & actions. Don't skip to the next tip before clicking on it!",
+                content: "Click on the record button to START record mode!",
                 target: "record-button",
                 placement: "top",
                 zindex: 1050
             },
             {
                 title: "Record your voice",
-                content: "Your voice is now being recorded. Try saying 'Hello World'",
+                content: "Your voice is now being recorded. Try saying - Hello World ",
                 target: "tooltip-proxy-2",
                 placement: "top",
                 zindex: 1050
             },
             {
                 title: "Reveal elements",
-                content: "Click anywhere on the screen to reveal slide-elements one-by-one. Practise syncing your voice & revealing",
+                content: "Click anywhere to reveal the first element on this slide. ",
                 target: "tooltip-proxy-3",
                 placement: "top",
                 zindex: 1050
             },
             {
+                title: "Reveal elements",
+                content: "Keep clicking to reveal elements one-by-one. Practice synching elements with your voice. ",
+                target: "tooltip-proxy-3",
+                placement: "top",
+                zindex: 1050
+            },
+
+            {
                 title: "Pause Recording",
-                content: "You can pause recording any time by clicking here",
+                content: "Click here to pause the recording. Resume recording when ready ",
                 target: 'pause-recording',
                 placement: "right",
                 zindex: 1050
             } ,
             {
+                title: "Redo",
+                content: "Click here to re-do the slide. This wipes out all recording and you can record the slide again.",
+                target: "redo",
+                placement: "right",
+                zindex: 1050
+            }  ,
+            {
                 title: "Annotate",
-                content: "Pro tip! Write on the screen using this pen",
+                content: "Click here to write on the screen. USe a mouse or a digital pen.",
                 target: "annotation",
                 placement: "right",
                 zindex: 1050
             }    ,
             {
-                title: "Redo",
-                content: "Pro tip! If you want to make changes and record the slide again, use the redo button. You will be able to record the current slide again.",
-                target: "redo",
-                placement: "right",
+                title: "Next slide",
+                content: "After you are done recording for this slide, click here to go to the next slide",
+                target: "nextSlide",
+                placement: "left",
                 zindex: 1050
-            }  ,
+            }   ,
+
             {
                 title: "Done Recording",
                 content: "When all slides are recorded, click here. Your video will be created",
@@ -157,9 +173,16 @@
                     $scope.alerts.splice(index, 1);
                 };
                 var tourIndex = 0;
+                var tourState =   _.str.words($window.hopscotch.getState(),":");
+                if(!!tourState && tourState[0]==='edit-tutorial'){
+                    tourIndex = _.str.words($window.hopscotch.getState(),":")[1];
+                    tourIndex = parseInt(tourIndex,10);
+                }else{
+                    tourIndex = 0;
+                }
                 var timeOut = null;
                 $window.hopscotch.listen('show', function () {
-                    tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 7;
+                    tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 9;
                     timeOut = _.delay(function () {
                         console.log('In delay function');
                         $window.hopscotch.endTour();
