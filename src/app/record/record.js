@@ -173,6 +173,13 @@
                     $scope.alerts.splice(index, 1);
                 };
                 var tourIndex = 0;
+                var tourState =   _.str.words($window.hopscotch.getState(),":");
+                if(!!tourState && tourState[0]==='edit-tutorial'){
+                    tourIndex = _.str.words($window.hopscotch.getState(),":")[1];
+                    tourIndex = parseInt(tourIndex,10);
+                }else{
+                    tourIndex = 0;
+                }
                 var timeOut = null;
                 $window.hopscotch.listen('show', function () {
                     tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 9;
