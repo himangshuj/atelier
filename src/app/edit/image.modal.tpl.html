@@ -1,12 +1,12 @@
 <div class="no-padding modal-header">
     <button class="btn-close" ng-click="cancel()"><i class="fa fa-times-circle fa-2x"></i></button>
     <tabset justified="true">
-        <tab heading="URL">
+        <tab heading="Upload your own image">
+            <sokratik-image-upload name="image" caption="selected.caption" url="selected.image"/>
+        </tab>
+        <tab heading="Choose image from the internet">
             <span class="input-label">Enter image URL </span>
             <input type="text" ng-model="selected.image"><br/>
-        </tab>
-        <tab heading="Upload">
-            <sokratik-image-upload name="image" caption="selected.caption" url="selected.image"/>
         </tab>
     </tabset>
     <div class="padding-5">
