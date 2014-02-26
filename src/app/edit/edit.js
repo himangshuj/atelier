@@ -119,6 +119,7 @@
                         presentation = anduril.put(presentation, $scope.page, activePresentation);
                         anduril.changeTemplate(presentation, page, templateName);
                         anduril.post(presentation);
+                        $window.hopscotch.endTour(false);
                         $state.go('edit', { images: images, templateName: templateName});
 
                     };
@@ -249,12 +250,19 @@
                         showPrevButton: false,
                         showNextButton: false
                     };
+                    var tourState =   _.str.words($window.hopscotch.getState(),":");
                     var tourIndex = 0;
+                    if(!!tourState && tourState[0]==='edit-tutorial'){
+                        tourIndex = _.str.words($window.hopscotch.getState(),":")[1];
+                        tourIndex = parseInt(tourIndex,10);
+                    }else{
+                        tourIndex = 0;
+                    }
                     var timeOut = null;
                     $window.hopscotch.listen('show', function () {
                         tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 11;
                         timeOut = _.delay(function () {
-                            $window.hopscotch.endTour();
+                            $window.hopscotch.endTour(false);
                         }, 5000);
                     });
                     $window.hopscotch.listen('next', function () {
@@ -272,7 +280,7 @@
                         $window.hopscotch.startTour(tour, Math.max(tourIndex-2,0));
                     };
                     if (page === 0) {
-                        $window.hopscotch.startTour(tour);
+                        $window.hopscotch.startTour(tour,tourIndex);
                     }
                 }]);
 })(angular, 'sokratik.atelier.edit');
