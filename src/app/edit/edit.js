@@ -185,8 +185,7 @@
                                 target: "title",
                                 placement: "bottom",
                                 xOffset: 400,
-                                yOffset: 40
-
+                                yOffset: 80
                             },
                             {
                                 title: "Choose image",
@@ -227,7 +226,7 @@
                             },
                             {
                                 title: " fullScreen images",
-                                content: "Click here to expand images to take the full screen",
+                                content: "Upload an image. Then click here to make it full-screen",
                                 target: "toggleFullScreen",
                                 placement: "right"
                             }  ,
