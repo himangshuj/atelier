@@ -25,7 +25,7 @@
             $log.info("Executing " + instruction.fnName + " with delay " + delay);
             _.delay(function () {
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
-                    (instruction.args || {}).params, {pausedInterval: pausedInterval});
+                    (instruction.args || {}).params, {pausedInterval: pausedInterval},{play:true});
                 if (!paused) {
                     $q.when(modules[instruction.module][instruction.fnName]
                         (_.extend((instruction.args || {}), {'params': params, fragments: fragmentFn()}), $q.defer())).then(postExecute);
@@ -172,6 +172,8 @@
                     $scope.played = true;
 
                 });
+
+                $scope.$emit('variablePropagation',$stateParams.page, _.size(presentation.presentationData),null);
 
                 $scope.addFragment = function (fragment) {//TODO remove duplication
                     fragmentFn = fragment;

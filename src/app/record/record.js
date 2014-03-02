@@ -172,36 +172,8 @@
                 $scope.closeAlert = function (index) {
                     $scope.alerts.splice(index, 1);
                 };
-                var tourIndex = 0;
-                var tourState =   _.str.words($window.hopscotch.getState(),":");
-                if(!!tourState && tourState[0]==='edit-tutorial'){
-                    tourIndex = _.str.words($window.hopscotch.getState(),":")[1];
-                    tourIndex = parseInt(tourIndex,10);
-                }else{
-                    tourIndex = 0;
-                }
-                var timeOut = null;
-                $window.hopscotch.listen('show', function () {
-                    tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 9;
-                    timeOut = _.delay(function () {
-                        console.log('In delay function');
-                        $window.hopscotch.endTour();
-                    }, 5000);
-                });
-                $window.hopscotch.listen('next', function () {
-                    $window.clearTimeout(timeOut);
-                });
-                $window.hopscotch.listen('prev', function () {
-                    $window.clearTimeout(timeOut);
-                });
-                $scope.nextTip = function () {
-                    $window.clearTimeout(timeOut);
-                    $window.hopscotch.startTour(tour, tourIndex);
-                };
-                $scope.prevTip = function () {
-                    $window.clearTimeout(timeOut);
-                    $window.hopscotch.startTour(tour, Math.max(tourIndex - 2, 0));
-                };
+                $scope.$emit('variablePropagation',$stateParams.page, _.size(presentation.presentationData),tour);
+
                 var pause = $scope.pause = function () {
                     enableCanvas(false);
                     acoustics.pause(recorder);
@@ -324,12 +296,6 @@
                     });
 
                 };
-                if (page === 0 && $scope.recording === false) {
-                    if (!!$window.hopscotch.getCurrTour()) {
-                        $window.hopscotch.endTour();
-                    }
-                    $window.hopscotch.startTour(tour, 0);
-                }
 
                 $scope.index = 0;
                 $scope.next = _.throttle(function () {
