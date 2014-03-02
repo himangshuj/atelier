@@ -75,7 +75,6 @@
                 function ($scope, page, $stateParams, presentation, anduril, $state, $modal, $rootScope, $window) {
 
                     $rootScope.presentationMode = true;
-                    $rootScope.navigationMode = false;
                     //noinspection JSUnresolvedFunction
                     $scope.page = page = parseInt(page, 10);
                     var presentationId = $stateParams.presentationId;
@@ -248,38 +247,8 @@
                         showPrevButton: false,
                         showNextButton: false
                     };
-                    var tourState =   _.str.words($window.hopscotch.getState(),":");
-                    var tourIndex = 0;
-                    if(!!tourState && tourState[0]==='edit-tutorial'){
-                        tourIndex = _.str.words($window.hopscotch.getState(),":")[1];
-                        tourIndex = parseInt(tourIndex,10);
-                    }else{
-                        tourIndex = 0;
-                    }
-                    var timeOut = null;
-                    $window.hopscotch.listen('show', function () {
-                        tourIndex = ($window.hopscotch.getCurrStepNum() + 1) % 11;
-                        timeOut = _.delay(function () {
-                            $window.hopscotch.endTour(false);
-                        }, 5000);
-                    });
-                    $window.hopscotch.listen('next', function () {
-                        $window.clearTimeout(timeOut);
-                    });
-                    $window.hopscotch.listen('prev', function () {
-                        $window.clearTimeout(timeOut);
-                    });
-                    $scope.nextTip = function () {
-                        $window.clearTimeout(timeOut);
-                        $window.hopscotch.startTour(tour, tourIndex);
-                    };
-                    $scope.prevTip = function () {
-                        $window.clearTimeout(timeOut);
-                        $window.hopscotch.startTour(tour, Math.max(tourIndex-2,0));
-                    };
-                    if (page === 0) {
-                        $window.hopscotch.startTour(tour,tourIndex);
-                    }
+                    $scope.$emit('variablePropagation',page, _.size(presentation.presentationData),tour);
+
                 }]);
 })(angular, 'sokratik.atelier.edit');
 

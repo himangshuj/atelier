@@ -111,7 +111,6 @@
                 $scope.presentations = presentation.presentationData;
                 $scope.presentationId = presentation._id;
                 $rootScope.presentationMode = true;
-                $rootScope.navigationMode = false;
 
             }])
         .controller('PlayInit', ['$scope', '$state', '$stateParams', '$q', 'modules', 'presentation', '$rootScope', '$sce', 'anduril', '$log',

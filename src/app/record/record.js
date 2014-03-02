@@ -304,7 +304,6 @@
                         $scope.recording = false;
                     });
                 $rootScope.presentationMode = true;
-                $rootScope.navigationMode = false;
 
             }])
 
