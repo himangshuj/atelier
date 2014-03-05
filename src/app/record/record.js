@@ -1,76 +1,5 @@
 (function (ng, app) {
-    var tour = {
-        id: "record-tutorial",
-        steps: [
-            {
-                title: "Start Recording",
-                content: "Click on the record button to START record mode!",
-                target: "record-button",
-                placement: "top",
-                zindex: 1050
-            },
-            {
-                title: "Record your voice",
-                content: "Your voice is now being recorded. Try saying - Hello World ",
-                target: "tooltip-proxy-2",
-                placement: "top",
-                zindex: 1050
-            },
-            {
-                title: "Reveal elements",
-                content: "Click anywhere to reveal the first element on this slide. ",
-                target: "tooltip-proxy-3",
-                placement: "top",
-                zindex: 1050
-            },
-            {
-                title: "Reveal elements",
-                content: "Keep clicking to reveal elements one-by-one. Practice synching elements with your voice. ",
-                target: "tooltip-proxy-3",
-                placement: "top",
-                zindex: 1050
-            },
 
-            {
-                title: "Pause Recording",
-                content: "Click here to pause the recording. Resume recording when ready ",
-                target: 'pause-recording',
-                placement: "right",
-                zindex: 1050
-            } ,
-            {
-                title: "Redo",
-                content: "Click here to re-do the slide. This wipes out all recording and you can record the slide again.",
-                target: "redo",
-                placement: "right",
-                zindex: 1050
-            }  ,
-            {
-                title: "Annotate",
-                content: "Click here to write on the screen. USe a mouse or a digital pen.",
-                target: "annotation",
-                placement: "right",
-                zindex: 1050
-            }    ,
-            {
-                title: "Next slide",
-                content: "After you are done recording for this slide, click here to go to the next slide",
-                target: "nextSlide",
-                placement: "left",
-                zindex: 1050
-            }   ,
-
-            {
-                title: "Done Recording",
-                content: "When all slides are recorded, click here. Your video will be created",
-                target: "done",
-                placement: "left",
-                zindex: 1050
-            }
-        ],
-        showPrevButton: false,
-        showNextButton: false
-    };
     ng.module(app, [
             'ui.router',
             'sokratik.atelier.istari.services',
@@ -172,7 +101,79 @@
                 $scope.closeAlert = function (index) {
                     $scope.alerts.splice(index, 1);
                 };
-                $scope.$emit('variablePropagation',$stateParams.page, _.size(presentation.presentationData),tour);
+                var tour = {
+                    id: "record-tutorial",
+                    steps: [
+                        {
+                            title: "Start Recording",
+                            content: "Click on the record button to START record mode!",
+                            target: "record-button",
+                            placement: "top",
+                            zindex: 1050
+                        },
+                        {
+                            title: "Record your voice",
+                            content: "Your voice is now being recorded. Try saying - Hello World ",
+                            target: "tooltip-proxy-2",
+                            placement: "top",
+                            zindex: 1050
+                        },
+                        {
+                            title: "Reveal elements",
+                            content: "Click anywhere to reveal the first element on this slide. ",
+                            target: "tooltip-proxy-3",
+                            placement: "top",
+                            zindex: 1050
+                        },
+                        {
+                            title: "Reveal elements",
+                            content: "Keep clicking to reveal elements one-by-one. Practice synching elements with your voice. ",
+                            target: "tooltip-proxy-3",
+                            placement: "top",
+                            zindex: 1050
+                        },
+
+                        {
+                            title: "Pause Recording",
+                            content: "Click here to pause the recording. Resume recording when ready ",
+                            target: 'pause-recording',
+                            placement: "right",
+                            zindex: 1050
+                        } ,
+                        {
+                            title: "Redo",
+                            content: "Click here to re-do the slide. This wipes out all recording and you can record the slide again.",
+                            target: "redo",
+                            placement: "right",
+                            zindex: 1050
+                        }  ,
+                        {
+                            title: "Annotate",
+                            content: "Click here to write on the screen. USe a mouse or a digital pen.",
+                            target: "annotation",
+                            placement: "right",
+                            zindex: 1050
+                        }    ,
+                        {
+                            title: "Next slide",
+                            content: "After you are done recording for this slide, click here to go to the next slide",
+                            target: "nextSlide",
+                            placement: "left",
+                            zindex: 1050
+                        }   ,
+
+                        {
+                            title: "Done Recording",
+                            content: "When all slides are recorded, click here. Your video will be created",
+                            target: "done",
+                            placement: "left",
+                            zindex: 1050
+                        }
+                    ],
+                    showPrevButton: false,
+                    showNextButton: false
+                };
+                $scope.$emit('variablePropagation',0, _.size(presentation.presentationData),tour);
 
                 var pause = $scope.pause = function () {
                     enableCanvas(false);
@@ -298,6 +299,80 @@
                 };
 
                 $scope.index = 0;
+                var tour = {
+                    id: "record-tutorial",
+                    steps: [
+                        {
+                            title: "Start Recording",
+                            content: "Click on the record button to START record mode!",
+                            target: "record-button",
+                            placement: "top",
+                            zindex: 1050
+                        },
+                        {
+                            title: "Record your voice",
+                            content: "Your voice is now being recorded. Try saying - Hello World ",
+                            target: "tooltip-proxy-2",
+                            placement: "top",
+                            zindex: 1050
+                        },
+                        {
+                            title: "Reveal elements",
+                            content: "Click anywhere to reveal the first element on this slide. ",
+                            target: "tooltip-proxy-3",
+                            placement: "top",
+                            zindex: 1050
+                        },
+                        {
+                            title: "Reveal elements",
+                            content: "Keep clicking to reveal elements one-by-one. Practice synching elements with your voice. ",
+                            target: "tooltip-proxy-3",
+                            placement: "top",
+                            zindex: 1050
+                        },
+
+                        {
+                            title: "Pause Recording",
+                            content: "Click here to pause the recording. Resume recording when ready ",
+                            target: 'pause-recording',
+                            placement: "right",
+                            zindex: 1050
+                        } ,
+                        {
+                            title: "Redo",
+                            content: "Click here to re-do the slide. This wipes out all recording and you can record the slide again.",
+                            target: "redo",
+                            placement: "right",
+                            zindex: 1050
+                        }  ,
+                        {
+                            title: "Annotate",
+                            content: "Click here to write on the screen. USe a mouse or a digital pen.",
+                            target: "annotation",
+                            placement: "right",
+                            zindex: 1050
+                        }    ,
+                        {
+                            title: "Next slide",
+                            content: "After you are done recording for this slide, click here to go to the next slide",
+                            target: "nextSlide",
+                            placement: "left",
+                            zindex: 1050
+                        }   ,
+
+                        {
+                            title: "Done Recording",
+                            content: "When all slides are recorded, click here. Your video will be created",
+                            target: "done",
+                            placement: "left",
+                            zindex: 1050
+                        }
+                    ],
+                    showPrevButton: false,
+                    showNextButton: false
+                };
+                $scope.$emit('variablePropagation',page, _.size(presentation.presentationData),tour);
+
                 $scope.next = _.throttle(function () {
                     $scope.alerts = [];
                     if ($scope.recording) {
