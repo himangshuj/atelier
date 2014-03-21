@@ -103,7 +103,7 @@
         return deferred.promise;
     };
 
-    var getAudioNode = function ($q) {
+    var getAudioNode = function ($q,$log) {
         var deferred = $q.defer();
         //noinspection JSUnresolvedVariable
         navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -114,7 +114,7 @@
             var audioInput = context.createMediaStreamSource(audioStream);
             deferred.resolve(audioInput);
         }, function (err) {
-            // console.log("getUserMedia error: " + err);
+            $log.info(err);
         });
         return deferred.promise;
     };
@@ -195,7 +195,7 @@
                         return getMediaRecorder($q, $window);
 
                     } else {
-                        return getAudioNode($q);
+                        return getAudioNode($q,$log);
                     }
                 },
 
