@@ -21,7 +21,6 @@
                 _executeInstruction(instructions, modules, $state, scriptIndex++, instructions[index].actionInitiated, $q, pausedInterval, $scope, $log);
             };
             var postExecute = !(ng.equals(instruction.fnName, 'changeState')) ? intraState : ng.noop;
-
             $log.info("Executing " + instruction.fnName + " with delay " + delay);
             _.delay(function () {
                 var params = _.extend({scriptIndex: ++scriptIndex, timeStamp: instruction.actionInitiated},
@@ -67,8 +66,10 @@
                     instructionDetails: [ '$stateParams', 'presentation', function ($stateParams, presentation) {
                         'use strict';
                         var index = $stateParams.scriptIndex || 0;
-                        var instruction = presentation.script[index];
-                        var delay = presentation.script[index].actionInitiated - ($stateParams.timeStamp || presentation.script[index].actionInitiated);
+                        var instruction = (_.isEmpty(presentation.script)?presentation.fallBackScript:presentation.script)[index];
+                        var delay = instruction.actionInitiated -
+                            ($stateParams.timeStamp || instruction.actionInitiated);
+
                         return {instruction: instruction, delay: delay};
                     }],
                     modules: ['dialogue', 'apollo', 'sokratube', 'canvas', function (dialogue, apollo, sokratube, canvas) {
@@ -132,7 +133,7 @@
 
                 };
                 modules.apollo.getMainAudio().addEventListener('ended', callBack, false);
-                _executeInstruction(presentation.script,
+                _executeInstruction(_.isEmpty(presentation.script)?presentation.fallBackScript:presentation.script,
                     modules, $state,
                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope, $log);
             }])
@@ -181,7 +182,7 @@
 
                         modules.dialogue.resetFragments({fragments: fragmentFn()}, $q.defer()).then(
                             function () {
-                                _executeInstruction(presentation.script,
+                                _executeInstruction(_.isEmpty(presentation.script)?presentation.fallBackScript:presentation.script,
                                     modules, $state,
                                     $stateParams.scriptIndex, $stateParams.timeStamp, $q, $stateParams.pausedInterval, $scope, $log);
                             }

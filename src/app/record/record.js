@@ -200,7 +200,6 @@
                         $scope.recording = false;
                         recordAction({'fnName': 'pause', 'args': {},
                             actionInitiated: lastTransmittedTime, module: 'apollo' });
-                        //console.log((new Date()).getTime());
                         var reversedInstructions = _.clone(instructionsToKeep).reverse();
                         var lastSlideChange = _.find(reversedInstructions, function (instruction) {
                             return _.isEqual(instruction.fnName, "changeState");
